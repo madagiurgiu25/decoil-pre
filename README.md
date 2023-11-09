@@ -36,11 +36,11 @@ The example is started in `sv-reconstruct` mode which will perform:
 
 ```bash
 # download annotation files
+REFGENOME=reference.fa
+GTFANNO=anno.gtf
 wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REFGENOME
 wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $GTFANNO
 
-REFGENOME=reference.fa
-GTFANNO=anno.gtf
 # run decoil in `sv-reconstruct` mode
 docker run -it --platform=linux/amd64 \
     -v $PWD/test3:/output \
