@@ -193,11 +193,16 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 
 ## Citation <a name="citation"></a>
 
+If you use Decoil for your work please cite our pre-print:
+
+Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Richard P. Koche, Kerstin Haase, Knut Reinert, Anton G. Henssen.
+_Decoil: Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data_. bioRxiv, 2023, DOI: [https://doi.org/10.1101/2023.11.15.567169](https://www.biorxiv.org/content/10.1101/2023.11.15.567169v1)
+
 ## License <a name="license"></a> 
 
-Decoil is distributed under [LICENSE](LICENSE), academic use-only.
+Decoil is distributed under the BSD 3-Clause license.  Consult the accompanying [LICENSE](LICENSE) file for more details.
 
- Disclaimer
+## Disclaimer
 
 Decoil and the content of this research-repository (i) is not suitable for a medical device; and (ii) is not intended
 for clinical use of any kind, including but not limited to diagnosis or prognosis.
