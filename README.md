@@ -150,12 +150,63 @@ optional arguments:
 - convert VCF to BEDPE using SURVIVOR
 - bigWig track generation using bamCoverage
 
+Usage:
+```commandline
+docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.1-slim-test decoil sv-only --help       
+usage: decoil <workflow> <parameters> [<target>]
+Example: 
+    # run decoil including the processing and visualization steps
+    decoil -f sv-recontruct --bam <input> --outputdir <outputdir> --name <sample> --sv-caller <sniffles> -r <reference-genome> -g <annotation-gtf> sv-only
+       [-h] -b BAM -o OUTPUTDIR -n NAME
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BAM, --bam BAM
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
+  -n NAME, --name NAME  Name of the sample
+```
+
 `sv-reconstruct` mode:
 -
 - SV calling using sniffles1
 - convert VCF to BEDPE using SURVIVOR
 - bigWig track generation using bamCoverage
 - Decoil reconstruction
+
+Usage:
+```commandline
+docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.1-slim-test decoil sv-reconstruct --help
+usage: decoil <workflow> <parameters> [<target>]
+Example: 
+    # run decoil including the processing and visualization steps
+    decoil -f sv-recontruct --bam <input> --outputdir <outputdir> --name <sample> --sv-caller <sniffles> -r <reference-genome> -g <annotation-gtf> sv-reconstruct
+       [-h] -b BAM -o OUTPUTDIR -n NAME -r REFERENCE_GENOME -g ANNOTATION_GTF [-d] [-p PLOT] [--fragment-min-cov FRAGMENT_MIN_COV] [--fragment-min-size FRAGMENT_MIN_SIZE]
+       [--min-vaf MIN_VAF] [--min-cov-alt MIN_COV_ALT] [--max-explog-threshold MAX_EXPLOG_THRESHOLD] [--min-cov MIN_COV] [--filter-score FILTER_SCORE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BAM, --bam BAM
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
+  -n NAME, --name NAME  Name of the sample
+  -r REFERENCE_GENOME, --reference-genome REFERENCE_GENOME
+                        Reference genome (fasta)
+  -g ANNOTATION_GTF, --annotation-gtf ANNOTATION_GTF
+                        GTF annotation
+  -d, --debug           Debug mode
+  -p PLOT, --plot PLOT  Plot circles (default: False
+  --fragment-min-cov FRAGMENT_MIN_COV
+                        Minimal fragment coverage (default: 5X)
+  --fragment-min-size FRAGMENT_MIN_SIZE
+                        Minimal fragment size (default: 500bp)
+  --min-vaf MIN_VAF     Minimal VAF acceptance SV (default: 0.01)
+  --min-cov-alt MIN_COV_ALT
+                        Minimal supporting reads SV (default: 6X)
+  --max-explog-threshold MAX_EXPLOG_THRESHOLD
+                        Maximal score; better not change this (default: 0.1)
+  --min-cov MIN_COV     Minimal coverage on site (default: 8X)
+  --filter-score FILTER_SCORE
+                        Filter circular structures by estimated proportions (default: 0)
+```
 
 ## File formats <a name="file-format"></a> 
 
