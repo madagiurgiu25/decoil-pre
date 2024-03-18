@@ -1,0 +1,44 @@
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get -y update \
+    && apt-get install -y libssl-dev software-properties-common build-essential libstdc++6 pandoc openssh-server git gcc g++ \
+    && apt-get install -y zlib1g-dev git-lfs wget libcurl4-openssl-dev python3-dev \
+    && apt-get clean -y \
+    && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+
+# Create the environment:
+COPY environment.yml .
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh
+
+ENV PATH="/opt/conda/bin:$PATH"
+
+RUN mkdir -p /decoil
+COPY ./environment.yml /decoil/environment.yml
+# RUN conda create -n envdecoil python=3.8.0 -y \
+RUN conda env create -f /decoil/environment.yml -y \
+    && echo "source activate envdecoil" > ~/.bashrc \
+    && /bin/bash -c "source ~/.bashrc"
+ENV PATH /opt/conda/envs/envdecoil/bin:$PATH
+ENV PATH /opt/conda/envs/envdecoil/python:$PATH
+
+COPY ./examples /examples
+COPY ./decoil /decoil/decoil
+COPY ./requirements.txt /decoil/requirements.txt
+COPY ./setup.py /decoil/setup.py
+COPY ./README.md /decoil/README.md
+COPY ./LICENSE /decoil/LICENSE
+COPY ./annotation /decoil/annotation
+
+RUN /bin/bash -c "source ~/.bashrc" \
+    && python --version \
+    && cd /decoil && python -m pip uninstall decoil -y \
+    && python -m pip install setuptools \
+    && python -m pip install -e . \
+    && python setup.py build install
+
+WORKDIR /output
+CMD ["decoil"]

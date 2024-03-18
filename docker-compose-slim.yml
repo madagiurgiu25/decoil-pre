@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  decoilbase:
+    build:
+      context: .
+      dockerfile: Dockerfile-slim
+    platform: linux/amd64
+    image: decoil:${VERSION_DECOIL}

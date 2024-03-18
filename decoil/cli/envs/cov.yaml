@@ -1,0 +1,10 @@
+name: mapping
+channels:
+ - bioconda
+ - conda-forge
+ - defaults
+dependencies:
+ - python-dateutil==2.8.0
+ - pip
+ - pip:
+   - deeptools==3.5.1

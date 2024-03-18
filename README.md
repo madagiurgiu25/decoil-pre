@@ -3,85 +3,32 @@
 Decoil (deconvolve extrachromosomal circular DNA isoforms from long-read data) is a software package for reconstruction
 circular DNA.
 
-- [Getting started using docker](#gettingstarted)
-- [Run Decoil reconstruction using docker](#decoil-slim)
+- [Getting started using docker or singularity](#gettingstarted)
+- [Run Decoil reconstruction using docker/singularity on your sample](#decoil-slim)
+- [Example](#testexample)
 - [Decoil configuration](#decoil-config)
 - [File formats](#decoil-file)
 - [Citation](#citation)
 - [License](#license)
 
-## Getting started using docker <a name="gettingstarted"></a> 
+## Getting started using docker or singularity<a name="gettingstarted"></a> 
 
-As a prequisite you need to have install `docker` (you can install this from the official website or using `conda`).
-The advantage is that you do not need to install any environment as everything is packed inside the container.
+As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
 
 ### Download the docker image
 
-This image contains all the dependencies needed to run the software.
-No additional installation needed.
+Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software.<br/>
+No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
 
 
 ```commandline
 # docker
-docker pull madagiurgiu25/decoil:1.1.1-slim-test
+docker pull madagiurgiu25/decoil:1.1.2-slim
 ```
 
-#### Run example
+#### Run example <a name="testexample"></a> 
 
-You can test if Decoil is correctly installed by running the following example. This will create a output folder under `$PWD/test3`.
-The example is started in `sv-reconstruct` mode which will perform:
-- SV calling using sniffles1
-- bigWig track generation using bamCoverage
-- Decoil reconstruction
-
-```bash
-# download annotation files
-REFGENOME=reference.fa
-GTFANNO=anno.gtf
-wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz | gunzip -c > $REFGENOME
-wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.primary_assembly.basic.annotation.gtf.gz | gunzip -c > $GTFANNO
-
-# run decoil in `sv-reconstruct` mode
-docker run -it --platform=linux/amd64 \
-    -v $PWD/test3:/output \
-    -v $PWD/$GTFANNO:/annotation/anno.gtf \
-    -v $PWD/$REFGENOME:/annotation/reference.fa \
-    -t madagiurgiu25/decoil:1.1.1-slim-test \
-decoil -f sv-reconstruct \
-    -b /examples/ecdna1/map.bam \
-    -r /annotation/reference.fa \
-    -g /annotation/anno.gtf \
-    -o /output -n ecdna1
-```
-
-Check example output results:
-
-```commandline
-tree $PWD/test3
-|-- clean.vcf
-|-- config.json
-|-- coverage.bw
-|-- fragments_clean_1.bed
-|-- fragments_clean_2.bed
-|-- fragments_clean_3.bed
-|-- fragments_initial.bed
-|-- graph.gpickle
-|-- logs
-|   |-- logs_cov
-|   |-- logs_decoil
-|   |-- logs_sniffles
-|   `-- logs_survivor
-|-- metrics_frag_cov_distribution.png
-|-- metrics_frag_len_cov_correlation.png
-|-- metrics_frag_len_distribution.png
-|-- reconstruct.bed
-|-- reconstruct.bed_debug
-|-- reconstruct.ecDNA.bed
-|-- reconstruct.json
-|-- reconstruct.links.txt_debug
-|-- sv.sniffles.bedpe
-`-- sv.sniffles.vcf
-```
+The test your installation check the [Example](docs/example.md).
 
 ## Run Decoil reconstruction using docker <a name="decoil-slim"></a> 
 
@@ -115,6 +62,17 @@ docker run -it --platform=linux/amd64 \
 
 ## Decoil configuration <a name="decoil-config"></a> 
 
+An overview about the available functionalities:
+
+|                	| decoil 	| decoil-pipeline 	| decoil-viz 	|
+|----------------	|--------	|-----------------	|------------	|
+| SV calling     	|        	| x               	|            	|
+| reconstruction 	| x      	| x               	|            	|
+| visualization  	|        	|                 	| x          	|
+| docker         	| x      	| x               	| x          	|
+| singularity    	| x      	| x               	| x          	|
+| pip, conda     	| x      	| x               	|            	|
+
 To check Decoil's run modes:
 
 ```commandline
@@ -131,7 +89,7 @@ Example:
 Decoil 1.1.1: reconstruct ecDNA from long-read data
 
 positional arguments:
-  {sv-only,sv-reconstruct}
+  {sv-only,sv-reconstruct,reconstruct-only}
                         sub-command help
     sv-only             Perform preprocessing
     sv-reconstruct      Perform preprocessing and reconstruction
