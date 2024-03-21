@@ -94,7 +94,7 @@ singularity run \
 
 An overview about the available functionalities:
 
-|                	| [decoil-pipeline](#decoil-pipeline) 	| [decoil](#decoil-docs)	| [decoil-viz](#decoil-viz) 	|
+|                	| [decoil-pipeline](#decoil-pipeline) (recommended)	| [decoil](#decoil-docs) (advanced users)	| [decoil-viz](#decoil-viz) (recommended)	|
 |----------------	|--------	|-----------------	|------------	|
 | SV calling     	| x       |                	 |            	|
 | coverage track 	| x      	|                 	|            	|
