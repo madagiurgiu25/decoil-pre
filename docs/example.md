@@ -1,4 +1,6 @@
 
+# Example
+
 You can test if Decoil is correctly installed by running the following example. 
 
 ## Download docker image and convert to singularity
