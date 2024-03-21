@@ -131,7 +131,7 @@ docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.2-slim decoil-
 
 Usage:
 
-```
+```bash
 usage: decoil-pipeline reconstruct-only --bam <input> --outputdir <outputdir> --name <sample> -r <reference-genome>
 
 Perform reconstruction only

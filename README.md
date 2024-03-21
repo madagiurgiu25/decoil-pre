@@ -20,14 +20,14 @@ As a prequisite you need to have install `docker` or `singularity` (you can inst
 Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software. No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
 
 
-```commandline
+```bash
 # docker
 docker pull madagiurgiu25/decoil:1.1.2-slim
 ```
 
 ### 1.2 Download as singularity image
 
-```commandline
+```bash
 # singularity
 singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
 ```
@@ -112,7 +112,7 @@ To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconst
 This requires only a `.bam` file as input and generates internally all the files required for the reconstruction.
 
 
-```commandline
+```bash
 # call help
 docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.2-slim decoil-pipeline --help
 
@@ -166,7 +166,7 @@ The relevant output files for the users are:
 - `reconstruct.ecDNA.bed` - contains all genomic fragments composing all the ecDNA labeled reconstructions
 - `summary.txt` - summarize all the circular reconstructions
 
-```commandline
+```bash
 cat reconstruct.bed
 
 #chr    start   end     circ_id fragment_id     strand  coverage        estimated_proportions
@@ -183,7 +183,7 @@ chr12   68807722        68970910        2       53      +       252     252
 
 ```
 
-```commandline
+```bash
 cat summary.txt
 
 circ_id chr_origin      size(MB)        label   topology_idx    topology_name   estimated_proportions

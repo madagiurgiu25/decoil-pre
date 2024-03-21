@@ -6,7 +6,7 @@ This requires as input the SV calls (.vcf), the aligment file (.bam) and the cov
 
 Usage:
 
-```
+```bash
 usage: decoil reconstruct -b <bamfile> -i <vcffile> -c <coveragefile> --outputdir <outputdir> --name <sample> -r <reference_genome>
 
 optional arguments:
