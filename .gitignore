@@ -1,0 +1,18 @@
+# ignore
+/**/*.ipyc
+/**/.DS_Store
+/**/decoil.egg-info/
+/**/dist/
+/**/build/
+repo-key
+repo-key.pub
+
+# snakemake logs
+/**/.snakemake/
+/**/.idea/
+
+# data folder
+/**/simulation/data/
+/**/data/
+/**/__pycache__/
+/**/examples/

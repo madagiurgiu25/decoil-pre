@@ -1,0 +1,83 @@
+import os
+import json
+import decoil.main as d
+from decoil.utils import PROG
+
+WORKFLOWS = [PROG.SV_ONLY,
+             PROG.SV_RECONSTRUCT,
+	         PROG.RECONSTRUCT_ONLY]
+
+dirname = None
+bam = None
+
+if config['workflow'] in WORKFLOWS:
+
+    # define workflow variables
+    bam = config["bam"]
+    threads = config["threads"]
+    name = config["name"]
+    outputdir = config["outputdir"]
+    normpath = os.path.normpath(outputdir)
+    outdir_outside_container = config["container"]
+    os.makedirs(os.path.join(normpath,"logs"),exist_ok=True)
+
+    # save configs
+    with open(os.path.join(normpath,"config.json"), 'w', encoding='utf-8') as f:
+        json.dump(config,f,ensure_ascii=False,indent=4)
+
+    if config['workflow'] == PROG.SV_ONLY:
+        
+        include: "rules/sv.smk"
+
+        rule all:
+            input:
+                expand(["{dirname}/sv.sniffles.vcf",
+                        "{dirname}/sv.sniffles.bedpe",
+                        "{dirname}/coverage.bw"
+                        ],dirname=normpath)
+
+    elif config['workflow'] == PROG.SV_RECONSTRUCT:
+
+        ref = config["reference_genome"]
+        # anno = config["annotation_gtf"]
+        svcaller = config["svcaller"]
+
+        include: "rules/sv.smk"
+        include: "rules/decoil.smk"
+
+        rule all:
+            input:
+                expand(["{dirname}/sv.sniffles.vcf",
+                        "{dirname}/sv.sniffles.bedpe",
+                        "{dirname}/coverage.bw",
+                        "{dirname}/reconstruct.bed",
+                        "{dirname}/reconstruct.links.txt",
+                        "{dirname}/reconstruct.fasta",
+                        "{dirname}/reconstruct.ecDNA.bed",
+                        "{dirname}/reconstruct.links.ecDNA.txt",
+                        "{dirname}/reconstruct.ecDNA.fasta",
+                        "{dirname}/reconstruct.ecDNA.filtered.bed",
+                        "{dirname}/reconstruct.links.ecDNA.filtered.txt",
+                        "{dirname}/reconstruct.ecDNA.filtered.fasta",
+                        "{dirname}/summary.txt"],dirname=normpath)
+
+    elif config['workflow'] == PROG.RECONSTRUCT_ONLY:
+
+        ref = config["reference_genome"]
+        # anno = config["annotation_gtf"]
+        svcaller = config["svcaller"]
+
+        include: "rules/decoil.smk"
+
+        rule all:
+            input:
+                expand(["{dirname}/reconstruct.bed",
+                        "{dirname}/reconstruct.links.txt",
+                        "{dirname}/reconstruct.fasta",
+                        "{dirname}/reconstruct.ecDNA.bed",
+                        "{dirname}/reconstruct.links.ecDNA.txt",
+                        "{dirname}/reconstruct.ecDNA.fasta",
+                        "{dirname}/reconstruct.ecDNA.filtered.bed",
+                        "{dirname}/reconstruct.links.ecDNA.filtered.txt",
+                        "{dirname}/reconstruct.ecDNA.filtered.fasta",
+                        "{dirname}/summary.txt"],dirname=normpath)

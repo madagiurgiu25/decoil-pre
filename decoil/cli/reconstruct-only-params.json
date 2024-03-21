@@ -1,0 +1,9 @@
+{
+    "bam": "",
+    "outputdir": "",
+    "reference_genome": "",
+    "annotation_gtf": "",
+    "name": "test",
+    "threads": 4,
+    "svcaller": "sniffles"
+}
