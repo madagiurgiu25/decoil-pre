@@ -95,7 +95,7 @@ singularity run \
 
 An overview about the available functionalities:
 
-|                	| [decoil-pipeline](#decoil-pipeline) 	| [decoil](#decoil)	| [decoil-viz](#decoil-viz) 	|
+|                	| [decoil-pipeline](#decoil-pipeline) 	| [decoil](#decoil-docs)	| [decoil-viz](#decoil-viz) 	|
 |----------------	|--------	|-----------------	|------------	|
 | SV calling     	| x       |                	 |            	|
 | reconstruction 	| x      	| x               	|            	|
@@ -151,7 +151,7 @@ To interpret and visualize the results of the ecDNA reconstruction threads, use 
 
 <br/>
 
-### 3. Advanced users only: reconstruct ecDNA using `decoil` <a name="decoil"></a> 
+### 3. Advanced users only: reconstruct ecDNA using `decoil` <a name="decoil-docs"></a> 
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
