@@ -17,8 +17,7 @@ As a prequisite you need to have install `docker` or `singularity` (you can inst
 
 ### 1.1 Download as docker image
 
-Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software.<br/>
-No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
+Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software. No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
 
 
 ```commandline
@@ -98,6 +97,7 @@ An overview about the available functionalities:
 |                	| [decoil-pipeline](#decoil-pipeline) 	| [decoil](#decoil-docs)	| [decoil-viz](#decoil-viz) 	|
 |----------------	|--------	|-----------------	|------------	|
 | SV calling     	| x       |                	 |            	|
+| coverage track 	| x      	|                 	|            	|
 | reconstruction 	| x      	| x               	|            	|
 | visualization  	|        	|                 	| x          	|
 | docker         	| x      	| x               	| x          	|
@@ -105,7 +105,7 @@ An overview about the available functionalities:
 
 <br/>
 
-### <a name="decoil-pipeline"></a> 1. Reconstruct ecDNA using `decoil-pipeline`
+### <a name="decoil-pipeline"></a> 1. Reconstruct ecDNA using `decoil-pipeline` (recommended)
 
 To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconstruct` mode.<br/>
 This requires only a `.bam` file as input and generates internally all the files required for the reconstruction.
@@ -145,13 +145,13 @@ The pipeline has the following [running modes](docs/decoil_pipeline_modes.md):
 
 <br/>
 
-### <a name="decoil-viz"></a> 2. Visualization of ecDNA threads using `decoil-viz`
+### <a name="decoil-viz"></a> 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
 <br/>
 
-### <a name="decoil-docs"></a> 3. Advanced users only: reconstruct ecDNA using `decoil`
+### <a name="decoil-docs"></a> 3. Reconstruct ecDNA using `decoil` (advanced users only)
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
