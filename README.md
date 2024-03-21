@@ -95,8 +95,8 @@ singularity run \
 An overview about the available functionalities:
 
 |                	| [decoil-pipeline](#decoil-pipeline)	| [decoil](#decoil-docs) | [decoil-viz](#decoil-viz) |
-|                	|  (recommended)	|  (advanced users)	| (recommended)	|
 |----------------	|--------	|-----------------	|------------	|
+|                	|  (recommended)	                    |  (advanced users)	     | (recommended)	           |
 | SV calling     	| x       |                	 |            	|
 | coverage track 	| x      	|                 	|            	|
 | reconstruction 	| x      	| x               	|            	|
