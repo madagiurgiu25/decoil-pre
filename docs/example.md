@@ -36,7 +36,7 @@ Using docker:
 ```bash
 # run decoil-pipeline using docker `sv-reconstruct` mode
 docker run -it --platform=linux/amd64 \
-    -v $PWD/test3:/examples \
+    -v $PWD/test3:/mnt \
     -v $PWD/$GTFANNO:/annotation/anno.gtf \
     -v $PWD/$REFGENOME:/annotation/reference.fa \
     -t madagiurgiu25/decoil:1.1.2-slim \
@@ -44,7 +44,7 @@ decoil-pipeline -f sv-reconstruct \
     --bam /examples/ecdna1/map.bam \
     --reference-genome /annotation/reference.fa \
     --annotation-gtf /annotation/anno.gtf \
-    --outputdir /examples \
+    --outputdir /mnt \
     --name ecdna1
 ```
 
@@ -57,7 +57,7 @@ mkdir -p $PWD/test3
 
 # run decoil-pipeline using singularity in `sv-reconstruct` mode
 singularity run \
-    --bind $PWD/test3:/examples \
+    --bind $PWD/test3:/mnt \
     --bind $PWD/$GTFANNO:/annotation/anno.gtf \
     --bind $PWD/$REFGENOME:/annotation/reference.fa \
     decoil.sif \
@@ -65,7 +65,7 @@ decoil-pipeline -f sv-reconstruct \
     --bam /examples/ecdna1/map.bam \
     --reference-genome /annotation/reference.fa \
     --annotation-gtf /annotation/anno.gtf \
-    --outputdir /examples \
+    --outputdir /mnt \
     --name ecdna1
 ```
 
