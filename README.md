@@ -105,7 +105,7 @@ An overview about the available functionalities:
 
 <br/>
 
-### 1. Reconstruct ecDNA using `decoil-pipeline` <a name="decoil-pipeline"></a> 
+### <a name="decoil-pipeline"></a> 1. Reconstruct ecDNA using `decoil-pipeline`
 
 To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconstruct` mode.<br/>
 This requires only a `.bam` file as input and generates internally all the files required for the reconstruction.
@@ -145,13 +145,13 @@ The pipeline has the following [running modes](docs/decoil_pipeline_modes.md):
 
 <br/>
 
-### 2. Visualization of ecDNA threads using `decoil-viz` <a name="decoil-viz"></a> 
+### <a name="decoil-viz"></a> 2. Visualization of ecDNA threads using `decoil-viz`
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
 <br/>
 
-### 3. Advanced users only: reconstruct ecDNA using `decoil` <a name="decoil-docs"></a> 
+### <a name="decoil-docs"></a> 3. Advanced users only: reconstruct ecDNA using `decoil`
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
