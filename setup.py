@@ -31,7 +31,7 @@ setuptools.setup(name='decoil',
 						 "IN_CONTAINER=False",
 					 ],
 				 },
-				 package_data={'': ['Snakefile', '*.json', 'envs/*.yaml']},
+				 package_data={'': ['Snakefile', '*.json', 'envs/*.yaml', 'rules/*.smk']},
 				 install_requires=required,
 				 conda_channels=['conda-forge', 'bioconda'],
 				 conda_packages={

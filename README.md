@@ -3,19 +3,22 @@
 Decoil (deconvolve extrachromosomal circular DNA isoforms from long-read data) is a software package for reconstruction
 circular DNA.
 
+- [Getting started using conda](#gettingstarted-conda)
 - [Getting started using docker or singularity](#gettingstarted)
+- [Run example using docker](#testexample)
 - [Run Decoil reconstruction using docker/singularity on your sample](#decoil-slim)
-- [Example](#testexample)
 - [Decoil configuration](#decoil-config)
 - [File formats](#decoil-file)
 - [Citation](#citation)
 - [License](#license)
 
+## Getting started using conda<a name="gettingstarted-conda"></a> 
+
 ## Getting started using docker or singularity<a name="gettingstarted"></a> 
 
 As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
 
-### Download the docker image
+### Download as docker image
 
 Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software.<br/>
 No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
@@ -26,11 +29,19 @@ No additional installation needed. All the environment, packages, dependencies a
 docker pull madagiurgiu25/decoil:1.1.2-slim
 ```
 
-#### Run example <a name="testexample"></a> 
+### Download as singularity image
+
+```commandline
+# singularity
+singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
+```
+
+### Run example <a name="testexample"></a> 
 
 The test your installation check the [Example](docs/example.md).
 
-## Run Decoil reconstruction using docker <a name="decoil-slim"></a> 
+
+### Run Decoil reconstruction using docker <a name="decoil-slim"></a> 
 
 To run Decoil on your data you need to cofigure the following parameters:
 
@@ -43,7 +54,7 @@ GENOME="<absolute path to your reference genome file>"
 ANNO="<absolute path to your gtf annotation file>"
 ```
 
-and then run the following command:
+and then run the following command, to use `sv-reconstruct` mode:
 
 ```bash
 docker run -it --platform=linux/amd64 \
@@ -53,14 +64,14 @@ docker run -it --platform=linux/amd64 \
     -v ${ANNO}:/annotation/anno.gtf \
     -v ${OUTPUT_FOLDER}:/output \
     -t madagiurgiu25/decoil:1.1.1-slim-test \
-    decoil -f sv-reconstruct \
+    decoil-pipeline sv-reconstruct \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
             -o /output -n ${NAME}
 ```
 
-## Decoil configuration <a name="decoil-config"></a> 
+## Decoil configurations <a name="decoil-config"></a> 
 
 An overview about the available functionalities:
 
@@ -71,19 +82,23 @@ An overview about the available functionalities:
 | visualization  	|        	|                 	| x          	|
 | docker         	| x      	| x               	| x          	|
 | singularity    	| x      	| x               	| x          	|
-| pip, conda     	| x      	| x               	|            	|
+| conda     	| x      	| x               	|            	|
 
-To check Decoil's run modes:
+### Decoil-pipeline configuration
+
+To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconstruct` mode.<br/>
+This requires only `.bam` file as input and generates internally all the files required for the reconstruction.
+
 
 ```commandline
 # call help
-docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.1-slim-test decoil --help
+docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.2-slim decoil-pipeline --help
 ```
 ```commandline
-usage: decoil <workflow> <parameters> [<target>]
+usage: decoil-pipeline <workflow> <parameters> [<target>]
 Example: 
     # run decoil including the processing and visualization steps
-    decoil -f sv-recontruct --bam <input> --outputdir <outputdir> --name <sample> --sv-caller <sniffles> -r <reference-genome> -g <annotation-gtf>
+    decoil-pipeline -f sv-recontruct --bam <input> --outputdir <outputdir> --name <sample> --sv-caller <sniffles> -r <reference-genome> -g <annotation-gtf>
         
 
 Decoil 1.1.1: reconstruct ecDNA from long-read data
@@ -165,6 +180,52 @@ optional arguments:
   --filter-score FILTER_SCORE
                         Filter circular structures by estimated proportions (default: 0)
 ```
+
+### Decoil reconstruct configuration
+
+To perform ecDNA reconstruction use `decoil reconstruct`:
+
+```
+usage: decoil reconstruct -b <bamfile> -i <vcffile> -c <coveragefile> --outputdir <outputdir> --name <sample> -r <reference_genome>
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -g ANNOTATION_GTF, --annotation-gtf ANNOTATION_GTF
+                        GTF annotation
+  -d, --debug           Debug mode
+  --fast                Reconstruct fast (not accurate and does not require a bam file)
+  --min-sv-len MIN_SV_LEN
+                        Minimal SV length (default: 500X)
+  --fragment-min-cov FRAGMENT_MIN_COV
+                        Minimal fragment coverage (default: 5X)
+  --fragment-min-size FRAGMENT_MIN_SIZE
+                        Minimal fragment size (default: 500bp)
+  --min-vaf MIN_VAF     Minimal VAF acceptance SV (default: 0.01)
+  --min-cov-alt MIN_COV_ALT
+                        Minimal supporting reads SV (default: 6X)
+  --max-explog-threshold MAX_EXPLOG_THRESHOLD
+                        Maximal score; better not change this (default: 0.1)
+  --min-cov MIN_COV     Minimal coverage on site (default: 8X)
+  --sv-caller SV_CALLER
+                        SV caller name {sniffles, sniffles2, cutesv}
+  --filter-score FILTER_SCORE
+                        Filter circular structures by estimated copy-number (default: 0)
+
+required named arguments:
+  -b BAM, --bam BAM     Bam file
+  -c COVERAGE, --coverage COVERAGE
+                        Coverage file (bigwig)
+  -i VCF, --vcf VCF     Vcf file
+  -o OUTPUTDIR, --outputdir OUTPUTDIR
+                        Output directory
+  --name NAME           Name of the sample
+  -r REFERENCE_GENOME, --reference-genome REFERENCE_GENOME
+                        Reference genome (fasta)
+```
+
+### Decoil-viz
+
+To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
 ## File formats <a name="file-format"></a> 
 

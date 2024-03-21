@@ -1,13 +1,16 @@
 
 You can test if Decoil is correctly installed by running the following example. 
 
-## Download docker image
+## Download docker image and convert to singularity
 
 To run the example, download the `decoil:1.1.2-slim` docker image from `docker hub`.
 
 ```
 # docker
 docker pull madagiurgiu25/decoil:1.1.2-slim
+
+# singularity
+singularity pull decoil.sif madagiurgiu25/decoil:1.1.2-slim
 ```
 
 ## Download annotation data
@@ -21,21 +24,43 @@ wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/g
 ```
 
 
-## Run decoil in `sv-reconstruct` mode
+## Run decoil-pipeline in `sv-reconstruct` mode
 
-The example is started in `sv-reconstruct` mode and will perform:
+The example reconstructs ecDNA using `decoil-pipeline` in `sv-reconstruct` mode. This will perform:
 - SV calling using sniffles1
 - bigWig track generation using bamCoverage
 - Decoil reconstruction
 
-```bash
+Using docker:
 
-# run decoil in `sv-reconstruct` mode
+```bash
+# run decoil-pipeline using docker `sv-reconstruct` mode
 docker run -it --platform=linux/amd64 \
     -v $PWD/test3:/examples \
     -v $PWD/$GTFANNO:/annotation/anno.gtf \
     -v $PWD/$REFGENOME:/annotation/reference.fa \
     -t madagiurgiu25/decoil:1.1.2-slim \
+decoil-pipeline -f sv-reconstruct \
+    --bam /examples/ecdna1/map.bam \
+    --reference-genome /annotation/reference.fa \
+    --annotation-gtf /annotation/anno.gtf \
+    --outputdir /examples \
+    --name ecdna1
+```
+
+Using singularity:
+
+```bash
+
+# singularity needs to create upfront the output directory which will be mounted into the container
+mkdir -p $PWD/test3
+
+# run decoil-pipeline using singularity in `sv-reconstruct` mode
+singularity run \
+    --bind $PWD/test3:/examples \
+    --bind $PWD/$GTFANNO:/annotation/anno.gtf \
+    --bind $PWD/$REFGENOME:/annotation/reference.fa \
+    decoil.sif \
 decoil-pipeline -f sv-reconstruct \
     --bam /examples/ecdna1/map.bam \
     --reference-genome /annotation/reference.fa \

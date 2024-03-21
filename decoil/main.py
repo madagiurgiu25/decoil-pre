@@ -251,8 +251,8 @@ def process_commandline_decoil_only(subparsers):
 	requiredNamed.add_argument('-r', '--reference-genome', help='Reference genome (fasta)', required=True)
 	parser_a.add_argument('-g', '--annotation-gtf', help='GTF annotation', required=False)
 	parser_a.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
-	# parser_a.add_argument('--fast', help='Reconstruct fast (not accurate and does not require a bam file)',
-						#   action='count', default=0)
+	parser_a.add_argument('--fast', help='Reconstruct fast (not accurate and does not require a bam file)',
+						  action='count', default=0)
 
 	# optional parameters
 	parser_a.add_argument('--min-sv-len', help='Minimal SV length (default: %(default)sX)',
@@ -387,7 +387,10 @@ def process_commandline(sysargs, pipeline=False):
 	parser = argparse.ArgumentParser(prog=PROG.DECOIL,
 									 description="""Decoil {}: reconstruct ecDNA from long-read data""".format(
 										 decoil.__version__),
-									 usage='''decoil [options] <workflow> <parameters> [<target>]''')
+									 usage='''
+          decoil-pipeline [options] <run-mode> <parameters> [<target>]
+          or
+          decoil <run-mode> <paramters>''')
 	parser.add_argument('--version', action='version',
 						version='%(prog)s {}'.format(decoil.__version__))
 	subparsers = parser.add_subparsers(help='sub-command help')
@@ -451,6 +454,7 @@ def main(sysargs=sys.argv[1:]):
 
 			# not use bam file
 			fast = None
+			bam = None
 			if args.fast == 1:
 				bam = None
 				fast = True
@@ -460,9 +464,9 @@ def main(sysargs=sys.argv[1:]):
 
 			run_reconstruction(os.path.abspath(args.vcf),
 							   os.path.abspath(args.coverage),
+							   bam,
 							   os.path.abspath(args.outputdir),
 							   os.path.abspath(args.reference_genome),
-							   bamfile=bam,
 							   name=args.name,
 							   svcaller=args.sv_caller,
 							   fast=fast)
