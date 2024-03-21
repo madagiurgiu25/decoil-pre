@@ -5,17 +5,23 @@ You can test if Decoil is correctly installed by running the following example.
 
 ## Download docker image and convert to singularity
 
-To run the example, download the `decoil:1.1.2-slim` docker image from `docker hub`.
+If you want to run the example using `docker`, download the `decoil:1.1.2-slim` docker image from `docker hub`.
 
-```
+```bash
 # docker
 docker pull madagiurgiu25/decoil:1.1.2-slim
+```
 
+If you want to run the example using `singularity`, run the command below to convert the docker image into a singularity image file (SIF):
+
+```bash
 # singularity
 singularity pull decoil.sif madagiurgiu25/decoil:1.1.2-slim
 ```
 
 ## Download annotation data
+
+To run the example you need a reference genome and the genes annotation.
 
 ```bash
 # download annotation files
@@ -26,7 +32,7 @@ wget -O - https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/g
 ```
 
 
-## Run decoil-pipeline in `sv-reconstruct` mode
+## Run `decoil-pipeline` in `sv-reconstruct` mode
 
 The example reconstructs ecDNA using `decoil-pipeline` in `sv-reconstruct` mode. This will perform:
 - SV calling using sniffles1
