@@ -68,13 +68,17 @@ docker run -it --platform=linux/amd64 \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 ```bash
 # singularity
 mkdir -p ${OUTPUT_FOLDER}
+mkdir -p ${OUTPUT_FOLDER}/logs
+mkdir -p ${OUTPUT_FOLDER}/tmp
 singularity run \
+    --bind ${OUTPUT_FOLDER}/logs:/mnt/logs \
+    --bind ${OUTPUT_FOLDER}/tmp:/tmp \
     --bind ${BAM_INPUT}:/data/input.bam \
     --bind ${BAM_INPUT}.bai:/data/input.bam.bai \
     --bind ${GENOME}:/annotation/reference.fa \
@@ -85,7 +89,7 @@ singularity run \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 <br/>
