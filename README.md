@@ -112,16 +112,14 @@ python setup.py build install
 # put decoil in $PATH
 ROOT=`dirname $(which decoil)`
 export PATH=$PATH:$ROOT
-
-# might take a while
-decoil-pipeline --version
-decoil --version
 ```
 
 And check if the installation worked:
 
 ```
-
+# might take a while
+decoil-pipeline --version
+decoil --version
 ```
 
 
