@@ -246,6 +246,33 @@ def remove_duplicated_edges(graph):
 
 	return graph
 
+
+def remove_highcoverage_fragments(graph, threshold=QUAL.MAX_COVERAGE_DEFAULT):
+	"""
+	Remove fragments which highly covered > QUAL.MAX_COVERAGE_DEFAULT and remove subgraph
+
+	Args:
+		graph (decoil.graph.Mutigraph): SV graph
+
+	Returns:
+		filtered graph including only fragments with coverage <= QUAL.MAX_COVERAGE_DEFAULT
+	"""
+	
+	# remove low coverage fragments
+	fragments = graph.get_fragments()
+	toremove = []
+	for fid in fragments:
+		frag = fragments[fid]
+		if frag.coverage > threshold:
+			toremove.append(fid)
+	
+	for f in toremove:
+		# graph.rewire_fragment_neighbors(f)
+		graph.remove_fragment(f)
+
+	return graph
+
+
 def remove_lowcoverage_fragments(graph, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE):
 	"""
 	Remove fragments which are covered < 4X (QUAL.MINIMAL_FRAGMENT_COVERAGE) and remove subgraph

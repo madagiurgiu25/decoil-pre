@@ -96,7 +96,7 @@ singularity run \
 
 ## Installing from source
 
-You can install the latest version of Decoil by:
+You can install the latest version of Decoil repository by:
 
 ```
 git clone https://github.com/madagiurgiu25/decoil-pre.git

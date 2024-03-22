@@ -186,16 +186,20 @@ def run_reconstruction(vcffile, bigwigfile, bamfile, outputdir, ref_genome,
 	# 2.1 Remove standalone fragments
 	G = operations.remove_standalone_fragments(G)
 	run_save_fragments(G, "fragments_clean_1.bed")
+ 
+	# 2.2.1 Remove high coverage fragments
+	G = operations.remove_highcoverage_fragments(G, threshold=QUAL.MAX_COVERAGE_DEFAULT)
+	run_save_fragments(G, "fragments_clean_2.bed")
 
-	# 2.2 Remove low coverage fragments
+	# 2.2.2 Remove low coverage fragments
 	# dynamically setup minimal fragment coverage (better not use this)
 	# metrics.set_threshold()
 	G = operations.remove_lowcoverage_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE)
-	run_save_fragments(G, "fragments_clean_2.bed")
+	run_save_fragments(G, "fragments_clean_3.bed")
 
 	# 2.3 Remove short fragments
 	G = operations.remove_short_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_SIZE)
-	run_save_fragments(G, "fragments_clean_3.bed")
+	run_save_fragments(G, "fragments_clean_4.bed")
 
 	# 2.4 Remove duplicated edges
 	G = operations.remove_duplicated_edges(G)
@@ -259,6 +263,8 @@ def process_commandline_decoil_only(subparsers):
 						  required=False, default=QUAL.MINIMAL_SV_LEN, type=int)
 	parser_a.add_argument('--fragment-min-cov', help='Minimal fragment coverage (default: %(default)sX)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_COVERAGE, type=int)
+	parser_a.add_argument('--fragment-max-cov', help='Maximal fragment coverage (default: %(default)sX)',
+						  required=False, default=QUAL.MAX_COVERAGE_DEFAULT, type=int)
 	parser_a.add_argument('--fragment-min-size', help='Minimal fragment size (default: %(default)sbp)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_SIZE, type=int)
 	parser_a.add_argument('--min-vaf', help='Minimal VAF acceptance SV (default: %(default)s)',
@@ -326,6 +332,8 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 						  required=False, default=QUAL.MINIMAL_SV_LEN, type=int)
 	parser_b.add_argument('--fragment-min-cov', help='Minimal fragment coverage (default: %(default)sX)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_COVERAGE, type=int)
+	parser_b.add_argument('--fragment-max-cov', help='Maximal fragment coverage (default: %(default)sX)',
+						  required=False, default=QUAL.MAX_COVERAGE_DEFAULT, type=int)
 	parser_b.add_argument('--fragment-min-size', help='Minimal fragment size (default: %(default)sbp)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_SIZE, type=int)
 	parser_b.add_argument('--min-vaf', help='Minimal VAF acceptance SV (default: %(default)s)',
@@ -360,6 +368,8 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 						  required=False, default=QUAL.MINIMAL_SV_LEN, type=int)
 	parser_d.add_argument('--fragment-min-cov', help='Minimal fragment coverage (default: %(default)sX)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_COVERAGE, type=int)
+	parser_d.add_argument('--fragment-max-cov', help='Maximal fragment coverage (default: %(default)sX)',
+						  required=False, default=QUAL.MAX_COVERAGE_DEFAULT, type=int)
 	parser_d.add_argument('--fragment-min-size', help='Minimal fragment size (default: %(default)sbp)',
 						  required=False, default=QUAL.MINIMAL_FRAGMENT_SIZE, type=int)
 	parser_d.add_argument('--min-vaf', help='Minimal VAF acceptance SV (default: %(default)s)',
@@ -419,6 +429,7 @@ def setup_defaults(args):
 	QUAL.MIN_COV_ALT = args.min_cov_alt
 	QUAL.FILTER_SCORE = args.filter_score
 	QUAL.EXPLOG_THRESHOLD = args.max_explog_threshold
+	QUAL.MAX_COVERAGE_DEFAULT = args.fragment_max_cov
 
 
 def main(sysargs=sys.argv[1:]):
