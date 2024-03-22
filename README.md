@@ -68,7 +68,7 @@ docker run -it --platform=linux/amd64 \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 ```bash
@@ -85,7 +85,7 @@ singularity run \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 <br/>
