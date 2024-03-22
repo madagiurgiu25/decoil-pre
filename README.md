@@ -90,7 +90,40 @@ singularity run \
 
 <br/>
 
-## Decoil configurations <a name="decoil-config"></a> 
+## Installing from source
+
+You can install the latest version of Decoil by:
+
+```
+git clone https://github.com/madagiurgiu25/decoil-pre.git
+cd  decoil-pre
+
+# create conda environment
+mamba env create -f environment.yml
+conda activate envdecoil
+
+python -m pip install -r requirements.txt
+python setup.py build install
+
+# put decoil in $PATH
+ROOT=`dirname $(which decoil)`
+export PATH=$PATH:$ROOT
+
+# might take a while
+decoil-pipeline --version
+decoil --version
+```
+
+And check if the installation worked:
+
+```
+
+```
+
+
+<a name="decoil-config"></a><br/>
+
+## Decoil configurations 
 
 An overview about the available functionalities:
 
@@ -104,9 +137,10 @@ An overview about the available functionalities:
 | docker         	| x      	| x               	| x          	|
 | singularity    	| x      	| x               	| x          	|
 
-<br/>
 
-### <a name="decoil-pipeline"></a> 1. Reconstruct ecDNA using `decoil-pipeline` (recommended)
+<a name="decoil-pipeline"></a> <br/>
+
+### 1. Reconstruct ecDNA using `decoil-pipeline` (recommended)
 
 To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconstruct` mode.<br/>
 This requires only a `.bam` file as input and generates internally all the files required for the reconstruction.
@@ -144,21 +178,21 @@ The pipeline has the following [running modes](docs/decoil_pipeline_modes.md):
 - `sv-reconstruct`
 - `reconstruct-only`
 
-<br/>
+<a name="decoil-viz"></a><br/>
 
-### <a name="decoil-viz"></a> 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
+### 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
-<br/>
+<a name="decoil-docs"></a><br/>
 
-### <a name="decoil-docs"></a> 3. Reconstruct ecDNA using `decoil` (advanced users only)
+### 3. Reconstruct ecDNA using `decoil` (advanced users only)
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
-<br/>
+<a name="file-format"></a><br/>
 
-## File formats <a name="file-format"></a> 
+## File formats
 
 The relevant output files for the users are:
 
