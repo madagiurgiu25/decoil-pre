@@ -14,7 +14,7 @@ from pprint import pprint
 
 import decoil.output.metrics
 import json
-import pickle5 as pickle
+import pickle
 
 # local modules
 from decoil import __version__
