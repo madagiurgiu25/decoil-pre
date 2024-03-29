@@ -8,6 +8,7 @@ circular DNA.
 - [Run Decoil reconstruction using docker or singularity](#decoil-slim)
 - [Decoil configurations](#decoil-config)
 - [File formats](#decoil-file)
+- [FAQ](#decoil-faq)
 - [Citation](#citation)
 - [License](#license)
 
@@ -191,6 +192,12 @@ To interpret and visualize the results of the ecDNA reconstruction threads, use 
 ### 3. Reconstruct ecDNA using `decoil` (advanced users only)
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
+
+<a name="#decoil-faq"></a><br/>
+
+## FAQ
+
+Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
 
 <a name="file-format"></a><br/>
 
