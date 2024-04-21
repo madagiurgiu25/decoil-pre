@@ -244,7 +244,9 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 
 <br/>
 
-## Citation <a name="citation"></a>
+<a name="citation"></a>
+
+## Citation
 
 If you use Decoil for your work please cite our pre-print:
 
