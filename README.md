@@ -6,13 +6,16 @@ circular DNA.
 - [Getting started using docker or singularity](#gettingstarted)
 - [Run example using docker or singularity](#testexample)
 - [Run Decoil reconstruction using docker or singularity](#decoil-slim)
+- [Install Decoil from source](#installsource)
 - [Decoil configurations](#decoil-config)
 - [File formats](#decoil-file)
 - [FAQ](#decoil-faq)
 - [Citation](#citation)
 - [License](#license)
 
-## Getting started using docker or singularity<a name="gettingstarted"></a> 
+<a name="gettingstarted"></a> 
+
+## Getting started using docker or singularity
 
 As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
 
@@ -35,7 +38,9 @@ singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
 
 <br/>
 
-### 2. Run example using docker or singularity <a name="testexample"></a> 
+<a name="testexample"></a> 
+
+### 2. Run example using docker or singularity 
 
 To test your installation check the [Example](docs/example.md).
 
@@ -95,7 +100,9 @@ singularity run \
 
 <br/>
 
-## Installing from source
+<a name="installsource"></a> 
+
+## Install Decoil from source
 
 You can install the latest version of Decoil repository (git and conda/mamba required):
 
@@ -110,7 +117,7 @@ conda activate envdecoil
 python -m pip install -r requirements.txt
 python setup.py build install
 
-# put decoil in $PATH
+# add decoil in $PATH
 ROOT=`dirname $(which decoil)`
 export PATH=$PATH:$ROOT
 ```
