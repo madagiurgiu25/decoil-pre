@@ -206,7 +206,7 @@ This configuration is the most flexible and allows users to use their own SV cal
 
 Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
 
-<a name="file-format"></a><br/>
+<a name="decoil-file"></a><br/>
 
 ## File formats
 
