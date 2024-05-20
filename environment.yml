@@ -11,4 +11,3 @@ dependencies:
   - samtools==1.9
   - nanofilt==2.6.0
   - pip==22.2.2
-  - deeptools==3.5.1
