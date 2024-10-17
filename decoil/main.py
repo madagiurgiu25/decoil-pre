@@ -14,7 +14,7 @@ from pprint import pprint
 
 import decoil.output.metrics
 import json
-import pickle5 as pickle
+import pickle
 
 # local modules
 from decoil import __version__
@@ -161,7 +161,7 @@ def debug_cleaning(G):
 
 
 def run_reconstruction(vcffile, bigwigfile, bamfile, outputdir, ref_genome,
-					   name="default_circle", svcaller="sniffles", fast=False):
+					   name="default_circle", svcaller="sniffles", multi=False, fast=False):
 	"""
 	Reconstruct circle by finding the longest circular path in the graph
 	"""
@@ -176,11 +176,11 @@ def run_reconstruction(vcffile, bigwigfile, bamfile, outputdir, ref_genome,
 
 	# 1 Graph generation
 	# 1.1 Encode
-	G = encode.run_encoding(vcffile, bigwigfile, bamfile, outputdir, svcaller=svcaller)
+	G = encode.run_encoding(vcffile, bigwigfile, bamfile, outputdir, multi=multi, svcaller=svcaller)
 	run_save_fragments(G, "fragments_initial.bed")
 
 	# 1.3 Add spatial
-	G = operations.add_spatial_edges_new(G, bamfile)
+	G = operations.add_spatial_edges_new(G, bamfile, fast=fast)
 
 	# 2. Clean
 	# 2.1 Remove standalone fragments
@@ -247,7 +247,7 @@ def process_commandline_decoil_only(subparsers):
 									 help='Reconstruct ecDNA',
 									 usage='''decoil reconstruct -b <bamfile> -i <vcffile> -c <coveragefile> --outputdir <outputdir> --name <sample> -r <reference_genome>''')
 	requiredNamed = parser_a.add_argument_group('required named arguments')
-	requiredNamed.add_argument('-b', '--bam', help='Bam file', required=True)
+	requiredNamed.add_argument('-b', '--bam', help='Bam file', required=False)
 	requiredNamed.add_argument('-c', '--coverage', help='Coverage file (bigwig)', required=True)
 	requiredNamed.add_argument('-i', '--vcf', help='Vcf file', required=True)
 	requiredNamed.add_argument('-o', '--outputdir', help='Output directory', required=True)
@@ -256,6 +256,8 @@ def process_commandline_decoil_only(subparsers):
 	parser_a.add_argument('-g', '--annotation-gtf', help='GTF annotation', required=False)
 	parser_a.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
 	parser_a.add_argument('--fast', help='Reconstruct fast (not accurate and does not require a bam file)',
+						  action='count', default=0)
+	parser_a.add_argument('--multi', help='Multi-sample VCF file',
 						  action='count', default=0)
 
 	# optional parameters
@@ -473,6 +475,11 @@ def main(sysargs=sys.argv[1:]):
 				bam = os.path.abspath(args.bam)
 				fast = False
 
+			if args.multi == 1:
+				multi = True
+			else:
+				multi = False
+
 			run_reconstruction(os.path.abspath(args.vcf),
 							   os.path.abspath(args.coverage),
 							   bam,
@@ -480,7 +487,9 @@ def main(sysargs=sys.argv[1:]):
 							   os.path.abspath(args.reference_genome),
 							   name=args.name,
 							   svcaller=args.sv_caller,
-							   fast=fast)
+							   multi=multi,
+							   fast=fast,
+          					    )
 
 		elif subcommand == PROG.FILTER:
 			# start filtering
