@@ -6,12 +6,16 @@ circular DNA.
 - [Getting started using docker or singularity](#gettingstarted)
 - [Run example using docker or singularity](#testexample)
 - [Run Decoil reconstruction using docker or singularity](#decoil-slim)
+- [Install Decoil from source](#installsource)
 - [Decoil configurations](#decoil-config)
 - [File formats](#decoil-file)
+- [FAQ](#decoil-faq)
 - [Citation](#citation)
 - [License](#license)
 
-## Getting started using docker or singularity<a name="gettingstarted"></a> 
+<a name="gettingstarted"></a> 
+
+## Getting started using docker or singularity
 
 As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
 
@@ -34,7 +38,9 @@ singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
 
 <br/>
 
-### 2. Run example using docker or singularity <a name="testexample"></a> 
+<a name="testexample"></a> 
+
+### 2. Run example using docker or singularity 
 
 To test your installation check the [Example](docs/example.md).
 
@@ -94,7 +100,9 @@ singularity run \
 
 <br/>
 
-## Installing from source
+<a name="installsource"></a> 
+
+## Install Decoil from source
 
 You can install the latest version of Decoil repository (git and conda/mamba required):
 
@@ -109,7 +117,7 @@ conda activate envdecoil
 python -m pip install -r requirements.txt
 python setup.py build install
 
-# put decoil in $PATH
+# add decoil in $PATH
 ROOT=`dirname $(which decoil)`
 export PATH=$PATH:$ROOT
 ```
@@ -192,7 +200,13 @@ To interpret and visualize the results of the ecDNA reconstruction threads, use 
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
-<a name="file-format"></a><br/>
+<a name="#decoil-faq"></a><br/>
+
+## FAQ
+
+Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
+
+<a name="decoil-file"></a><br/>
 
 ## File formats
 
@@ -230,12 +244,30 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 
 <br/>
 
-## Citation <a name="citation"></a>
+<a name="citation"></a>
 
-If you use Decoil for your work please cite our pre-print:
+## Citation
 
-Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Richard P. Koche, Kerstin Haase, Knut Reinert, Anton G. Henssen.
-_Decoil: Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data_. bioRxiv, 2023, DOI: [https://doi.org/10.1101/2023.11.15.567169](https://www.biorxiv.org/content/10.1101/2023.11.15.567169v1)
+If you use Decoil for your work please cite our paper:
+
+Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Philipp Euskirchen, Richard P. Koche, Kerstin Haase*, Knut Reinert*, Anton G. Henssen*.
+**Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data using Decoil**. _Genome Research 2024_, DOI: [https://doi.org/10.1101/gr.279123.124](https://doi.org/10.1101/gr.279123.124)
+
+
+```
+@article{Giurgiu2024ReconstructingDecoil,
+    title = {{Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data using Decoil}},
+    year = {2024},
+    journal = {Genome Research},
+    author = {Giurgiu, Madalina and Wittstruck, Nadine and Rodriguez-Fos, Elias and Chamorro Gonzalez, Rocio and Brueckner, Lotte and Krienelke-Szymansky, Annabell and Helmsauer, Konstantin and Hartebrodt, Anne and Euskirchen, Philipp and Koche, Richard P. and Haase, Kerstin and Reinert, Knut and Henssen, Anton G.},
+    month = {8},
+    pages = {gr.279123.124},
+    doi = {10.1101/gr.279123.124},
+    issn = {1088-9051}
+}
+```
+
+Paper repository: [https://github.com/henssen-lab/decoil-paper](https://github.com/henssen-lab/decoil-paper)
 
 ## License <a name="license"></a> 
 
