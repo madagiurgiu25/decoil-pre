@@ -139,13 +139,21 @@ def merge_near_breakpoints(collection_breakpoints, svinfo, distance=QUAL.DISTANC
 	return collection_breakpoints, svinfo
 
 
-def pass_filter(record):
+def pass_filter(record, multi=False):
 	"""
 	Check if SV record pass the quality filter
 	"""
 
-	v = int(record.calls[0].data.get('DV'))
-	dr = int(record.calls[0].data.get('DR'))
+	if multi==False:
+		v = int(record.calls[0].data.get('DV'))
+		dr = int(record.calls[0].data.get('DR'))
+	else:
+		dv_arr = [record.calls[i].data['DR'][1] for i in range(len(record.calls))]
+		dr_arr = [record.calls[i].data['DR'][0] for i in range(len(record.calls))]
+		max_index = np.argmax(np.array(dv_arr))
+		v = dv_arr[max_index]
+		dr = dr_arr[max_index]
+  
 	cov = (dr + v)
 	vaf = (v / (v + dr))
 
@@ -189,7 +197,7 @@ def pass_filter(record):
 	return True
 
 
-def filter(vcf, vcfout, svcaller='sniffles'):
+def filter(vcf, vcfout, svcaller='sniffles', multi=False):
 	"""
 	Read vcf file and store all breakpoints.
 
@@ -205,7 +213,7 @@ def filter(vcf, vcfout, svcaller='sniffles'):
 	for record in reader:
 		try:
 			# check quality filter
-			if not pass_filter(record):
+			if not pass_filter(record, multi=multi):
 				# skip record as this is good
 				continue
 			writer.write_record(record)
@@ -459,7 +467,7 @@ def passqc(count_spanning_reads, mean_wgs):
 		return True
 	return False
 
-def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
+def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 	"""
 	Add edges which connects 2 neighboring fragments in space if supporting reads >= WGS / 2
 
@@ -472,7 +480,10 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
 
 	log.info("5. Add edges connecting neighboring fragments")
 
-	samfile = pysam.AlignmentFile(bamfile, "rb")
+	# this only looks into the bam file if fast flag not enabled
+	if bamfile and fast==False:
+		samfile = pysam.AlignmentFile(bamfile, "rb")
+  
 	fragment_intervals = graph.get_fragment_intervals()
 	fragments = graph.get_fragments()
 	fragments_connected = {}
@@ -502,21 +513,26 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
 		if breakpoint > -1:
 
 			count_coverage_through = 0
-			for read in samfile.fetch(contig=chr1,
-			                          start=max(0, breakpoint - window),
-			                          stop=breakpoint + window):
+   
+			if bamfile and fast==False:
+				for read in samfile.fetch(contig=chr1,
+										start=max(0, breakpoint - window),
+										stop=breakpoint + window):
 
-				# filter out secondary alignment and mapped
-				if not read.is_mapped or read.is_secondary:
-					continue
+					# filter out secondary alignment and mapped
+					if not read.is_mapped or read.is_secondary:
+						continue
 
-				# filter out short reads (< 2*window)
-				if read.query_length < 2 * window:
-					continue
+					# filter out short reads (< 2*window)
+					if read.query_length < 2 * window:
+						continue
 
-				# keep only reads which go through the breakpoint
-				if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
-					count_coverage_through += 1
+					# keep only reads which go through the breakpoint
+					if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
+						count_coverage_through += 1
+			else:
+				# set coverage to mean coverage
+				count_coverage_through = 2*QUAL.MEAN_COVERAGE_WGS
 
 			if passqc(count_coverage_through,QUAL.MEAN_COVERAGE_WGS):
 
