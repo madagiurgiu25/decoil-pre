@@ -6,12 +6,16 @@ circular DNA.
 - [Getting started using docker or singularity](#gettingstarted)
 - [Run example using docker or singularity](#testexample)
 - [Run Decoil reconstruction using docker or singularity](#decoil-slim)
+- [Install Decoil from source](#installsource)
 - [Decoil configurations](#decoil-config)
 - [File formats](#decoil-file)
+- [FAQ](#decoil-faq)
 - [Citation](#citation)
 - [License](#license)
 
-## Getting started using docker or singularity<a name="gettingstarted"></a> 
+<a name="gettingstarted"></a> 
+
+## Getting started using docker or singularity
 
 As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
 
@@ -34,7 +38,9 @@ singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
 
 <br/>
 
-### 2. Run example using docker or singularity <a name="testexample"></a> 
+<a name="testexample"></a> 
+
+### 2. Run example using docker or singularity 
 
 To test your installation check the [Example](docs/example.md).
 
@@ -68,13 +74,17 @@ docker run -it --platform=linux/amd64 \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 ```bash
 # singularity
 mkdir -p ${OUTPUT_FOLDER}
+mkdir -p ${OUTPUT_FOLDER}/logs
+mkdir -p ${OUTPUT_FOLDER}/tmp
 singularity run \
+    --bind ${OUTPUT_FOLDER}/logs:/mnt/logs \
+    --bind ${OUTPUT_FOLDER}/tmp:/tmp \
     --bind ${BAM_INPUT}:/data/input.bam \
     --bind ${BAM_INPUT}.bai:/data/input.bam.bai \
     --bind ${GENOME}:/annotation/reference.fa \
@@ -85,12 +95,45 @@ singularity run \
             -b /data/input.bam \
             -r /annotation/reference.fa \
             -g /annotation/anno.gtf \
-            -o /mnt -n ${NAME}
+            -o /mnt --name ${NAME}
 ```
 
 <br/>
 
-## Decoil configurations <a name="decoil-config"></a> 
+<a name="installsource"></a> 
+
+## Install Decoil from source
+
+You can install the latest version of Decoil repository (git and conda/mamba required):
+
+```
+git clone https://github.com/madagiurgiu25/decoil-pre.git
+cd  decoil-pre
+
+# create conda environment
+mamba env create -f environment.yml
+conda activate envdecoil
+
+python -m pip install -r requirements.txt
+python setup.py build install
+
+# add decoil in $PATH
+ROOT=`dirname $(which decoil)`
+export PATH=$PATH:$ROOT
+```
+
+And check if the installation worked:
+
+```
+# might take a while
+decoil-pipeline --version
+decoil --version
+```
+
+
+<a name="decoil-config"></a><br/>
+
+## Decoil configurations 
 
 An overview about the available functionalities:
 
@@ -104,9 +147,10 @@ An overview about the available functionalities:
 | docker         	| x      	| x               	| x          	|
 | singularity    	| x      	| x               	| x          	|
 
-<br/>
 
-### <a name="decoil-pipeline"></a> 1. Reconstruct ecDNA using `decoil-pipeline` (recommended)
+<a name="decoil-pipeline"></a> <br/>
+
+### 1. Reconstruct ecDNA using `decoil-pipeline` (recommended)
 
 To reconstruct ecDNA we recommend to use `decoil-pipeline` using the `sv-reconstruct` mode.<br/>
 This requires only a `.bam` file as input and generates internally all the files required for the reconstruction.
@@ -144,21 +188,27 @@ The pipeline has the following [running modes](docs/decoil_pipeline_modes.md):
 - `sv-reconstruct`
 - `reconstruct-only`
 
-<br/>
+<a name="decoil-viz"></a><br/>
 
-### <a name="decoil-viz"></a> 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
+### 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
-<br/>
+<a name="decoil-docs"></a><br/>
 
-### <a name="decoil-docs"></a> 3. Reconstruct ecDNA using `decoil` (advanced users only)
+### 3. Reconstruct ecDNA using `decoil` (advanced users only)
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
 
-<br/>
+<a name="#decoil-faq"></a><br/>
 
-## File formats <a name="file-format"></a> 
+## FAQ
+
+Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
+
+<a name="decoil-file"></a><br/>
+
+## File formats
 
 The relevant output files for the users are:
 
@@ -194,12 +244,30 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 
 <br/>
 
-## Citation <a name="citation"></a>
+<a name="citation"></a>
 
-If you use Decoil for your work please cite our pre-print:
+## Citation
 
-Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Richard P. Koche, Kerstin Haase, Knut Reinert, Anton G. Henssen.
-_Decoil: Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data_. bioRxiv, 2023, DOI: [https://doi.org/10.1101/2023.11.15.567169](https://www.biorxiv.org/content/10.1101/2023.11.15.567169v1)
+If you use Decoil for your work please cite our paper:
+
+Madalina Giurgiu, Nadine Wittstruck, Elias Rodriguez-Fos, Rocio Chamorro Gonzalez, Lotte Bruckner, Annabell Krienelke-Szymansky, Konstantin Helmsauer, Anne Hartebrodt, Philipp Euskirchen, Richard P. Koche, Kerstin Haase*, Knut Reinert*, Anton G. Henssen*.
+**Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data using Decoil**. _Genome Research 2024_, DOI: [https://doi.org/10.1101/gr.279123.124](https://doi.org/10.1101/gr.279123.124)
+
+
+```
+@article{Giurgiu2024ReconstructingDecoil,
+    title = {{Reconstructing extrachromosomal DNA structural heterogeneity from long-read sequencing data using Decoil}},
+    year = {2024},
+    journal = {Genome Research},
+    author = {Giurgiu, Madalina and Wittstruck, Nadine and Rodriguez-Fos, Elias and Chamorro Gonzalez, Rocio and Brueckner, Lotte and Krienelke-Szymansky, Annabell and Helmsauer, Konstantin and Hartebrodt, Anne and Euskirchen, Philipp and Koche, Richard P. and Haase, Kerstin and Reinert, Knut and Henssen, Anton G.},
+    month = {8},
+    pages = {gr.279123.124},
+    doi = {10.1101/gr.279123.124},
+    issn = {1088-9051}
+}
+```
+
+Paper repository: [https://github.com/henssen-lab/decoil-paper](https://github.com/henssen-lab/decoil-paper)
 
 ## License <a name="license"></a> 
 
@@ -209,3 +277,4 @@ Decoil is distributed under the BSD 3-Clause license.  Consult the accompanying 
 
 Decoil and the content of this research-repository (i) is not suitable for a medical device; and (ii) is not intended
 for clinical use of any kind, including but not limited to diagnosis or prognosis.
+
