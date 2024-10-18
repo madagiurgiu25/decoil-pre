@@ -2,7 +2,6 @@ name: envdecoil
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
   - python==3.8.0
   - survivor==1.0.7
