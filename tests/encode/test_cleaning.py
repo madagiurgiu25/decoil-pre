@@ -14,28 +14,29 @@ class TestMultiGraph(unittest.TestCase):
 		g = MultiGraph.load_graph("tests/data/test3.txt")
 		m = g.adjacency_matrix()
 		MultiGraph.id_generator = 100
-		m_initial = [[0, 1, 0, 0, 0, 0, 0, 1],
-		             [1, 0, 1, 0, 1, 0, 0, 0],
-		             [0, 1, 0, 1, 0, 0, 0, 1],
-		             [0, 0, 1, 0, 1, 0, 0, 0],
-		             [0, 1, 0, 1, 0, 1, 0, 0],
-		             [0, 0, 0, 0, 1, 0, 1, 0],
-		             [0, 0, 0, 0, 0, 1, 0, 1],
-		             [1, 0, 1, 0, 0, 0, 1, 0]
-		             ]
+		m_initial = np.array([[0, 1, 0, 0, 0, 0, 0, 1],
+		             		  [1, 0, 1, 0, 1, 0, 0, 0],
+		                      [0, 1, 0, 1, 0, 0, 0, 1],
+		                      [0, 0, 1, 0, 1, 0, 0, 0],
+		                      [0, 1, 0, 1, 0, 1, 0, 0],
+		                      [0, 0, 0, 0, 1, 0, 1, 0],
+		                      [0, 0, 0, 0, 0, 1, 0, 1],
+		                      [1, 0, 1, 0, 0, 0, 1, 0]
+		             ])
+		self.assertTrue(m.dtype, m_initial.dtype)
 		self.assertTrue(np.array_equal(m, m_initial, equal_nan=True))
 
 		# remove low coverage fragments
-		g = operations.remove_lowcoverage_fragments(g, threshold=5)
+		g = operations.remove_lowcoverage_fragments(g, threshold=6)
 		m = g.adjacency_matrix()
 		fragments = g.get_fragments().keys()
-		m_aftercleaning = [[0, 1, 0, 0, 0, 1],
-		             [1, 0, 1, 0, 0, 0],
-		             [0, 1, 0, 1, 0, 1],
-		             [0, 0, 1, 0, 1, 0],
-		             [0, 0, 0, 1, 0, 1],
-		             [1, 0, 1, 0, 1, 0]
-		             ]
+		m_aftercleaning = np.array([[0, 1, 0, 0, 0, 1],
+		             	   			[1, 0, 1, 0, 0, 0],
+		                   			[0, 1, 0, 1, 0, 0],
+		                   			[0, 0, 1, 0, 1, 0],
+		                   			[0, 0, 0, 1, 0, 1],
+		                   			[1, 0, 0, 0, 1, 0]])
+
 		self.assertTrue(fragments, ['A','C','D'])
 		self.assertTrue(np.array_equal(m, m_aftercleaning, equal_nan=True))
 
