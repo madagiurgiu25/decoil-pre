@@ -289,6 +289,11 @@ def process_commandline_decoil_only(subparsers):
 	parser_c.add_argument('-i', '--vcf', help='Input vcf', required=True)
 	parser_c.add_argument('-o', '--outputdir', help='Output directory', required=True)
 	parser_c.set_defaults(which=PROG.FILTER)
+ 
+	parser_d = subparsers.add_parser(PROG.CHECK, help='Check integrity of files')
+	parser_d.add_argument('-i', '--input', help='Input file', required=True)
+	parser_d.add_argument('-f', '--format', help='File format {VCF}', required=True, default='VCF')
+	parser_d.set_defaults(which=PROG.CHECK)
 
 	return subparsers
 

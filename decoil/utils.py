@@ -14,6 +14,7 @@ class PROG:
 	VALIDATE = "validate"
 	RECONSTRUCT = "reconstruct"
 	FILTER = "filter"
+	CHECK = "check"
 
 	# pipeline
 	RECONSTRUCT_ONLY = "reconstruct-only"
