@@ -17,7 +17,7 @@ scipy==1.8
 seaborn==0.13.0
 setuptools==68.2.2
 snakemake==7.32.4
-vcfpy==0.13.6
+vcfpy==0.13.8
 bionumpy==1.0.12
 nanomonsv==0.7.2
 configparser==7.1.0

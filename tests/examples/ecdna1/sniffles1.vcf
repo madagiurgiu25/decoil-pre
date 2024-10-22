@@ -1,6 +1,6 @@
 ##fileformat=VCFv4.2
 ##source=Sniffles
-##fileDate=20241021
+##fileDate=20241022
 ##contig=<ID=chr1,length=248956422>
 ##contig=<ID=chr2,length=242193529>
 ##contig=<ID=chr3,length=198295559>
@@ -210,24 +210,23 @@
 ##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="Length of the SV">
 ##INFO=<ID=SVMETHOD,Number=1,Type=String,Description="Type of approach used to detect SV">
 ##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
-##INFO=<ID=STD_quant_start,Number=.,Type=Integer,Description="STD of the start breakpoints across the reads.">
-##INFO=<ID=STD_quant_stop,Number=.,Type=Integer,Description="STD of the stop breakpoints across the reads.">
-##INFO=<ID=Kurtosis_quant_start,Number=.,Type=Integer,Description="Kurtosis value of the start breakpoints accross the reads.">
-##INFO=<ID=Kurtosis_quant_stop,Number=.,Type=Integer,Description="Kurtosis value of the stop breakpoints accross the reads.">
-##INFO=<ID=SUPTYPE,Number=1,Type=String,Description="Type by which the variant is supported.(SR,ALN)">
+##INFO=<ID=STD_quant_start,Number=.,Type=Float,Description="STD of the start breakpoints across the reads.">
+##INFO=<ID=STD_quant_stop,Number=.,Type=Float,Description="STD of the stop breakpoints across the reads.">
+##INFO=<ID=Kurtosis_quant_start,Number=.,Type=Float,Description="Kurtosis value of the start breakpoints accross the reads.">
+##INFO=<ID=Kurtosis_quant_stop,Number=.,Type=Float,Description="Kurtosis value of the stop breakpoints accross the reads.">
 ##INFO=<ID=SUPTYPE,Number=1,Type=String,Description="Type by which the variant is supported.(SR,ALN)">
 ##INFO=<ID=STRANDS,Number=.,Type=String,Description="Strand orientation of the adjacency in BEDPE format (DEL:+-, DUP:-+, INV:++/--)">
-##INFO=<ID=AF,Number=.,Type=Integer,Description="Allele Frequency.">
-##INFO=<ID=ZMW,Number=.,Type=Integer,Description="Number of ZMWs (Pacbio) supporting SV.">
+##INFO=<ID=AF,Number=.,Type=Float,Description="Allele Frequency.">
+##INFO=<ID=ZMW,Number=.,Type=Float,Description="Number of ZMWs (Pacbio) supporting SV.">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ##FORMAT=<ID=DR,Number=1,Type=Integer,Description="# high-quality reference reads">
 ##FORMAT=<ID=DV,Number=1,Type=Integer,Description="# high-quality variant reads">
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	map.sorted.bam
-chr2	15633375	0	N	<DEL>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr2;END=16521051;STD_quant_start=0.377964;STD_quant_stop=0.534522;Kurtosis_quant_start=2.734819;Kurtosis_quant_stop=-0.284463;SVTYPE=DEL;SUPTYPE=SR;SVLEN=887676;STRANDS=+-;RE=42	GT:DR:DV	./.:.:42
-chr3	11049997	1	N	<INV>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11150002;STD_quant_start=0.707107;STD_quant_stop=0.894427;Kurtosis_quant_start=0.383743;Kurtosis_quant_stop=3.549315;SVTYPE=INV;SUPTYPE=SR;SVLEN=100005;STRANDS=--;RE=12	GT:DR:DV	./.:.:12
-chr3	11049996	2	N	<INV>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11149999;STD_quant_start=0.662589;STD_quant_stop=0.748983;Kurtosis_quant_start=0.712778;Kurtosis_quant_stop=-1.543894;SVTYPE=INV;SUPTYPE=SR;SVLEN=100003;STRANDS=--;RE=82	GT:DR:DV	./.:.:82
-chr12	68807721	3	N	<DUP>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr12;END=68970909;STD_quant_start=0.470438;STD_quant_stop=0.479070;Kurtosis_quant_start=15.779646;Kurtosis_quant_stop=18.324073;SVTYPE=DUP;SUPTYPE=SR;SVLEN=163188;STRANDS=-+;RE=245	GT:DR:DV	./.:.:245
-chr2	15585355	4	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=10981201;STD_quant_start=0.288675;STD_quant_stop=0.577350;Kurtosis_quant_start=-0.905325;Kurtosis_quant_stop=1.768223;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237590375;STRANDS=--;RE=24	GT:DR:DV	./.:.:24
-chr2	15585355	5	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11060000;STD_quant_start=0.586739;STD_quant_stop=0.000000;Kurtosis_quant_start=3.359925;Kurtosis_quant_stop=4.723794;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237669174;STRANDS=-+;RE=123	GT:DR:DV	./.:.:123
-chr2	15633377	6	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11160000;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=2.899497;Kurtosis_quant_stop=3.439088;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237721152;STRANDS=++;RE=96	GT:DR:DV	./.:.:96
-chr2	16628304	7	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11028469;STD_quant_start=0.000000;STD_quant_stop=0.420084;Kurtosis_quant_start=1.226015;Kurtosis_quant_stop=3.220052;SVTYPE=TRA;SUPTYPE=SR;SVLEN=236594694;STRANDS=++;RE=35	GT:DR:DV	./.:.:35
+chr2	15633375	0	N	<DEL>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr2;END=16521051;STD_quant_start=0.377964;STD_quant_stop=0.534522;Kurtosis_quant_start=2.734819;Kurtosis_quant_stop=-0.284463;SVTYPE=DEL;SUPTYPE=SR;SVLEN=887676;STRANDS=+-;RE=42;AF=1	GT:DR:DV	1/1:0:42
+chr3	11049997	1	N	<INV>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11150002;STD_quant_start=0.707107;STD_quant_stop=0.894427;Kurtosis_quant_start=0.383743;Kurtosis_quant_stop=3.549315;SVTYPE=INV;SUPTYPE=SR;SVLEN=100005;STRANDS=--;RE=12;AF=1	GT:DR:DV	1/1:0:12
+chr3	11049996	2	N	<INV>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11149999;STD_quant_start=0.662589;STD_quant_stop=0.748983;Kurtosis_quant_start=0.712778;Kurtosis_quant_stop=-1.543894;SVTYPE=INV;SUPTYPE=SR;SVLEN=100003;STRANDS=--;RE=82;AF=1	GT:DR:DV	1/1:0:82
+chr12	68807721	3	N	<DUP>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr12;END=68970909;STD_quant_start=0.470438;STD_quant_stop=0.479070;Kurtosis_quant_start=15.779646;Kurtosis_quant_stop=18.324073;SVTYPE=DUP;SUPTYPE=SR;SVLEN=163188;STRANDS=-+;RE=245;AF=1	GT:DR:DV	1/1:0:245
+chr2	15585355	4	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=10981201;STD_quant_start=0.288675;STD_quant_stop=0.577350;Kurtosis_quant_start=-0.905325;Kurtosis_quant_stop=1.768223;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237590375;STRANDS=--;RE=24;AF=1	GT:DR:DV	1/1:0:24
+chr2	15585355	5	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11060000;STD_quant_start=0.586739;STD_quant_stop=0.000000;Kurtosis_quant_start=3.359925;Kurtosis_quant_stop=4.723794;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237669174;STRANDS=-+;RE=123;AF=1	GT:DR:DV	1/1:0:123
+chr2	15633377	6	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11160000;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=2.899497;Kurtosis_quant_stop=3.439088;SVTYPE=TRA;SUPTYPE=SR;SVLEN=237721152;STRANDS=++;RE=96;AF=1	GT:DR:DV	1/1:0:96
+chr2	16628304	7	N	<TRA>	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.7;CHR2=chr3;END=11028469;STD_quant_start=0.000000;STD_quant_stop=0.420084;Kurtosis_quant_start=1.226015;Kurtosis_quant_stop=3.220052;SVTYPE=TRA;SUPTYPE=SR;SVLEN=236594694;STRANDS=++;RE=35;AF=1	GT:DR:DV	1/1:0:35

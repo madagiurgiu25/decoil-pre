@@ -81,25 +81,16 @@ def transform_record(record, svcaller):
 
 	return record
 
-def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
-	"""
-	Read vcf file and store all breakpoints.
-
-	Returns:
-		(breakpoints, sv info)
-	"""
+def parsevcf(vcffile_clean, svcaller):
+    
+	reader = vcfpy.Reader.from_path(vcffile_clean)
+	count=0
+ 
 	# breakpoints info
 	collection_breakpoints = defaultdict(list)  # chr2: [pos1, pos2, pos3]
 	# sv info
 	svinfo = defaultdict(list)  # "chr2:pos": [(key1, SVTYPE, coverage), (key2, SVTYPE2, coverage)]
-
-	# check for corrupted entries
-	vcffile_clean = os.path.join(outputdir,"clean.vcf")
-	cleanvcf(vcffile,vcffile_clean)
-
-	# parse vcf
-	reader = vcfpy.Reader.from_path(vcffile_clean)
-	count=0
+ 
 	try:
 		for record in reader:
 			if svcaller in [vp.SNIFFLES2, vp.CUTESV]:
@@ -141,10 +132,36 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 			svinfo['{}{}{}'.format(chr1, utils.SEPARATOR, pos1)].append((id, chr2, pos2, svtype, dv, dr, gt, strand))
 			collection_breakpoints[chr1].append(int(pos1))
 			collection_breakpoints[chr2].append(int(pos2))
+   
+		return svinfo, collection_breakpoints
 	
 	except InvalidRecordException:
 		log.warning("VCF file was cropped! Most probably because Sniffle VCF is corrupted. This will generate incomplete/incorrect reconstruction.")
-		pass
+		sys.exit(1)
+	except Exception:
+		print("""VCF not compatible with the specified --svcaller {}; check your VCF format using: decoil check -i <your vcf file>""".format(svcaller))
+		sys.exit(1)
+    
+    
+def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
+	"""
+	Read vcf file and store all breakpoints.
+
+	Returns:
+		(breakpoints, sv info)
+	"""
+	# breakpoints info
+	collection_breakpoints = defaultdict(list)  # chr2: [pos1, pos2, pos3]
+	# sv info
+	svinfo = defaultdict(list)  # "chr2:pos": [(key1, SVTYPE, coverage), (key2, SVTYPE2, coverage)]
+ 
+	# check for corrupted entries
+	vcffile_clean = os.path.join(outputdir,"clean.vcf")
+	cleanvcf(vcffile,vcffile_clean)
+
+	# parse vcf
+	svinfo, collection_breakpoints = parsevcf(vcffile_clean,svcaller)
+	
 
 	print("Total number of entries in vcf", count)
 	print("SV kept for graph generation", len(svinfo))

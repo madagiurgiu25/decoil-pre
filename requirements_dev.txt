@@ -17,7 +17,7 @@ scipy==1.8
 seaborn==0.13.0
 setuptools==68.2.2
 snakemake==7.32.4
-vcfpy==0.13.6
+vcfpy==0.13.8
 pytest==8.3.3
 twine==5.1.1
 setuptools-scm==8.1.0

@@ -1,6 +1,6 @@
 ##fileformat=VCFv4.2
 ##source=cuteSV-2.1.1
-##fileDate=2024-10-22 15:51:02 2-CEST
+##fileDate=2024-10-22 17:36:38 2-CEST
 ##contig=<ID=chr1,length=248956422>
 ##contig=<ID=chr2,length=242193529>
 ##contig=<ID=chr3,length=198295559>
@@ -218,10 +218,10 @@
 ##FORMAT=<ID=DV,Number=1,Type=Integer,Description="# High-quality variant reads">
 ##FORMAT=<ID=PL,Number=G,Type=Integer,Description="# Phred-scaled genotype likelihoods rounded to the closest integer">
 ##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="# Genotype quality">
-##CommandLine="cuteSV -t 1 -s 4 map.sorted.bam /Users/madag/Projects/PhD/reference/GRCh38.primary_assembly.genome.fa cutesv.vcf cutesv_wd"
+##CommandLine="cuteSV -t 1 -s 4 --genotype map.sorted.bam /Users/madag/Projects/PhD/reference/GRCh38.primary_assembly.genome.fa cutesv.vcf cutesv_wd"
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NULL
-chr2	15585356	cuteSV.BND.0	T	[chr3:10981202[N	.	PASS	PRECISE;SVTYPE=BND;RE=24;RNAMES=NULL	GT:DR:DV:PL:GQ	./.:.:24:.,.,.:.
-chr2	15585357	cuteSV.BND.1	G	]chr3:11059998]N	.	PASS	PRECISE;SVTYPE=BND;RE=104;RNAMES=NULL	GT:DR:DV:PL:GQ	./.:.:104:.,.,.:.
-chr2	15585359	cuteSV.DUP.0	A	<DUP>	.	PASS	PRECISE;SVTYPE=DUP;SVLEN=48016;END=15633375;RE=9;STRAND=-+;RNAMES=NULL	GT:DR:DV:PL:GQ	./.:.:9:.,.,.:.
-chr2	15633376	cuteSV.BND.2	T	N]chr3:11159998]	.	PASS	PRECISE;SVTYPE=BND;RE=89;RNAMES=NULL	GT:DR:DV:PL:GQ	./.:.:89:.,.,.:.
-chr2	16628305	cuteSV.BND.3	G	N]chr3:11028466]	.	PASS	PRECISE;SVTYPE=BND;RE=35;RNAMES=NULL	GT:DR:DV:PL:GQ	./.:.:35:.,.,.:.
+chr2	15585356	cuteSV.BND.0	T	[chr3:10981202[N	229.0	PASS	PRECISE;SVTYPE=BND;RE=24;RNAMES=NULL;AF=1.0	GT:DR:DV:PL:GQ	1/1:0:24:229,61,0:61
+chr2	15585357	cuteSV.BND.1	G	]chr3:11059998]N	954.2	PASS	PRECISE;SVTYPE=BND;RE=104;RNAMES=NULL;AF=1.0	GT:DR:DV:PL:GQ	1/1:0:104:954,255,0:255
+chr2	15585359	cuteSV.DUP.0	A	<DUP>	85.9	PASS	PRECISE;SVTYPE=DUP;SVLEN=48016;END=15633375;RE=9;STRAND=-+;RNAMES=NULL;AF=1.0	GT:DR:DV:PL:GQ	1/1:0:9:86,23,0:22
+chr2	15633376	cuteSV.BND.2	T	N]chr3:11159998]	849.3	PASS	PRECISE;SVTYPE=BND;RE=89;RNAMES=NULL;AF=1.0	GT:DR:DV:PL:GQ	1/1:0:89:849,227,0:227
+chr2	16628305	cuteSV.BND.3	G	N]chr3:11028466]	334.0	PASS	PRECISE;SVTYPE=BND;RE=35;RNAMES=NULL;AF=1.0	GT:DR:DV:PL:GQ	1/1:0:35:334,89,0:89
