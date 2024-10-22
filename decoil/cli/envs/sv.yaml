@@ -2,9 +2,9 @@ name: sv
 channels:
   - bioconda
   - conda-forge
-  - default
 dependencies:
   - sniffles==1.0.12
+  # - sniffles==2.4
   - svim==1.4.2
 #  - sniffles==1.0.7
   - survivor==1.0.7
