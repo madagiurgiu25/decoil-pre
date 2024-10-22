@@ -146,12 +146,12 @@ def pass_filter(record):
 	
 	val = record.calls[0].data.get('DV')
 	if val == None:
-		raise Exception("DV has not value.  Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	v = int(val)
 	
 	val = record.calls[0].data.get('DR')
 	if val == None:
-		raise Exception("DR has not value.  Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	dr = int(val)
  
 	cov = (dr + v)

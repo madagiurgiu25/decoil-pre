@@ -51,13 +51,13 @@ class TestInput(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unexpected exception raised: {e}")
         
-        # 'chr2_15585355': [('4', 'chr3', '10981201', 'TRA', 24, 0, '1/1', '--'), ('5', 'chr3', '11060000', 'TRA', 123, 0, '1/1', '-+')]
-        self.assertEqual(svinfo["chr2_15585355"][0][2], '10981201')
-        self.assertEqual(svinfo["chr2_15585355"][1][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585355"][1][7], '-+')
+        # 'chr2_15585356':[('cuteSV.BND.0', 'chr3', '10981202', 'BND', 24, 0, '1/1', '++')]
+        self.assertEqual(svinfo["chr2_15585356"][0][2], '10981202')
+        self.assertEqual(svinfo["chr2_15585356"][0][1], 'chr3')
+        self.assertEqual(svinfo["chr2_15585356"][0][7], '++')
         
-        #collection_breakpoints["chr2"]: [15633375, 16521051, 15585355, 15585355, 15633377, 16628304]  
-        self.assertEqual(collection_breakpoints["chr2"], [15633375, 16521051, 15585355, 15585355, 15633377, 16628304])
+        #collection_breakpoints["chr2"]: [15585356, 15585357, 15585359, 15633375, 15633376, 16628305]  
+        self.assertEqual(collection_breakpoints["chr2"], [15585356, 15585357, 15585359, 15633375, 15633376, 16628305])
     
     def test_header_nanomonsv(self):
         """Test correct format for nanomonsv"""
