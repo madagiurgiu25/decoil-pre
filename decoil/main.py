@@ -14,7 +14,8 @@ from pprint import pprint
 
 import decoil.output.metrics
 import json
-import pickle5 as pickle
+# import pickle5 as pickle
+import pickle
 
 # local modules
 from decoil import __version__
@@ -28,6 +29,7 @@ import decoil.validate.compare as validate
 from decoil.utils import QUAL
 from decoil.utils import POS
 from decoil.utils import PROG
+from decoil.utils import VCF_PROP
 
 import decoil.output.parse as parse
 
@@ -161,7 +163,7 @@ def debug_cleaning(G):
 
 
 def run_reconstruction(vcffile, bigwigfile, bamfile, outputdir, ref_genome,
-					   name="default_circle", svcaller="sniffles", fast=False):
+					   name="default_circle", svcaller=VCF_PROP.SNIFFLES, fast=False):
 	"""
 	Reconstruct circle by finding the longest circular path in the graph
 	"""
@@ -269,7 +271,7 @@ def process_commandline_decoil_only(subparsers):
 						  required=False, default=QUAL.EXPLOG_THRESHOLD, type=float)
 	parser_a.add_argument('--min-cov', help='Minimal coverage on site (default: %(default)sX)',
 						  required=False, default=QUAL.MIN_COV, type=int)
-	parser_a.add_argument('--sv-caller', help='SV caller name {sniffles, sniffles2, cutesv}', required=False,
+	parser_a.add_argument('--sv-caller', help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS), required=False,
 						  default="sniffles")
 	parser_a.add_argument('--filter-score',
 						  help='Filter circular structures by estimated copy-number (default: %(default)d)',

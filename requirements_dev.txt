@@ -25,5 +25,4 @@ wheel
 bionumpy==1.0.12
 nanomonsv==0.7.2
 configparser==7.1.0
-svim==2.0.0
 cuteSV==2.1.1

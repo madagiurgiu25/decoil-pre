@@ -61,7 +61,20 @@ class TestInput(unittest.TestCase):
     
     def test_header_nanomonsv(self):
         """Test correct format for nanomonsv"""
-        pass
+        try:
+            svinfo, collection_breakpoints = parsevcf("tests/examples/ecdna1/cutesv.vcf",vp.NANOMONSV)
+            print(svinfo)
+            print(collection_breakpoints)
+        except Exception as e:
+            self.fail(f"Unexpected exception raised: {e}")
+        
+        # 'chr2_15585356':[('cuteSV.BND.0', 'chr3', '10981202', 'BND', 24, 0, '1/1', '++')]
+        self.assertEqual(svinfo["chr2_15585356"][0][2], '10981202')
+        self.assertEqual(svinfo["chr2_15585356"][0][1], 'chr3')
+        self.assertEqual(svinfo["chr2_15585356"][0][7], '++')
+        
+        #collection_breakpoints["chr2"]: [15585356, 15585357, 15585359, 15633375, 15633376, 16628305]  
+        self.assertEqual(collection_breakpoints["chr2"], [15585356, 15585357, 15585359, 15633375, 15633376, 16628305])
     
     @patch('sys.exit')  # Mock sys.exit so it doesn't actually exit the interpreter
     def test_header_sniffles2_wrong_with_sniffles1(self, mock_exit):

@@ -7,7 +7,7 @@ from decoil import __version__, _program
 with open("README.md", "r", encoding="utf-8") as fh:
 	long_description = fh.read()
 
-with open("requirements.txt", "r", encoding="utf-8") as f:
+with open("requirements_dev.txt", "r", encoding="utf-8") as f:
 	required = [x for x in f.read().splitlines() if not x.startswith("#")]
 
 setuptools.setup(name='decoil',
