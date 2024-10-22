@@ -16,3 +16,8 @@ repo-key.pub
 /**/data/
 /**/__pycache__/
 /**/examples/
+!/**/data/test1.txt
+!/**/data/test2.txt
+!/**/data/test3.txt
+!/**/data/test4.txt
+!/**/data/test5.txt

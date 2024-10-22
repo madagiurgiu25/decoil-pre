@@ -18,8 +18,11 @@ seaborn==0.13.0
 setuptools==68.2.2
 snakemake==7.32.4
 vcfpy==0.13.8
+pytest==8.3.3
+twine==5.1.1
+setuptools-scm==8.1.0
+wheel
 bionumpy==1.0.12
 nanomonsv==0.7.2
 configparser==7.1.0
-svim==2.0.0
 cuteSV==2.1.1

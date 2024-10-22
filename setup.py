@@ -1,15 +1,17 @@
+import sys
 import setuptools
 from decoil import __version__, _program
+
+ 
 
 with open("README.md", "r", encoding="utf-8") as fh:
 	long_description = fh.read()
 
-with open("requirements.txt", "r", encoding="utf-8") as f:
+with open("requirements_dev.txt", "r", encoding="utf-8") as f:
 	required = [x for x in f.read().splitlines() if not x.startswith("#")]
 
 setuptools.setup(name='decoil',
 				 version=__version__,
-				 # packages=['decoil'],
 				 test_suite='pytest.collector',
 				 tests_require=['pytest'],
 				 author="Madalina Giurgiu",
@@ -25,7 +27,7 @@ setuptools.setup(name='decoil',
 					 ]
 				 },
 				 extra_require={
-					 "dev": ["pytest>=7.0"],
+					 "dev": ["pytest>=7.0","wheel","setuptools","twine"],
 					 "build": [
 						 # Define environment variables for the build process
 						 "IN_CONTAINER=False",
@@ -36,9 +38,12 @@ setuptools.setup(name='decoil',
 				 conda_channels=['conda-forge', 'bioconda'],
 				 conda_packages={
          				'survivor' : '1.0.7', 
-             			'sniffles' : '>=1.0.7,<=1.0.12',
-                		'deeptools': '3.5.0'},
-				 python_requires=">=3.7.0",
+             			'sniffles' : '2.4',
+                		'deeptools': '3.5.5',
+						'ngmlr' : '0.2.7',
+						'samtools':'1.15.1',
+						'python-dateutil':'2.8.0'},
+				 python_requires=">=3.10.0",
 				 packages=setuptools.find_packages(),
 				 include_package_data=True,
 				 keywords=[],

@@ -111,7 +111,10 @@ git clone https://github.com/madagiurgiu25/decoil-pre.git
 cd  decoil-pre
 
 # create conda environment
+# for linux
 mamba env create -f environment.yml
+# for macos
+mamba env create -f environment.yml --platform osx-64
 conda activate envdecoil
 
 python -m pip install -r requirements.txt

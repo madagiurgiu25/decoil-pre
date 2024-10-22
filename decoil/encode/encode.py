@@ -49,19 +49,25 @@ def cleanvcf(vcfin, vcfout):
 
 def transform_record(record, svcaller):
 	"""
-	Convert required fields from Sniffles2 or others to Sniffles
+	Convert required fields from Sniffles2, CuteSV and NANOMONSV
 	"""
+	if svcaller == vp.SNIFFLES:
+		record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
+ 
 	if svcaller == vp.CUTESV:
 		# add STRANDS instead of STRAND or add an artificial strand encoding for INS
-		record.INFO[vp.STRANDS] = [record.INFO[vp.STRAND] if vp.STRAND in record.INFO else "++"]
+		if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
+			record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation
+		elif vp.STRAND in record.INFO:
+			record.INFO[vp.STRAND] = record.INFO[vp.STRAND][0]
+		else:
+			raise Exception("""Strand information not found {}""".format(record))
 
 		# add CHR2 and POS2
 		record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 		record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
 
 	if svcaller == vp.SNIFFLES2:
-		# add STRANDS instead of STRAND
-		record.INFO[vp.STRANDS] = [record.INFO[vp.STRAND]]
 
 		# add CHR2 and POS2
 		record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
@@ -78,32 +84,43 @@ def transform_record(record, svcaller):
 				record.calls[0].data[vp.GT] = "0/1"
 			else:
 				record.calls[0].data[vp.GT] = "1/1"
+    
+	if svcaller == vp.NANOMONSV:
 
+  		# add CHR2 and POS2
+		record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
+		record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
+  
+		# calculate AF
+		record.calls[0].data[vp.AF] = (record.calls[0].data[vp.DV]/(record.calls[0].data[vp.DV]+record.calls[0].data[vp.DR]+1))
+  
+		# add STRANDS information
+		if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
+			record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation
+		elif vp.STRAND in record.INFO:
+			record.INFO[vp.STRAND] = record.INFO[vp.STRAND][0]
+		else:
+			raise Exception("""Strand information not found {}""".format(record))
+   
+	if  svcaller not in vp.SVCALLERS:
+		raise Exception("""{} vcf format not compatible with Decoil.""".format(svcaller))
+	
 	return record
 
-def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
-	"""
-	Read vcf file and store all breakpoints.
-
-	Returns:
-		(breakpoints, sv info)
-	"""
+def parsevcf(vcffile_clean, svcaller):
+    
+	reader = vcfpy.Reader.from_path(vcffile_clean)
+	count=0
+ 
 	# breakpoints info
 	collection_breakpoints = defaultdict(list)  # chr2: [pos1, pos2, pos3]
 	# sv info
 	svinfo = defaultdict(list)  # "chr2:pos": [(key1, SVTYPE, coverage), (key2, SVTYPE2, coverage)]
-
-	# check for corrupted entries
-	vcffile_clean = os.path.join(outputdir,"clean.vcf")
-	cleanvcf(vcffile,vcffile_clean)
-
-	# parse vcf
-	reader = vcfpy.Reader.from_path(vcffile_clean)
-	count=0
+ 
 	try:
 		for record in reader:
-			if svcaller in [vp.SNIFFLES2, vp.CUTESV]:
-				record = transform_record(record, svcaller)
+
+			record = transform_record(record, svcaller)
 
 			id = record.ID[0]  # primary id
 			count+=1
@@ -111,7 +128,7 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 			dv = record.calls[0].data.get(vp.DV)
 			dr = record.calls[0].data.get(vp.DR)
 			gt = record.calls[0].data.get(vp.GT)
-			strand = record.INFO[vp.STRANDS][0]
+			strand = record.INFO[vp.STRAND]
 
 			# check quality filter
 			if not operations.pass_filter(record):
@@ -141,10 +158,36 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 			svinfo['{}{}{}'.format(chr1, utils.SEPARATOR, pos1)].append((id, chr2, pos2, svtype, dv, dr, gt, strand))
 			collection_breakpoints[chr1].append(int(pos1))
 			collection_breakpoints[chr2].append(int(pos2))
+   
+		return svinfo, collection_breakpoints
 	
 	except InvalidRecordException:
 		log.warning("VCF file was cropped! Most probably because Sniffle VCF is corrupted. This will generate incomplete/incorrect reconstruction.")
-		pass
+		sys.exit(1)
+	except Exception:
+		print("""VCF not compatible with the specified --svcaller {}; check your VCF format using: decoil check -i <your vcf file>""".format(svcaller))
+		sys.exit(1)
+    
+    
+def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
+	"""
+	Read vcf file and store all breakpoints.
+
+	Returns:
+		(breakpoints, sv info)
+	"""
+	# breakpoints info
+	collection_breakpoints = defaultdict(list)  # chr2: [pos1, pos2, pos3]
+	# sv info
+	svinfo = defaultdict(list)  # "chr2:pos": [(key1, SVTYPE, coverage), (key2, SVTYPE2, coverage)]
+ 
+	# check for corrupted entries
+	vcffile_clean = os.path.join(outputdir,"clean.vcf")
+	cleanvcf(vcffile,vcffile_clean)
+
+	# parse vcf
+	svinfo, collection_breakpoints = parsevcf(vcffile_clean,svcaller)
+	
 
 	print("Total number of entries in vcf", count)
 	print("SV kept for graph generation", len(svinfo))
@@ -349,7 +392,6 @@ def addsv(graph, svinfo):
 					v1 = fragments_intervals.find_tail_node(chr1, pos1)
 					v2 = fragments_intervals.find_tail_node(chr2, pos2)
 					svtype_code = gp.BND
-
 				
 				graph.add_edge(MultiGraph.generate_id(), v1, v2, svtype_code, data)
 			

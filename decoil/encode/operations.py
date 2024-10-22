@@ -143,9 +143,17 @@ def pass_filter(record):
 	"""
 	Check if SV record pass the quality filter
 	"""
-
-	v = int(record.calls[0].data.get('DV'))
-	dr = int(record.calls[0].data.get('DR'))
+	
+	val = record.calls[0].data.get('DV')
+	if val == None:
+		raise Exception("DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+	v = int(val)
+	
+	val = record.calls[0].data.get('DR')
+	if val == None:
+		raise Exception("DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+	dr = int(val)
+ 
 	cov = (dr + v)
 	vaf = (v / (v + dr))
 

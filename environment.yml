@@ -1,15 +1,14 @@
-name: envdecoil
+name: envdecoil_18102024_7
 channels:
   - bioconda
   - conda-forge
-  - defaults
 dependencies:
-  - python==3.8.0
+  - python==3.10
+  - pip==24.2
   - survivor==1.0.7
-  - sniffles>=1.0.7,<=1.0.12
+  - sniffles==2.4
+  - savana==1.2.2
   - ngmlr==0.2.7
-  - ncurses==6.1
-  - samtools==1.9
-  - nanofilt==2.6.0
-  - python-dateutil==2.8.0
-  - pip==22.2.2
+  - samtools==1.15.1
+  - python-dateutil==2.8.1
+  - deeptools==3.5.5

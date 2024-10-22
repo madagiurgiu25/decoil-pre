@@ -14,6 +14,7 @@ class PROG:
 	VALIDATE = "validate"
 	RECONSTRUCT = "reconstruct"
 	FILTER = "filter"
+	CHECK = "check"
 
 	# pipeline
 	RECONSTRUCT_ONLY = "reconstruct-only"
@@ -215,8 +216,11 @@ class VCF_PROP:
 	PRECISE = "PRECISE"
 	IMPRECISE = "IMPRECISE"
 	SNIFFLES2 = "sniffles2"
-	SNIFFLES = "sniffles"  # SV caller name
+	SNIFFLES = "sniffles1"  # SV caller name
 	CUTESV = "cutesv"
+	NANOMONSV = "nanomonsv"
+	
+	SVCALLERS = [SNIFFLES, SNIFFLES2, CUTESV, NANOMONSV]
 
 	PASS = "PASS"
 	STRANDBIAS = "STRANDBIAS"

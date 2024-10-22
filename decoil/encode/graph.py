@@ -348,14 +348,18 @@ class MultiGraph(object):
                 Return adjacency matrix for the multi-graph.
                 """
                 size = len(self.nodes.keys())
-                m = np.zeros((size,size))
+                m = np.zeros((size,size),dtype=int)
                 cols = list(self.nodes.keys())
                 rows = list(self.nodes.keys())
+                
+                print(cols)
                 for u in self.graph:
+                        print(u, self.graph[u])
                         for v in self.graph[u]:
                                 i = rows.index(u)
                                 j = cols.index(v)
                                 m[i][j] += 1
+
                 return m
 
         def add_fragment(self, id, id_tail, id_head, id_edge, data):
@@ -1168,7 +1172,7 @@ class MultiGraph(object):
         @staticmethod
         def load_graph(file):
                 """
-                Load a graph based on the specification file.
+                Load a graph based on the specification file. Only for test
                 Example:
                         # test file for ABCBCBBA
                         # part -> {head=1, tail=0}
@@ -1205,9 +1209,6 @@ class MultiGraph(object):
                                         edgeid = int(edgeid)
                                         svtype = int(svtype)
                                         cov = float(cov)
-                                        # graph.add_node(int(node1), int(part1), frag1, {gep.WEIGHT: cov})
-                                        # graph.add_node(int(node2), int(part2), frag2, {gep.WEIGHT: cov})
-                                        # graph.add_edge(int(edgeid), int(node1), int(node2), int(svtype), {gep.WEIGHT: cov})
 
                                         # insert fragment
                                         if frag1 == frag2 and frag1 not in graph.get_fragments():
