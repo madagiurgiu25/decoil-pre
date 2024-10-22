@@ -159,7 +159,7 @@ def parsevcf(vcffile_clean, svcaller):
 			collection_breakpoints[chr1].append(int(pos1))
 			collection_breakpoints[chr2].append(int(pos2))
    
-		return svinfo, collection_breakpoints
+		return svinfo, collection_breakpoints, count
 	
 	except InvalidRecordException:
 		log.warning("VCF file was cropped! Most probably because Sniffle VCF is corrupted. This will generate incomplete/incorrect reconstruction.")
@@ -186,7 +186,7 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 	cleanvcf(vcffile,vcffile_clean)
 
 	# parse vcf
-	svinfo, collection_breakpoints = parsevcf(vcffile_clean,svcaller)
+	svinfo, collection_breakpoints, count = parsevcf(vcffile_clean,svcaller)
 	
 
 	print("Total number of entries in vcf", count)

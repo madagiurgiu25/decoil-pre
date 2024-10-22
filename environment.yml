@@ -1,4 +1,4 @@
-name: envdecoil_18102024_7
+name: envdecoil
 channels:
   - bioconda
   - conda-forge

@@ -115,14 +115,10 @@ cd  decoil-pre
 mamba env create -f environment.yml
 # for macos
 mamba env create -f environment.yml --platform osx-64
-conda activate envdecoil
 
-python -m pip install -r requirements.txt
+conda activate envdecoil
 python setup.py build install
 
-# add decoil in $PATH
-ROOT=`dirname $(which decoil)`
-export PATH=$PATH:$ROOT
 ```
 
 And check if the installation worked:
