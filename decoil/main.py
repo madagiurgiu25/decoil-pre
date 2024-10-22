@@ -230,7 +230,7 @@ def run_reconstruction(vcffile, bigwigfile, bamfile, outputdir, ref_genome,
 	candidates_annotated = metrics.annotate(likely_candidates_simplified)
 
 	# 8. Save
-	run_save_metrics(G, outputdir)
+	# run_save_metrics(G, outputdir)
 	# likelycandidates, G, ref_genome, outputdir, bigwigfile, gtffile, sample
 	run_save_v2_new(candidates_annotated, G, ref_genome, outputdir, name)
 	os.chdir(currpath)
