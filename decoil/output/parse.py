@@ -185,7 +185,7 @@ def convert_path2bed_v2(path, bedfile, keep=None, score_threshold=0):
 					   'coverage': str(int(cov)),
 					   'estimated_proportions': str(int(path[id_circ]["score"]))
 					   }
-			df = df.append(new_row, ignore_index=True)
+			df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
 	df.to_csv(bedfile,sep="\t",header=True,index=False,quoting=None)
 
@@ -222,6 +222,7 @@ def convert_bed2fasta(bedfile, fastafile, ref_genome, version=1):
 			if lastid != circleid:
 				circle_record = SeqRecord(Seq(sequence_circle), id=str(lastid), description=str(lastid))
 				circleseq_records.append(circle_record)
+
 				sequence_circle = ""
 				lastid = circleid
 			
@@ -259,7 +260,8 @@ def create_summary(candidates, summaryfile):
 					"topology_name": top_name,
 					"estimated_proportions": str(int(candidates[c]["score"]))
 				   }
-		df = df.append(new_row, ignore_index=True)
+		# df = df.append(new_row, ignore_index=True)
+		df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
 	df.to_csv(summaryfile, sep="\t", header=True, index=False, quoting=None)
 
