@@ -28,3 +28,4 @@ configparser==7.1.0
 cuteSV==2.1.1
 cython==3.0.11
 parasail==1.3.4
+parasail==1.3.4
