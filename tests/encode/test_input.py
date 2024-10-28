@@ -2,6 +2,8 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
+import bionumpy
+import vcfpy
 from vcfpy import InvalidRecordException, Record, BreakEnd, Call
 
 from decoil.encode.encode import parsevcf
@@ -103,6 +105,37 @@ class TestInput(unittest.TestCase):
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': 121, 'DV': None})])
             pass_filter(record)
         self.assertEqual(str(context.exception), "DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+
+    # def test_vcf(self):
+    #     file1 = "tests/examples/vcfs/sim1010_sniffles1.vcf"
+    #     file2 = "tests/examples/vcfs/sim1010_sniffles2.vcf"
+        
+    #     print("pyvcf and sniffles2----")
+    #     # read using vcf reader
+    #     reader = vcfpy.Reader.from_path(file2)
+    #     for record in reader:
+    #         print(record)
+        
+    #     # print()
+    #     # print("pyvcf and sniffles 2-------",flush=True)
+        
+    #     # reader = vcfpy.Reader.from_path(file2)
+    #     # for record in reader:
+    #     #     if record.INFO[vp.SVTYPE] == 'BND':
+    #     #         print(record)
+        
+    #     print()
+    #     print("bionumpy and sniffles2----")
+    #     f = bionumpy.open(file2)
+    #     for chunk in f.read_chunks():
+    #         # we can iterate over the entries
+    #         for single_entry in chunk.to_iter():
+    #             print(single_entry)
+                
+        
+            
+    #     self.assertEqual("True","False")
+        
 
 if __name__ == '__main__':
 	unittest.main()

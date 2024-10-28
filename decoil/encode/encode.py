@@ -73,6 +73,9 @@ def transform_record(record, svcaller):
 		record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 		record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
 
+		if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
+			record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation
+
 		if record.calls[0].data[vp.GT] == "./.":
 			record.calls[0].data[vp.DV] = int(record.INFO[vp.SUPPORT])
 			record.calls[0].data[vp.DR] = int(record.INFO[vp.COVERAGE][0]) if record.INFO[vp.COVERAGE][0] != 'None' else 0
@@ -141,8 +144,6 @@ def parsevcf(vcffile_clean, svcaller):
 				
 				chr2 = str(record.INFO[vp.CHR2])
 				pos2 = str(record.INFO[vp.END])
-
-				print(chr1, pos1, chr2, pos2)
 			
 			# elif svtype in [vp.INS, vp.DUPINS]:  # ! sniffles encodes SVTYPE==INS for both INS and INDELS!
 			# 	chr1 = str(record.CHROM)
@@ -158,7 +159,7 @@ def parsevcf(vcffile_clean, svcaller):
 			svinfo['{}{}{}'.format(chr1, utils.SEPARATOR, pos1)].append((id, chr2, pos2, svtype, dv, dr, gt, strand))
 			collection_breakpoints[chr1].append(int(pos1))
 			collection_breakpoints[chr2].append(int(pos2))
-   
+
 		return svinfo, collection_breakpoints, count
 	
 	except InvalidRecordException:
@@ -187,7 +188,8 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 
 	# parse vcf
 	svinfo, collection_breakpoints, count = parsevcf(vcffile_clean,svcaller)
-	
+	print(collection_breakpoints)
+	print(svinfo)
 
 	print("Total number of entries in vcf", count)
 	print("SV kept for graph generation", len(svinfo))
@@ -200,8 +202,8 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
 	# refine breakpoints
 	collection_breakpoints, svinfo = operations.merge_near_breakpoints(collection_breakpoints, svinfo)
 	log.info("1. 2. After cleaning breakpoints")
-	# print(collection_breakpoints)
-	# print(svinfo)
+	print(collection_breakpoints)
+	print(svinfo)
 	
 	return collection_breakpoints, svinfo
 
