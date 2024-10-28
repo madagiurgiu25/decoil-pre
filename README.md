@@ -1,4 +1,5 @@
 ![Coverage](./coverage-badge.svg)
+[![GitHub license](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/madagiurgiu25/decoil-pre/blob/main/LICENSE)
 
 # Decoil
 
