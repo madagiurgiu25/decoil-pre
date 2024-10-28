@@ -38,7 +38,7 @@ setuptools.setup(name='decoil',
 				 conda_channels=['conda-forge', 'bioconda'],
 				 conda_packages={
          				'survivor' : '1.0.7', 
-             			'sniffles' : '2.4',
+             			'sniffles' : '1.0.12',
                 		'deeptools': '3.5.5',
 						'ngmlr' : '0.2.7',
 						'samtools':'1.15.1',

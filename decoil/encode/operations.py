@@ -197,7 +197,7 @@ def pass_filter(record):
 	return True
 
 
-def filter(vcf, vcfout, svcaller='sniffles'):
+def filter(vcf, vcfout, svcaller=vp.SNIFFLES1):
 	"""
 	Read vcf file and store all breakpoints.
 

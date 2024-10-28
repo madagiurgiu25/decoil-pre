@@ -41,6 +41,7 @@ if config['workflow'] in WORKFLOWS:
         ref = config["reference_genome"]
         # anno = config["annotation_gtf"]
         svcaller = config["svcaller"]
+        print(svcaller)
 
         include: "rules/sv.smk"
         include: "rules/decoil.smk"

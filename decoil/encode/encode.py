@@ -51,7 +51,7 @@ def transform_record(record, svcaller):
 	"""
 	Convert required fields from Sniffles2, CuteSV and NANOMONSV
 	"""
-	if svcaller == vp.SNIFFLES:
+	if svcaller == vp.SNIFFLES1:
 		record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
  
 	if svcaller == vp.CUTESV:
@@ -170,7 +170,7 @@ def parsevcf(vcffile_clean, svcaller):
 		sys.exit(1)
     
     
-def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES):
+def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES1):
 	"""
 	Read vcf file and store all breakpoints.
 
@@ -446,7 +446,7 @@ def addsv(graph, svinfo):
 	return graph
 
 
-def run_encoding(vcffile, bigwigfile, bamfile, outputdir, svcaller="sniffles"):
+def run_encoding(vcffile, bigwigfile, bamfile, outputdir, svcaller=vp.SNIFFLES1):
 	"""
 	Encode the SV information in graph representation
 	"""

@@ -6,6 +6,7 @@
 Decoil (deconvolve extrachromosomal circular DNA isoforms from long-read data) is a software package for reconstruction
 circular DNA.
 
+- [Getting started using conda and pip](#gettingstartedpip)
 - [Getting started using docker or singularity](#gettingstarted)
 - [Run example using docker or singularity](#testexample)
 - [Run Decoil reconstruction using docker or singularity](#decoil-slim)
@@ -16,7 +17,21 @@ circular DNA.
 - [Citation](#citation)
 - [License](#license)
 
-<a name="gettingstarted"></a> 
+<a name="gettingstartedpip"></a> 
+
+## Getting started using conda and pip
+
+Assumes you have conda installed.
+
+```bash
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 deeptools==3.5.5 ngmlr==0.2.7 samtools==1.15.1 python-dateutil==2.8.0
+conda activate envdecoil
+python -m pip install decoil==1.1.2
+
+decoil --version
+```
+
+<a name="gettingstarted"></a>
 
 ## Getting started using docker or singularity
 
@@ -120,12 +135,7 @@ mamba env create -f environment.yml
 mamba env create -f environment.yml --platform osx-64
 
 conda activate envdecoil
-<<<<<<< HEAD
-python setup.py build install
-
-=======
 python setup.py install
->>>>>>> 72a6b18f7fda7dc2e1504c39a4b6632b14e9434f
 ```
 
 And check if the installation worked:

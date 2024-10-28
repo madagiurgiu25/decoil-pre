@@ -22,6 +22,7 @@ from decoil import main as dp
 from decoil.utils import QUAL
 from decoil.utils import POS
 from decoil.utils import PROG
+from decoil.utils import VCF_PROP
 
 # from . import _program
 
@@ -71,7 +72,7 @@ def add_configs_sv_workflow(args, config):
     config['bam'] = args.bam
     config['outputdir'] = args.outputdir
     config['name'] = args.name
-    config['svcaller'] = "sniffles"
+    config['svcaller'] = VCF_PROP.SNIFFLES1
 
 def add_configs_reconstruct_only_workflow(args,config):
     config['bam'] = args.bam
@@ -79,8 +80,8 @@ def add_configs_reconstruct_only_workflow(args,config):
     config['name'] = args.name
     config['reference_genome'] = args.reference_genome
     config['annotation_gtf'] = args.annotation_gtf
-    config['svcaller'] = "sniffles" # for full pipeline only sniffles1 allowed
-    # if args.sv_caller in ["sniffles", "sniffles2", "cutesv"]:
+    config['svcaller'] = VCF_PROP.SNIFFLES1 # for full pipeline only sniffles1 allowed
+    # if args.sv_caller in ["sniffles1", "sniffles2", "cutesv"]:
     #     config['svcaller'] = args.sv_caller
     # else:
     #     raise Exception("Not supported sv caller. Please choose between sniffles, sniffles2, cutesv")
@@ -92,7 +93,7 @@ def add_configs_sv_reconstruct_workflow(args,config):
     config['name'] = args.name
     config['reference_genome'] = args.reference_genome
     config['annotation_gtf'] = args.annotation_gtf
-    config['svcaller'] = "sniffles" # for full pipeline only sniffles1 allowed
+    config['svcaller'] = VCF_PROP.SNIFFLES1 # for full pipeline only sniffles1 allowed
     # if args.sv_caller in ["sniffles", "sniffles2", "cutesv"]:
     #     config['svcaller'] = args.sv_caller
     # else:

@@ -6,7 +6,7 @@ dependencies:
   - python==3.10
   - pip==24.2
   - survivor==1.0.7
-  - sniffles==2.4
+  - sniffles==1.0.12
   - savana==1.2.2
   - ngmlr==0.2.7
   - samtools==1.15.1
