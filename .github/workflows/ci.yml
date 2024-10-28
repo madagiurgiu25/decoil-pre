@@ -33,7 +33,7 @@ jobs:
       # Step 4: Run tests with coverage
       - name: Run tests
         run: |
-          pytest --cov=decoil --cov-branch
+          pytest --cov=decoil --cov-report=xml
       
       # Step 5: Extract coverage
       - name: Extract coverage and generate badge
