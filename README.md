@@ -1,3 +1,5 @@
+![Coverage](./coverage-badge.svg)
+
 # Decoil
 
 Decoil (deconvolve extrachromosomal circular DNA isoforms from long-read data) is a software package for reconstruction
