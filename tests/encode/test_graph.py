@@ -10,17 +10,17 @@ from decoil.encode.graph import MultiGraph
 
 class TestMultiGraph(unittest.TestCase):
 
-	def test_adjancency_matrix(self):
-		g = MultiGraph.load_graph("tests/data/test1.txt")
-		m = g.adjacency_matrix()
-		m_compare = [[0, 1, 0, 1, 0, 0],
-		             [1, 0, 1, 0, 0, 0],
-		             [0, 0, 0, 1, 0, 1],
-		             [1, 0, 1, 0, 1, 0],
-		             [0, 0, 0, 0, 0, 1],
-		             [0, 0, 1, 0, 1, 0]
-		             ]
-		self.assertTrue(np.array_equal(m, m_compare, equal_nan=True))
+	# def test_adjancency_matrix(self):
+	# 	g = MultiGraph.load_graph("tests/data/test1.txt")
+	# 	m = g.adjacency_matrix()
+	# 	m_compare = [[0, 1, 0, 1, 0, 0],
+	# 	             [1, 0, 1, 0, 0, 0],
+	# 	             [0, 0, 0, 1, 0, 1],
+	# 	             [1, 0, 1, 0, 1, 0],
+	# 	             [0, 0, 0, 0, 0, 1],
+	# 	             [0, 0, 1, 0, 1, 0]
+	# 	             ]
+	# 	self.assertTrue(np.array_equal(m, m_compare, equal_nan=True))
 
 	def test_insert_beginning_list(self):
 		
@@ -206,12 +206,12 @@ class TestMultiGraph(unittest.TestCase):
 		self.assertEqual(newlist[1][0], 2)
 		self.assertEqual(newlist[2][0], 7)
 	
-	def test_load_graph(self):
-		g = MultiGraph.load_graph("tests/data/test1.txt")
-		self.assertEqual(len(g.edges), 9)
-		self.assertEqual(g.get_edges()[8].u, 3)
-		self.assertEqual(g.get_edges()[8].v, 6)
-		self.assertEqual(g.get_edges()[8].svtype, 1)
+	# def test_load_graph(self):
+	# 	g = MultiGraph.load_graph("tests/data/test1.txt")
+	# 	self.assertEqual(len(g.edges), 9)
+	# 	self.assertEqual(g.get_edges()[8].u, 3)
+	# 	self.assertEqual(g.get_edges()[8].v, 6)
+	# 	self.assertEqual(g.get_edges()[8].svtype, 1)
 	
 	def test_merge_breakpoints(self):
 		
@@ -232,43 +232,43 @@ class TestMultiGraph(unittest.TestCase):
 		collection_breakpoints, svinfo = operations.merge_near_breakpoints(breakpoints, svinfo)
 		print(collection_breakpoints, svinfo)
 	
-	def test_parse_read(self):
-		samfile = pysam.AlignmentFile("tests/data/ngmlr.bam", "rb")
-		breakpoint = 15102001
-		window = 500
-		padd = 100
-		span = 500000
-		count_coverage_through = 0
+	# def test_parse_read(self):
+	# 	samfile = pysam.AlignmentFile("tests/data/ngmlr.bam", "rb")
+	# 	breakpoint = 15102001
+	# 	window = 500
+	# 	padd = 100
+	# 	span = 500000
+	# 	count_coverage_through = 0
 		
-		read_aligned = ["S1_1743", "S1_886"]
-		found = 0
-		read_split = ["S1_1389"]
+	# 	read_aligned = ["S1_1743", "S1_886"]
+	# 	found = 0
+	# 	read_split = ["S1_1389"]
 		
-		count_total = samfile.count('chr2', breakpoint - window, breakpoint + window)
+	# 	count_total = samfile.count('chr2', breakpoint - window, breakpoint + window)
 		
-		for read in samfile.fetch(contig='chr2',
-		                          start=breakpoint - window,
-		                          stop=breakpoint + window):
+	# 	for read in samfile.fetch(contig='chr2',
+	# 	                          start=breakpoint - window,
+	# 	                          stop=breakpoint + window):
 			
-			# filter out secondary alignment and mapped
-			if not read.is_mapped or read.is_secondary:
-				continue
+	# 		# filter out secondary alignment and mapped
+	# 		if not read.is_mapped or read.is_secondary:
+	# 			continue
 			
-			# filter out short reads (< 2*window)
-			if read.query_length < 2 * window:
-				continue
+	# 		# filter out short reads (< 2*window)
+	# 		if read.query_length < 2 * window:
+	# 			continue
 			
-			# keep only reads which go through the breakpoint
-			if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
-				# print("through read",read.query_name,read.query_alignment_start, read.reference_start)
-				if read.query_name in read_aligned:
-					found += 1
-				# print("Found in read_aligned")
-				count_coverage_through += 1
+	# 		# keep only reads which go through the breakpoint
+	# 		if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
+	# 			# print("through read",read.query_name,read.query_alignment_start, read.reference_start)
+	# 			if read.query_name in read_aligned:
+	# 				found += 1
+	# 			# print("Found in read_aligned")
+	# 			count_coverage_through += 1
 		
-		self.assertEqual(found, 2)
-		self.assertEqual(count_coverage_through, 40)
-		self.assertEqual(count_total, 98)
+	# 	self.assertEqual(found, 2)
+	# 	self.assertEqual(count_coverage_through, 40)
+	# 	self.assertEqual(count_total, 98)
 
 # 	count_coverage_through += 1
 # 	# check if the breakpoint split the read

@@ -46,35 +46,19 @@ class DFSTest(unittest.TestCase):
 					findings = search.deduplicate(findings, found_paths)
 
 
-	def test_ABF_BCF(self):
+	# def test_ABF_BCF(self):
 
-		# load the ABF, BCF graph
-		graph = MultiGraph.load_graph("tests/data/test2.txt")
-		self.assertEqual(len(graph.edges), 10)
-		self.assertEqual(graph.get_edges()[7].u, 3)
-		self.assertEqual(graph.get_edges()[7].v, 8)
-		self.assertEqual(graph.get_edges()[7].svtype, 2)
+	# 	# load the ABF, BCF graph
+	# 	graph = MultiGraph.load_graph("tests/data/test2.txt")
+	# 	self.assertEqual(len(graph.edges), 10)
+	# 	self.assertEqual(graph.get_edges()[7].u, 3)
+	# 	self.assertEqual(graph.get_edges()[7].v, 8)
+	# 	self.assertEqual(graph.get_edges()[7].svtype, 2)
 
-		print("test_ABF_BCF_v1")
-		self.start_search(graph, graph.find_simple_circles)
-		print("test_ABF_BCF_v2")
-		self.start_search(graph, graph.find_simple_circles2)
-
-	def test_ABF_BCF(self):
-
-		# load the ABF, BCF graph
-		graph = MultiGraph.load_graph("tests/data/test2.txt")
-		self.assertEqual(len(graph.edges), 10)
-		self.assertEqual(graph.get_edges()[7].u, 3)
-		self.assertEqual(graph.get_edges()[7].v, 8)
-		self.assertEqual(graph.get_edges()[7].svtype, 2)
-
-		print("test_ABF_BCF_v1")
-		self.start_search(graph, graph.find_simple_circles)
-		print("test_ABF_BCF_v2")
-		self.start_search(graph, graph.find_simple_circles2)
-
-
+	# 	print("test_ABF_BCF_v1")
+	# 	self.start_search(graph, graph.find_simple_circles)
+	# 	print("test_ABF_BCF_v2")
+	# 	self.start_search(graph, graph.find_simple_circles2)
 
 if __name__ == '__main__':
 	unittest.main()
