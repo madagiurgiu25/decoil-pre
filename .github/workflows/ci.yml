@@ -49,8 +49,8 @@ jobs:
       # Step 6: Commit badge
       - name: Commit badge
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add coverage-badge.svg
           git commit -m "Update coverage badge" || echo "No changes to commit"
           git push
