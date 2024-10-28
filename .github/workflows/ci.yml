@@ -28,17 +28,32 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov codecov
+          pip install pytest pytest-cov lxml
 
       # Step 4: Run tests with coverage
       - name: Run tests
         run: |
           pytest --cov=decoil --cov-branch
-
-      # Step 5: Upload coverage to Codecov
-      - name: Upload coverage to Codecov
+      
+      # Step 5: Extract coverage
+      - name: Extract coverage and generate badge
         run: |
-          bash <(curl -s https://codecov.io/bash)
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}  # Codecov token for private repos; public repos don’t need it
+          # Extract coverage percentage from `coverage.xml`
+          COVERAGE=$(python -c "import xml.etree.ElementTree as ET; \
+                      tree = ET.parse('coverage.xml'); \
+                      print(tree.getroot().get('line-rate'))")
+          COVERAGE=$(echo "$COVERAGE * 100" | bc)  # Convert to percentage
+          
+          # Generate SVG badge
+          echo '<?xml version="1.0" ?><svg xmlns="http://www.w3.org/2000/svg" width="100" height="20"><rect width="100" height="20" fill="#555"/><rect x="60" width="40" height="20" fill="#4c1"/><text x="10" y="15" fill="#fff" font-family="Verdana" font-size="11">coverage</text><text x="65" y="15" fill="#fff" font-family="Verdana" font-size="11">'$COVERAGE'%</text></svg>' > coverage-badge.svg
+      
+      # Step 6: Commit badge
+      - name: Commit badge
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add coverage-badge.svg
+          git commit -m "Update coverage badge" || echo "No changes to commit"
+          git push      
+
 
