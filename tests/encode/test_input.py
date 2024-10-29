@@ -30,7 +30,7 @@ class TestInput(unittest.TestCase):
     def test_header_sniffles1(self):
         """Test correct format for sniffles1"""
         try:
-            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles1.vcf",vp.SNIFFLES)
+            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles1.vcf",vp.SNIFFLES1)
             print(svinfo)
             print(collection_breakpoints)
         except Exception as e:
