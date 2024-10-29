@@ -26,7 +26,7 @@ Assumes you have conda installed.
 ```bash
 conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 deeptools==3.5.5 ngmlr==0.2.7 samtools==1.15.1 python-dateutil==2.8.0
 conda activate envdecoil
-python -m pip install decoil==1.1.2
+python -m pip install decoil==1.1.3
 
 decoil --version
 ```
