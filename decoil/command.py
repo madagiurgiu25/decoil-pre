@@ -27,15 +27,16 @@ from decoil.utils import VCF_PROP
 # from . import _program
 
 thisdir = os.path.abspath(os.path.dirname(__file__))
-parentdir = os.path.join(thisdir, '')
+parentdir = os.path.join(thisdir, "")
 cwd = os.getcwd()
+
 
 def check_workflow(workflow):
 
     # first, find the Snakefile
-    snakefile = os.path.join(thisdir, 'cli', 'Snakefile')
+    snakefile = os.path.join(thisdir, "cli", "Snakefile")
     if not os.path.exists(snakefile):
-        sys.stderr.write('Error: cannot find Snakefile at {}\n'.format(snakefile))
+        sys.stderr.write("Error: cannot find Snakefile at {}\n".format(snakefile))
         sys.exit(-1)
 
     # next, find the workflow config file
@@ -43,62 +44,66 @@ def check_workflow(workflow):
     if os.path.exists(workflow) and not os.path.isdir(workflow):
         workflowfile = workflow
     else:
-        for suffix in ('', '.json'):
-            tryfile = os.path.join(thisdir, 'cli', workflow + suffix)
+        for suffix in ("", ".json"):
+            tryfile = os.path.join(thisdir, "cli", workflow + suffix)
             if os.path.exists(tryfile) and not os.path.isdir(tryfile):
-                sys.stderr.write('Found workflowfile at {}\n'.format(tryfile))
+                sys.stderr.write("Found workflowfile at {}\n".format(tryfile))
                 workflowfile = tryfile
                 break
 
     if not workflowfile:
-        sys.stderr.write('Error: cannot find workflowfile {}\n'.format(workflow))
+        sys.stderr.write("Error: cannot find workflowfile {}\n".format(workflow))
         sys.exit(-1)
 
     # find workflow path
-    with open(workflowfile, 'rt') as fp:
+    with open(workflowfile, "rt") as fp:
         workflow_info = json.load(fp)
-    target = workflow_info['workflow_target']
-    configfile = workflow_info['workflow_config']
+    target = workflow_info["workflow_target"]
+    configfile = workflow_info["workflow_config"]
 
     # read configuration
-    with open(os.path.join(thisdir, 'cli', configfile)) as f:
+    with open(os.path.join(thisdir, "cli", configfile)) as f:
         config = json.load(f)
-    config['workflow'] = workflow
+    config["workflow"] = workflow
 
     # load params if exists
     return snakefile, workflowfile, target, config
 
-def add_configs_sv_workflow(args, config):
-    config['bam'] = args.bam
-    config['outputdir'] = args.outputdir
-    config['name'] = args.name
-    config['svcaller'] = VCF_PROP.SNIFFLES1
 
-def add_configs_reconstruct_only_workflow(args,config):
-    config['bam'] = args.bam
-    config['outputdir'] = args.outputdir
-    config['name'] = args.name
-    config['reference_genome'] = args.reference_genome
-    config['annotation_gtf'] = args.annotation_gtf
-    config['svcaller'] = VCF_PROP.SNIFFLES1 # for full pipeline only sniffles1 allowed
+def add_configs_sv_workflow(args, config):
+    config["bam"] = args.bam
+    config["outputdir"] = args.outputdir
+    config["name"] = args.name
+    config["svcaller"] = args.sv_caller
+
+
+def add_configs_reconstruct_only_workflow(args, config):
+    config["bam"] = args.bam
+    config["outputdir"] = args.outputdir
+    config["name"] = args.name
+    config["reference_genome"] = args.reference_genome
+    config["annotation_gtf"] = args.annotation_gtf
+    config["svcaller"] = args.sv_caller  # for full pipeline only sniffles1 allowed
     # if args.sv_caller in ["sniffles1", "sniffles2", "cutesv"]:
     #     config['svcaller'] = args.sv_caller
     # else:
     #     raise Exception("Not supported sv caller. Please choose between sniffles, sniffles2, cutesv")
     # config['plot'] = False
 
-def add_configs_sv_reconstruct_workflow(args,config):
-    config['bam'] = args.bam
-    config['outputdir'] = args.outputdir
-    config['name'] = args.name
-    config['reference_genome'] = args.reference_genome
-    config['annotation_gtf'] = args.annotation_gtf
-    config['svcaller'] = VCF_PROP.SNIFFLES1 # for full pipeline only sniffles1 allowed
+
+def add_configs_sv_reconstruct_workflow(args, config):
+    config["bam"] = args.bam
+    config["outputdir"] = args.outputdir
+    config["name"] = args.name
+    config["reference_genome"] = args.reference_genome
+    config["annotation_gtf"] = args.annotation_gtf
+    config["svcaller"] = args.sv_caller  # for full pipeline only sniffles1 allowed
     # if args.sv_caller in ["sniffles", "sniffles2", "cutesv"]:
     #     config['svcaller'] = args.sv_caller
     # else:
     #     raise Exception("Not supported sv caller. Please choose between sniffles, sniffles2, cutesv")
     # config['plot'] = False
+
 
 # def add_configs_sv_reconstruct_plot_workflow(args,config):
 #     add_configs_sv_workflow(args,config)
@@ -117,7 +122,8 @@ def add_configs_sv_reconstruct_workflow(args,config):
 #     config['filterscore'] = args.plot_filter_score
 #     config['filtertop'] = args.plot_top
 
-def entry_point(sysargs = sys.argv[1:]):
+
+def entry_point(sysargs=sys.argv[1:]):
 
     try:
         start_time = time.time()
@@ -148,24 +154,29 @@ def entry_point(sysargs = sys.argv[1:]):
         #     add_configs_plot_workflow(args, config)
 
         # if subcommand in [PROG.SV_RECONSTRUCT, PROG.SV_RECONSTRUCT_PLOT, PROG.RECONSTRUCT_ONLY]:
-        if subcommand in [PROG.SV_RECONSTRUCT, PROG.RECONSTRUCT_ONLY]:   
+        if subcommand in [PROG.SV_RECONSTRUCT, PROG.RECONSTRUCT_ONLY]:
 
             dp.setup_defaults(args)
             config["decoil"] = decoil.__version__
 
-        print('--------')
-        print('details!')
-        print('\tsnakefile: {}'.format(snakefile))
-        print('\tworkflowfile: {}'.format(workflowfile))
-        print('\tparams: {}'.format(config))
-        print('\ttarget: {}'.format(target))
-        print('--------')
+        print("--------")
+        print("details!")
+        print("\tsnakefile: {}".format(snakefile))
+        print("\tworkflowfile: {}".format(workflowfile))
+        print("\tparams: {}".format(config))
+        print("\ttarget: {}".format(target))
+        print("--------")
 
         # run workflows
-        status = snakemake.snakemake(snakefile,
-                                     targets=[target], printshellcmds=True,
-                                     dryrun=args.dry_run, forceall=args.force,
-                                     use_conda=args.use_conda, config=config)
+        status = snakemake.snakemake(
+            snakefile,
+            targets=[target],
+            printshellcmds=True,
+            dryrun=args.dry_run,
+            forceall=args.force,
+            use_conda=True,
+            config=config,
+        )
 
         if status == False:
             raise Exception("Snakemake failed")
@@ -186,7 +197,8 @@ def entry_point(sysargs = sys.argv[1:]):
         print()
         traceback.print_exc()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     status = entry_point()
 

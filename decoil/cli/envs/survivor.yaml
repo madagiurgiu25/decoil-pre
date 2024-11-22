@@ -3,4 +3,4 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - sniffles==1.0.12
+  - survivor==1.0.12
