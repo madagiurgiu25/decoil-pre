@@ -135,6 +135,7 @@ mamba env create -f environment.yml
 mamba env create -f environment.yml --platform osx-64
 
 conda activate envdecoil
+python -m pip install -r requirements.txt
 python setup.py install
 ```
 
