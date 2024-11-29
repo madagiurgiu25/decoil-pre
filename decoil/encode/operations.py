@@ -236,7 +236,7 @@ def remove_duplicated_edges(graph):
 	for u in nodes:
 		for v in graph.graph[u]:
 			# nodes do not belong to same fragment and have more than 2 connected edges
-			if u != v and nodes[u].parent_fragment != nodes[v].parent_fragment and len(graph.graph[u][v]) > 1:
+			if u and v and u != v and nodes[u].parent_fragment != nodes[v].parent_fragment and len(graph.graph[u][v]) > 1:
 
 				w_edges = np.array([edges[e].weight for e in graph.graph[u][v]])
 				idx_max = np.where(w_edges == w_edges.max())[0][0]
