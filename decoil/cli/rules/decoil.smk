@@ -4,6 +4,11 @@ rule decoil:
         bw = "{dirname}/coverage.bw",
         bam = bam,
         bai = bam + ".bai",
+        ref = ref
+    params:
+        name = name,
+        str = decoilparams,
+        dir = "{dirname}"
     output:
         "{dirname}/summary.txt",
         "{dirname}/reconstruct.bed",
@@ -17,11 +22,16 @@ rule decoil:
         "{dirname}/reconstruct.ecDNA.filtered.fasta"
     log:
         "{dirname}/logs/logs_decoil"
-    run:
-        d.run_reconstruction(input.vcf,
-                        input.bw,
-                        input.bam,
-                        outputdir,
-                        ref,
-                        name=name,
-                        svcaller=svcaller)
+    shell:
+        """
+        decoil reconstruct -b {input.bam} -c {input.bw} -i {input.vcf} \
+        --name {params.name} -r {input.ref} -o {params.dir} {params.str} &> {log}
+        """
+
+        #d.run_reconstruction(input.vcf,
+        #                input.bw,
+        #                input.bam,
+        #                outputdir,
+        #                ref,
+        #                name=name,
+        #                svcaller=svcaller)

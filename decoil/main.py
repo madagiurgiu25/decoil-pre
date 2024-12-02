@@ -415,7 +415,6 @@ def process_commandline_decoil_only(subparsers):
 def process_commandline_decoil_fullpipeline(parser, subparsers):
     parser.add_argument("-n", "--dry-run", action="store_true")
     parser.add_argument("-f", "--force", action="store_true")
-    parser.add_argument("-c", "--use-conda", action="store_true")
 
     # sv calling workflow
     parser_a = subparsers.add_parser(
@@ -433,6 +432,12 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
         required=False,
         default=4,
         type=int,
+    )
+    parser_a.add_argument(
+        "--sv-caller",
+        help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS),
+        required=False,
+        default=VCF_PROP.SNIFFLES1,
     )
     parser_a.set_defaults(which=PROG.SV_ONLY)
 
@@ -473,67 +478,74 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
         help="Minimal fragment coverage (default: %(default)sX)",
         required=False,
         default=QUAL.MINIMAL_FRAGMENT_COVERAGE,
-        type=int,
+        type=int
     )
     parser_b.add_argument(
         "--fragment-min-size",
         help="Minimal fragment size (default: %(default)sbp)",
         required=False,
         default=QUAL.MINIMAL_FRAGMENT_SIZE,
-        type=int,
+        type=int
     )
     parser_b.add_argument(
         "--min-vaf",
         help="Minimal VAF acceptance SV (default: %(default)s)",
         required=False,
         default=QUAL.MIN_VAF,
-        type=float,
+        type=float
     )
     parser_b.add_argument(
         "--min-cov-alt",
         help="Minimal supporting reads SV (default: %(default)sX)",
         required=False,
         default=QUAL.MIN_COV_ALT,
-        type=int,
+        type=int
     )
     parser_b.add_argument(
         "--max-explog-threshold",
         help="Maximal score; better not change this (default: %(default)s)",
         required=False,
         default=QUAL.EXPLOG_THRESHOLD,
-        type=float,
+        type=float
     )
     parser_b.add_argument(
         "--min-cov",
         help="Minimal coverage on site (default: %(default)sX)",
         required=False,
         default=QUAL.MIN_COV,
-        type=int,
+        type=int
     )
     parser_b.add_argument(
         "--sv-caller",
         help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS),
         required=False,
-        default=VCF_PROP.SNIFFLES1,
+        default=VCF_PROP.SNIFFLES1
     )
     parser_b.add_argument(
         "--filter-score",
         help="Filter circular structures by estimated proportions (default: %(default)d)",
         required=False,
         default=0,
-        type=int,
+        type=int
     )
     parser_b.add_argument(
         "--extend-allowed-chr",
         help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")',
         required=False,
-        default="",
+        default=""
     )
     parser_b.add_argument(
         "--fast",
         help="Reconstruct fast (not accurate and does not require a bam file)",
         action="count",
-        default=0,
+        default=0
+    )
+    parser_b.add_argument(
+        "--filt-version",
+        help="Sniffles2 filter version",
+        required=False,
+        default=1,
+        type=int
     )
     parser_b.set_defaults(which=PROG.SV_RECONSTRUCT)
 
@@ -618,6 +630,12 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
         required=False,
         default=0,
         type=int,
+    )
+    parser_d.add_argument(
+        "--sv-caller",
+        help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS),
+        required=False,
+        default=VCF_PROP.SNIFFLES1,
     )
     parser_d.add_argument(
         "--extend-allowed-chr",

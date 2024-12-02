@@ -10,6 +10,7 @@ WORKFLOWS = [PROG.SV_ONLY,
 dirname = None
 bam = None
 
+
 if config['workflow'] in WORKFLOWS:
 
     # define workflow variables
@@ -27,6 +28,9 @@ if config['workflow'] in WORKFLOWS:
 
     if config['workflow'] == PROG.SV_ONLY:
         
+        svcaller = config["svcaller"]
+        print(svcaller)
+
         include: "rules/sv.smk"
 
         rule all:
@@ -42,6 +46,9 @@ if config['workflow'] in WORKFLOWS:
         # anno = config["annotation_gtf"]
         svcaller = config["svcaller"]
         print(svcaller)
+        filt_version = config["filt_version"]
+        decoilparams = config["params"]
+        print(decoilparams)
 
         include: "rules/sv.smk"
         include: "rules/decoil.smk"
@@ -67,6 +74,9 @@ if config['workflow'] in WORKFLOWS:
         ref = config["reference_genome"]
         # anno = config["annotation_gtf"]
         svcaller = config["svcaller"]
+        print(svcaller)
+        decoilparams = config["params"]
+        print(decoilparams)
 
         include: "rules/decoil.smk"
 

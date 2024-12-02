@@ -70,6 +70,20 @@ def check_workflow(workflow):
     return snakefile, workflowfile, target, config
 
 
+def add_defaults_toconfigs(args, config):
+    config["params"] = ""
+    config["params"] += " --fragment-min-cov " + str(args.fragment_min_cov)
+    config["params"] += " --fragment-min-size " + str(args.fragment_min_size)
+    config["params"] += " --min-sv-len " + str(args.min_sv_len)
+    config["params"] += " --min-vaf " + str(args.min_vaf)
+    config["params"] += " --min-cov-alt " + str(args.min_cov_alt)
+    config["params"] += " --min-cov " + str(args.min_cov)
+    config["params"] += " --max-explog-threshold " + str(args.max_explog_threshold)
+    config["params"] += " --filter-score " + str(args.filter_score)
+    config["params"] += " --sv-caller " + str(args.sv_caller)
+    if args.extend_allowed_chr != "":
+        config["params"] += " --extend-allowed-chr " + args.extend_allowed_chr
+
 def add_configs_sv_workflow(args, config):
     config["bam"] = args.bam
     config["outputdir"] = args.outputdir
@@ -83,13 +97,8 @@ def add_configs_reconstruct_only_workflow(args, config):
     config["name"] = args.name
     config["reference_genome"] = args.reference_genome
     config["annotation_gtf"] = args.annotation_gtf
-    config["svcaller"] = args.sv_caller  # for full pipeline only sniffles1 allowed
-    # if args.sv_caller in ["sniffles1", "sniffles2", "cutesv"]:
-    #     config['svcaller'] = args.sv_caller
-    # else:
-    #     raise Exception("Not supported sv caller. Please choose between sniffles, sniffles2, cutesv")
-    # config['plot'] = False
-
+    config["svcaller"] = args.sv_caller 
+    config = add_defaults_toconfigs(args, config)
 
 def add_configs_sv_reconstruct_workflow(args, config):
     config["bam"] = args.bam
@@ -98,12 +107,8 @@ def add_configs_sv_reconstruct_workflow(args, config):
     config["reference_genome"] = args.reference_genome
     config["annotation_gtf"] = args.annotation_gtf
     config["svcaller"] = args.sv_caller  # for full pipeline only sniffles1 allowed
-    # if args.sv_caller in ["sniffles", "sniffles2", "cutesv"]:
-    #     config['svcaller'] = args.sv_caller
-    # else:
-    #     raise Exception("Not supported sv caller. Please choose between sniffles, sniffles2, cutesv")
-    # config['plot'] = False
-
+    config["filt_version"] = args.filt_version
+    config = add_defaults_toconfigs(args, config)
 
 # def add_configs_sv_reconstruct_plot_workflow(args,config):
 #     add_configs_sv_workflow(args,config)
@@ -174,8 +179,9 @@ def entry_point(sysargs=sys.argv[1:]):
             printshellcmds=True,
             dryrun=args.dry_run,
             forceall=args.force,
-            use_conda=True,
+            use_conda=False,
             config=config,
+            cores=int(args.threads)
         )
 
         if status == False:
