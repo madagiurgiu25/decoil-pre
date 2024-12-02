@@ -8,7 +8,6 @@ WORKFLOWS = [PROG.SV_ONLY,
 	         PROG.RECONSTRUCT_ONLY]
 
 TMPDIR = None
-
 dirname = None
 bam = None
 

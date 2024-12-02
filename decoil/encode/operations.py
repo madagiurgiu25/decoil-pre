@@ -177,10 +177,8 @@ def pass_filter(record):
 	# precise breakpoint
 	# if vp.PRECISE not in record.INFO or not record.INFO[vp.PRECISE]:
 	# 	return False
-	
-	
-	if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
-		return False
+	# if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
+	# 	return False
 	
 	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION:
 		log.warning("SV unknown")
@@ -407,21 +405,26 @@ def add_coverage_per_fragment(graph, bigwigfile):
 			# avoid different size of chr
 			stop = max(0, min(stop, all_chroms[chr]))
 			start = max(0, min(start, all_chroms[chr]))
-			
-			# compute average across bin
-			if start < stop:
-				avg_cov = bw.stats(chr, start, stop, type="mean")[0]
-			elif start > stop:
-				avg_cov = bw.stats(chr, stop, start, type="mean")[0]
-			else:
-				# equal start and stop
-				avg_cov = bw.stats(chr, start - 1, start, type="mean")[0]
-			
-			if avg_cov > -1:
+
+			# swap
+			if stop < start:
+				temp = start
+				start = stop
+				stop = temp
+			# bin of 1
+			elif stop == start:
+				start = start -1 
+
+			# Compute the median
+			values = bw.values(chr, start, stop)
+			median_value = np.median(values)
+   
+			if median_value > -1:
 				# set fragment coverage
-				frag_obj.coverage = avg_cov
+				frag_obj.coverage = median_value
 				# set edge weight as the fragment coverage
-				edge_obj.props[gep.WEIGHT] = avg_cov
+				edge_obj.props[gep.WEIGHT] = median_value
+			
 			# print("Fragment", fid, " coverage: ", fragments[fid].coverage, " edge ", frag_obj.edge, "with coverage",edge_obj.props[gep.WEIGHT])
 	else:
 		raise ValueError("""{} needs to be a bigWig file""".format(bigwigfile))
