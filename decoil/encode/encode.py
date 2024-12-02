@@ -113,6 +113,7 @@ def transform_record(record, svcaller):
 def parsevcf(vcffile_clean, svcaller):
     
 	reader = vcfpy.Reader.from_path(vcffile_clean)
+	writer = vcfpy.Writer.from_path(vcffile_clean.split(".")[0] + "_filtered.vcf", reader.header)
 	count=0
  
 	# breakpoints info
@@ -137,6 +138,9 @@ def parsevcf(vcffile_clean, svcaller):
 			if not operations.pass_filter(record):
 				# skip record as this is good
 				continue
+
+			# save filtered vcf
+			writer.write_record(record)
 
 			if svtype in [vp.DUP, vp.DEL, vp.INV, vp.BND, vp.INVDUP, vp.DUPINV, vp.TRA]:
 				chr1 = str(record.CHROM)

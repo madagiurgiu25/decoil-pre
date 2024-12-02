@@ -157,10 +157,6 @@ def pass_filter(record):
 	cov = (dr + v)
 	vaf = (v / (v + dr))
 
-	# precise breakpoint
-	# if vp.PRECISE not in record.INFO or not record.INFO[vp.PRECISE]:
-	# 	return False
-
 	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION_STRICT:
 		return False
 
@@ -176,7 +172,14 @@ def pass_filter(record):
 	if v < QUAL.MIN_COV_ALT:
 		return False
 	
-	if 'PASS' not in record.FILTER and 'STRANDBIAS' not in record.FILTER:
+	# if 'PASS' not in record.FILTER and 'STRANDBIAS' not in record.FILTER:
+	# 	return False
+	# precise breakpoint
+	# if vp.PRECISE not in record.INFO or not record.INFO[vp.PRECISE]:
+	# 	return False
+	
+	
+	if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
 		return False
 	
 	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION:
