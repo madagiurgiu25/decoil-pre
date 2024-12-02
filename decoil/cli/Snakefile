@@ -7,6 +7,8 @@ WORKFLOWS = [PROG.SV_ONLY,
              PROG.SV_RECONSTRUCT,
 	         PROG.RECONSTRUCT_ONLY]
 
+TMPDIR = None
+
 dirname = None
 bam = None
 
@@ -20,6 +22,8 @@ if config['workflow'] in WORKFLOWS:
     outputdir = config["outputdir"]
     normpath = os.path.normpath(outputdir)
     outdir_outside_container = config["container"]
+    TMPDIR = os.path.join(normpath,"tmp")
+    os.makedirs(os.path.join(normpath,"tmp"),exist_ok=True)
     os.makedirs(os.path.join(normpath,"logs"),exist_ok=True)
 
     # save configs

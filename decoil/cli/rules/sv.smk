@@ -43,7 +43,7 @@ rule svcalling:
 
         elif svcaller == "sniffles2" and filt_version == 3:
             shell("""sniffles --threads {params.threads} --input {input.bam} --qc-coverage 4 \
-            --reference {input.ref} --minsvlen 500 --cluster-merge-pos 300 --vcf {output} \
+            --reference {input.ref} --minsvlen 500 --cluster-merge-pos 5 --vcf {output} \
             --allow-overwrite --phase &> {log}
             """)
         else:

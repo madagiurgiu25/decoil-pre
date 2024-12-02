@@ -4,6 +4,6 @@
     "reference_genome": "",
     "annotation_gtf": "",
     "name": "test",
-    "threads": 4,
+    "threads": 20,
     "svcaller": "sniffles1"
 }

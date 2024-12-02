@@ -1,7 +1,7 @@
 {
     "bam": "",
     "outputdir": "",
-    "threads": 4,
+    "threads": 20,
     "name": "",
     "svcaller": "sniffles1"
 }
