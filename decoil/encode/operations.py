@@ -446,7 +446,7 @@ def passqc(count_spanning_reads, mean_wgs):
 		return True
 	return False
 
-def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
+def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 	"""
 	Add edges which connects 2 neighboring fragments in space if supporting reads >= WGS / 2
 
@@ -459,11 +459,13 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
 
 	log.info("5. Add edges connecting neighboring fragments")
 
-	samfile = pysam.AlignmentFile(bamfile, "rb")
+	if fast == False:
+		samfile = pysam.AlignmentFile(bamfile, "rb")
+	else:
+		samfile = None
 	fragment_intervals = graph.get_fragment_intervals()
 	fragments = graph.get_fragments()
 	fragments_connected = {}
-
 	frag_keys = list(fragments.keys())
 
 	for i in range(len(frag_keys)-1):
@@ -478,34 +480,36 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100):
 		if chr1 == chr2:
 			if abs(start1 - end2) < QUAL.DISTANCE:
 				breakpoint = start1
-			# left = fid2
-			# right = fid1
+				# left = fid2
+				# right = fid1
 			elif abs(start2 - end1) < QUAL.DISTANCE:
 				breakpoint = start2
-		# left = fid1
-		# right = fid2
+				# left = fid1
+				# right = fid2
 
 		# fragments are neighbors
 		if breakpoint > -1:
 
 			count_coverage_through = 0
-			for read in samfile.fetch(contig=chr1,
-			                          start=max(0, breakpoint - window),
-			                          stop=breakpoint + window):
+   
+			if fast == False:
+				for read in samfile.fetch(contig=chr1,
+										start=max(0, breakpoint - window),
+										stop=breakpoint + window):
 
-				# filter out secondary alignment and mapped
-				if not read.is_mapped or read.is_secondary:
-					continue
+					# filter out secondary alignment and mapped
+					if not read.is_mapped or read.is_secondary:
+						continue
 
-				# filter out short reads (< 2*window)
-				if read.query_length < 2 * window:
-					continue
+					# filter out short reads (< 2*window)
+					if read.query_length < 2 * window:
+						continue
 
-				# keep only reads which go through the breakpoint
-				if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
-					count_coverage_through += 1
+					# keep only reads which go through the breakpoint
+					if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
+						count_coverage_through += 1
 
-			if passqc(count_coverage_through,QUAL.MEAN_COVERAGE_WGS):
+			if fast == True or (fast == False and passqc(count_coverage_through,QUAL.MEAN_COVERAGE_WGS)):
 
 				# nodes
 				left = fragment_intervals.find_head_node(chr1, breakpoint)

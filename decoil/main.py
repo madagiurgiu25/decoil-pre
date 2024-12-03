@@ -107,7 +107,7 @@ def run_save_clusters(clusters, outputdir):
         json.dump(clusters, json_file, indent=4)
 
 
-def run_save_v2_new(likelycandidates, G, ref_genome, outputdir, sample):
+def run_save_v2_new(likelycandidates, G, ref_genome, outputdir, sample, skip=False):
 
     os.makedirs(outputdir, exist_ok=True)
 
@@ -155,12 +155,13 @@ def run_save_v2_new(likelycandidates, G, ref_genome, outputdir, sample):
         score_threshold=QUAL.FILTER_SCORE,
     )
 
-    log.info("6.4 Convert bed path to fasta")
-    parse.convert_bed2fasta(bedfile, fastafile, ref_genome, version=2)
-    parse.convert_bed2fasta(bedfile_ecdna, fastafile_ecdna, ref_genome, version=2)
-    parse.convert_bed2fasta(
-        bedfile_ecdna_filtered, fastafile_ecdna_filtered, ref_genome, version=2
-    )
+    if skip == False:
+        log.info("6.4 Convert bed path to fasta")
+        parse.convert_bed2fasta(bedfile, fastafile, ref_genome, version=2)
+        parse.convert_bed2fasta(bedfile_ecdna, fastafile_ecdna, ref_genome, version=2)
+        parse.convert_bed2fasta(
+            bedfile_ecdna_filtered, fastafile_ecdna_filtered, ref_genome, version=2
+        )
 
     log.info("6.5 Convert bed to links - required for visualization")
     parse.convert_bed2links(bedfile, linksfile)
@@ -195,6 +196,7 @@ def run_reconstruction(
     name="default_circle",
     svcaller=VCF_PROP.SNIFFLES1,
     fast=False,
+    skip=False
 ):
     """
     Reconstruct circle by finding the longest circular path in the graph
@@ -216,7 +218,7 @@ def run_reconstruction(
     run_save_fragments(G, "fragments_initial.bed")
 
     # 1.3 Add spatial
-    G = operations.add_spatial_edges_new(G, bamfile)
+    G = operations.add_spatial_edges_new(G, bamfile, fast=fast)
 
     # 2. Clean
     # 2.1 Remove standalone fragments
@@ -272,7 +274,7 @@ def run_reconstruction(
     # 8. Save
     # run_save_metrics(G, outputdir)
     # likelycandidates, G, ref_genome, outputdir, bigwigfile, gtffile, sample
-    run_save_v2_new(candidates_annotated, G, ref_genome, outputdir, name)
+    run_save_v2_new(candidates_annotated, G, ref_genome, outputdir, name, skip=skip)
     os.chdir(currpath)
 
 
@@ -287,7 +289,7 @@ def process_commandline_decoil_only(subparsers):
         usage="""decoil reconstruct -b <bamfile> -i <vcffile> -c <coveragefile> --outputdir <outputdir> --name <sample> -r <reference_genome>""",
     )
     requiredNamed = parser_a.add_argument_group("required named arguments")
-    requiredNamed.add_argument("-b", "--bam", help="Bam file", required=True)
+    requiredNamed.add_argument("-b", "--bam", help="Bam file", required=False)
     requiredNamed.add_argument(
         "-c", "--coverage", help="Coverage file (bigwig)", required=True
     )
@@ -376,6 +378,12 @@ def process_commandline_decoil_only(subparsers):
     parser_a.add_argument(
         "--fast",
         help="Reconstruct fast (not accurate and does not require a bam file)",
+        action="count",
+        default=0,
+    )
+    parser_a.add_argument(
+        "--skip",
+        help="Skip creation of fasta files (to save space)",
         action="count",
         default=0,
     )
@@ -743,6 +751,13 @@ def main(sysargs=sys.argv[1:]):
             else:
                 bam = os.path.abspath(args.bam)
                 fast = False
+            
+            # skip fasta file creation
+            skip = None
+            if args.skip == 1:
+                skip = True
+            else:
+                skip = False
 
             run_reconstruction(
                 os.path.abspath(args.vcf),
@@ -753,6 +768,7 @@ def main(sysargs=sys.argv[1:]):
                 name=args.name,
                 svcaller=args.sv_caller,
                 fast=fast,
+                skip=skip
             )
 
         elif subcommand == PROG.FILTER:
