@@ -224,18 +224,22 @@ def run_reconstruction(
     # 2.1 Remove standalone fragments
     G = operations.remove_standalone_fragments(G)
     run_save_fragments(G, "fragments_clean_1.bed")
+    
+    # 2.2.1 Remove high coverage fragments
+    G = operations.remove_highcoverage_fragments(G, threshold=QUAL.MAX_COVERAGE_DEFAULT)
+    run_save_fragments(G, "fragments_clean_2.bed")
 
-    # 2.2 Remove low coverage fragments
+    # 2.2.2 Remove low coverage fragments
     # dynamically setup minimal fragment coverage (better not use this)
     # metrics.set_threshold()
     G = operations.remove_lowcoverage_fragments(
         G, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE
     )
-    run_save_fragments(G, "fragments_clean_2.bed")
+    run_save_fragments(G, "fragments_clean_3.bed")
 
     # 2.3 Remove short fragments
     G = operations.remove_short_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_SIZE)
-    run_save_fragments(G, "fragments_clean_3.bed")
+    run_save_fragments(G, "fragments_clean_4.bed")
 
     # 2.4 Remove duplicated edges
     G = operations.remove_duplicated_edges(G)
@@ -319,7 +323,14 @@ def process_commandline_decoil_only(subparsers):
         help="Minimal fragment coverage (default: %(default)sX)",
         required=False,
         default=QUAL.MINIMAL_FRAGMENT_COVERAGE,
-        type=int,
+        type=int
+    )
+    parser_a.add_argument(
+        '--fragment-max-cov',
+        help='Maximal fragment coverage (default: %(default)sX)',
+		required=False,
+        default=QUAL.MAX_COVERAGE_DEFAULT,
+        type=int
     )
     parser_a.add_argument(
         "--fragment-min-size",
@@ -495,6 +506,11 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
         default=QUAL.MINIMAL_FRAGMENT_SIZE,
         type=int
     )
+    parser_b.add_argument('--fragment-max-cov',
+                          help='Maximal fragment coverage (default: %(default)sX)',
+						  required=False,
+                          default=QUAL.MAX_COVERAGE_DEFAULT,
+                          type=int)
     parser_b.add_argument(
         "--min-vaf",
         help="Minimal VAF acceptance SV (default: %(default)s)",
@@ -547,6 +563,12 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
         help="Reconstruct fast (not accurate and does not require a bam file)",
         action="count",
         default=0
+    )
+    parser_b.add_argument(
+        "--skip",
+        help="Skip creation of fasta files (to save space)",
+        action="count",
+        default=0,
     )
     parser_b.add_argument(
         "--filt-version",
@@ -700,6 +722,7 @@ def process_commandline(sysargs, pipeline=False):
 def setup_defaults(args):
     QUAL.MINIMAL_FRAGMENT_COVERAGE = args.fragment_min_cov
     QUAL.MINIMAL_FRAGMENT_SIZE = args.fragment_min_size
+    QUAL.MAX_COVERAGE_DEFAULT = args.fragment_max_cov
     QUAL.MINIMAL_SV_LEN = args.min_sv_len
     QUAL.MIN_VAF = args.min_vaf
     QUAL.MIN_COV = args.min_cov

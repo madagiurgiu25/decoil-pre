@@ -20,12 +20,12 @@ class TestInput(unittest.TestCase):
             self.fail(f"Unexpected exception raised: {e}")
         # Optionally, check that the result is correct
         # svinfo[chr2_15585355] [('Sniffles2.BND.2S1', 'chr3', '11049996', 'BND', 47, 88, '0/1', '+-'), ('Sniffles2.BND.3S1', 'chr3', '11056099', 'BND', 55, 80, '0/1', '-+')]
-        self.assertEqual(svinfo["chr2_15585355"][0][2], '11049996')
-        self.assertEqual(svinfo["chr2_15585355"][1][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585355"][1][7], '-+')
+        self.assertEqual(svinfo["chr2_15585355"][1][2], '11049996')
+        self.assertEqual(svinfo["chr2_15585355"][2][1], 'chr3')
+        self.assertEqual(svinfo["chr2_15585355"][2][7], '-+')
         
          # collection_breakpoints: defaultdict(<class 'list'>, {'chr2': [15585355, 15585355, 15633375, 16521051, 15585355], 'chr3': [11049996, 11056099, 10981201], 'chr12': [68807720, 68970909]})
-        self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15633375, 16521051, 15585355])
+        self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15585355, 15633375, 16521051, 15585355])
         
     def test_header_sniffles1(self):
         """Test correct format for sniffles1"""

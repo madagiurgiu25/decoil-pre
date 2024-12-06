@@ -47,6 +47,7 @@ def cleanvcf(vcfin, vcfout):
 					else:
 						log.warning("Corrupted VCF line " + l)
 
+
 def transform_record(record, svcaller):
 	"""
 	Convert required fields from Sniffles2, CuteSV and NANOMONSV
@@ -74,7 +75,7 @@ def transform_record(record, svcaller):
 		record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
 
 		if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
-			record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation
+			record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation			
 
 		if record.calls[0].data[vp.GT] == "./.":
 			record.calls[0].data[vp.DV] = int(record.INFO[vp.SUPPORT])
@@ -193,7 +194,7 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES1):
 	# parse vcf
 	svinfo, collection_breakpoints, count = parsevcf(vcffile_clean,svcaller)
 	print(collection_breakpoints)
-	print(svinfo)
+	# print(svinfo)
 
 	print("Total number of entries in vcf", count)
 	print("SV kept for graph generation", len(svinfo))
@@ -207,7 +208,7 @@ def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES1):
 	collection_breakpoints, svinfo = operations.merge_near_breakpoints(collection_breakpoints, svinfo)
 	log.info("1. 2. After cleaning breakpoints")
 	print(collection_breakpoints)
-	print(svinfo)
+	# print(svinfo)
 	
 	return collection_breakpoints, svinfo
 
@@ -370,6 +371,9 @@ def addsv(graph, svinfo):
 			        "weight": dv}
 			
 			svtype_code = -1
+			print("####")
+			print(id, chr1, pos1, chr2, pos2, svtype, dv, dr, gt, strand)
+			print("----")
 			if svtype in [vp.BND, vp.TRA]:
 				
 				if strand == "-+":
@@ -446,7 +450,6 @@ def addsv(graph, svinfo):
 		# 	print("SV id:", id, svtype, "is het!!, add neighbors for ", v1, v2)
 		# graph = add_neighbors(graph, v1, data, breakpoints, svtype)
 		# graph = add_neighbors(graph, v2, data, breakpoints, svtype)
-	
 	return graph
 
 
