@@ -18,6 +18,7 @@ import seaborn as sns
 from decoil.utils import QUAL
 from decoil.utils import META_CONFORMATION as mc
 from decoil.utils import TOPOLOGY as tp
+from decoil.utils import VCF_PROP as vp
 
 handler = logging.StreamHandler(sys.stdout)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -86,8 +87,7 @@ def compute_meancov(bwfile):
 		all_chroms = bw.chroms()
 		for _chr in all_chroms:
 			# select only primary chromosomes
-			if (_chr.startswith("chr") or (not _chr.startswith("K") and not _chr.startswith("J"))) and \
-					(not _chr.endswith("fix") or not _chr.endswith("alt")):
+			if _chr in vp.ALLOWED_CHR:
 				mean_perchr.append(bw.stats(_chr, 0, all_chroms[_chr], type="mean")[0])
 				len_perchr.append(all_chroms[_chr])
 	else:

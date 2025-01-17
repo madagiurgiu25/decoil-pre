@@ -139,38 +139,55 @@ def merge_near_breakpoints(collection_breakpoints, svinfo, distance=QUAL.DISTANC
 	return collection_breakpoints, svinfo
 
 
-def pass_filter(record):
+def pass_filter(record, processed_mates=[]):
 	"""
 	Check if SV record pass the quality filter
 	"""
+
+	# Extract values
+	svtype = record.INFO[vp.SVTYPE]
+	chr1 = str(record.CHROM)
+	chr2 = str(record.INFO[vp.CHR2])
+	svlen = abs(int(record.INFO[vp.SVLEN]))
+	mateid = record.INFO[vp.MATEID] if vp.MATEID in record.INFO else None
 	
-	val = record.calls[0].data.get('DV')
+	# DV - coverage spanning the alternative
+	val = record.calls[0].data.get(vp.DV)
 	if val == None:
-		raise Exception("DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("##Exception: DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	v = int(val)
 	
-	val = record.calls[0].data.get('DR')
+	# DR - coverage spanning the reference
+	val = record.calls[0].data.get(vp.DR)
 	if val == None:
-		raise Exception("DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("##Exception: DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	dr = int(val)
  
 	cov = (dr + v)
-	vaf = (v / (v + dr))
-
-	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION_STRICT:
-		return False
+	vaf = (v / (v + dr + 1))
+	
+	# check conditions
+	
+	# skip the mate for BND from VCF file
+	if vp.SECONDARY in record.INFO  or mateid and mateid in processed_mates:
+		processed_mates.append(mateid)
+		print("##INFO: Skip mate", record)
+		return False, processed_mates
+	
+	if svtype not in vp.SV_COLLECTION_STRICT:
+		return False, processed_mates
 
 	# filter low cov (< 10X)
 	if cov < QUAL.MIN_COV:
-		return False
+		return False, processed_mates
 	
 	# filter low VAF
 	if vaf < QUAL.MIN_VAF:
-		return False
+		return False, processed_mates
 	
 	# filter variants with < 4X
 	if v < QUAL.MIN_COV_ALT:
-		return False
+		return False, processed_mates
 	
 	# if 'PASS' not in record.FILTER and 'STRANDBIAS' not in record.FILTER:
 	# 	return False
@@ -180,25 +197,25 @@ def pass_filter(record):
 	# if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
 	# 	return False
 	
-	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION:
+	if svtype not in vp.SV_COLLECTION:
 		log.warning("SV unknown")
 		log.warning(record)
-		return False
+		return False, processed_mates
 
-	if str(record.INFO[vp.CHR2]) not in vp.ALLOWED_CHR or str(record.CHROM) not in vp.ALLOWED_CHR:
-		return False
+	if chr2 not in vp.ALLOWED_CHR or chr1 not in vp.ALLOWED_CHR:
+		return False, processed_mates
 
-	if record.INFO[vp.SVTYPE] != vp.BND and abs(int(record.INFO[vp.SVLEN])) < QUAL.MINIMAL_SV_LEN:
-		return False
+	if svtype != vp.BND and svlen < QUAL.MINIMAL_SV_LEN:
+		return False, processed_mates
 
 	# filter based on a negative exponential curve
 	if np.power(3,-cov*vaf/np.log(cov+0.001)) >= QUAL.EXPLOG_THRESHOLD:
-		return False
+		return False, processed_mates
 	
-	return True
+	return True, processed_mates
 
 
-def filter(vcf, vcfout, svcaller=vp.SNIFFLES1):
+def filter(vcf, vcfout):
 	"""
 	Read vcf file and store all breakpoints.
 
@@ -208,18 +225,22 @@ def filter(vcf, vcfout, svcaller=vp.SNIFFLES1):
         
 	encode.cleanvcf(vcf,vcf + "_clean.vcf")
 	reader = vcfpy.Reader.from_path(vcf + "_clean.vcf")
-	# outfile = vcf.replace(".vcf", ".filtered.vcf")
 	writer = vcfpy.Writer.from_path(vcfout, reader.header)
+	process_svs = []
 	
 	for record in reader:
 		try:
 			# check quality filter
-			if not pass_filter(record):
+			mateid = record.INFO[vp.MATEID] if vp.MATEID in record.INFO else None
+			if mateid:
+				process_svs.append(mateid)
+			state, process_svs = pass_filter(record, processed_mates=process_svs)
+			if state == False:
 				# skip record as this is good
 				continue
 			writer.write_record(record)
 		except Exception as e:
-			print("WARNING incorrect", record)
+			print("##WARNING: record incorrect", record)
 			continue
 
 def remove_duplicated_edges(graph):
@@ -250,7 +271,7 @@ def remove_duplicated_edges(graph):
 						visited_edges[e] = None
 
 	for e,u,v in to_remove:
-		print("remove edge ", e, " connecting nodes u,v ", u, v)
+		print("##INFO: remove edge ", e, " connecting nodes u,v ", u, v)
 		graph.remove_edge(e,u,v)
 
 	return graph
@@ -346,7 +367,7 @@ def remove_short_fragments(graph, threshold=QUAL.MINIMAL_FRAGMENT_SIZE):
 			toremove.append(fid)
 
 	for f in toremove:
-		print("Remove fragment due to size", f, fragments[f].coords)
+		print("##INFO: Remove fragment due to size", f, fragments[f].coords)
 		graph.rewire_fragment_neighbors(f)
 		graph.remove_fragment(f)
 
@@ -372,18 +393,18 @@ def resolve_self_loops(graph):
 			if etemp != e and edges[etemp][gep.SVTYPE] != gp.FRAGMENT:
 				# found self loop
 				if edges[etemp][gep.SVTYPE] == gp.DUP:
-					print("Found tandem duplication fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
+					print("##INFO: Found tandem duplication fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
 					                                                                                   edges[etemp][
 						                                                                                   gep.SVTYPE]))
 					edges[etemp][gep.REPEAT] = True
 				else:
-					print("Found other loop type fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
+					print("##INFO: Found other loop type fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
 					                                                                                edges[etemp][
 						                                                                                gep.SVTYPE]))
 					edges[etemp][gep.REPEAT] = True
 				pairs_selfloop.append((e, u, v))
 	
-	print("Found loops", pairs_selfloop)
+	print("##INFO: Found loops", pairs_selfloop)
 	for e, u, v in pairs_selfloop:
 		graph.remove_edge(e, u, v)
 	

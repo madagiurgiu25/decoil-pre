@@ -554,7 +554,7 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
     )
     parser_b.add_argument(
         "--extend-allowed-chr",
-        help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")',
+        help='Add list custom assemblies/chromosomes (e.g. --extend-allowed-chr chr1,chr2,chr3',
         required=False,
         default=""
     )
@@ -669,7 +669,7 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
     )
     parser_d.add_argument(
         "--extend-allowed-chr",
-        help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")',
+        help='Add list custom assemblies/chromosomes (e.g. --extend-allowed-chr chr1,chr2,chr3)',
         required=False,
         default="",
     )
@@ -730,7 +730,7 @@ def setup_defaults(args):
     QUAL.FILTER_SCORE = args.filter_score
     QUAL.EXPLOG_THRESHOLD = args.max_explog_threshold
     VCF_PROP.ALLOWED_CHR = VCF_PROP.ALLOWED_CHR + args.extend_allowed_chr.split(",")
-
+    print("INFO: allowed chromosomes", VCF_PROP.ALLOWED_CHR)
 
 def main(sysargs=sys.argv[1:]):
 
