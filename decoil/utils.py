@@ -6,7 +6,7 @@ Created using PyCharm
 Utils and auxiliary methods
 """
 
-SEPARATOR = "_"
+SEPARATOR = "@"
 
 
 class PROG:
@@ -198,7 +198,29 @@ class VCF_PROP:
     GT = "GT"  # genotype
     GQ = "GQ"
     AF = "AF"
-
+    MATEID = "MATEID"
+    
+    # lumpy specific
+    ##FORMAT=<ID=SU,Number=1,Type=Integer,Description="Number of pieces of evidence supporting the variant">
+    ##FORMAT=<ID=PE,Number=1,Type=Integer,Description="Number of paired-end reads supporting the variant">
+    ##FORMAT=<ID=SR,Number=1,Type=Integer,Description="Number of split reads supporting the variant">
+    ##FORMAT=<ID=RO,Number=1,Type=Integer,Description="Reference allele observation count, with partial observations recorded fractionally">
+    ##FORMAT=<ID=AO,Number=A,Type=Integer,Description="Alternate allele observations, with partial observations recorded fractionally">
+    ##FORMAT=<ID=QR,Number=1,Type=Integer,Description="Sum of quality of reference observations">
+    ##FORMAT=<ID=QA,Number=A,Type=Integer,Description="Sum of quality of alternate observations">
+    ##FORMAT=<ID=AP,Number=A,Type=Integer,Description="Alternate allele paired-end observation count, with partial observations recorded fractionally">
+    ##FORMAT=<ID=AB,Number=A,Type=Float,Description="Allele balance, fraction of observations from alternate allele, QA/(QR+QA)">
+    SU = "SU"
+    SR = "SR"
+    PE = "PE"
+    AB = "AB"
+    RO = "RO"
+    AO = "AO"
+    QA = "QA"
+    QR = "QR"
+    SECONDARY = "SECONDARY"
+    
+    
     DEL = "DEL"
     DUP = "DUP"
     INS = "INS"
@@ -223,8 +245,10 @@ class VCF_PROP:
     SNIFFLES1 = "sniffles1"  # SV caller name
     CUTESV = "cutesv"
     NANOMONSV = "nanomonsv"
+    LUMPY = "lumpy"
+    DELLY = "delly"
 
-    SVCALLERS = [SNIFFLES1, SNIFFLES2, CUTESV, NANOMONSV]
+    SVCALLERS = [SNIFFLES1, SNIFFLES2, CUTESV, NANOMONSV, LUMPY, DELLY]
 
     PASS = "PASS"
     STRANDBIAS = "STRANDBIAS"
@@ -343,7 +367,54 @@ class VCF_PROP:
         "NC_060945.1",
         "NC_060946.1",
         "NC_060947.1",
-        "NC_060948.1"
+        "NC_060948.1",
+        "NC_000001.11",
+    "NC_000002.12",
+    "NC_000003.12",
+    "NC_000004.12",
+    "NC_000005.10",
+    "NC_000006.12",
+    "NC_000007.14",
+    "NC_000008.11",
+    "NC_000009.12",
+    "NC_000010.11",
+    "NC_000011.10",
+    "NC_000012.12",
+    "NC_000013.11",
+    "NC_000014.9",
+    "NC_000015.10",
+    "NC_000016.10",
+    "NC_000017.11",
+    "NC_000018.10",
+    "NC_000019.10",
+    "NC_000020.11",
+    "NC_000021.9",
+    "NC_000022.11",
+    "NC_000023.11",
+    "NC_000024.10",
+    "NC_012920.1",
+    "NC_000067.7",
+    "NC_000068.8",
+    "NC_000069.7",
+    "NC_000070.7",
+    "NC_000071.7",
+    "NC_000072.7",
+    "NC_000073.7",
+    "NC_000074.7",
+    "NC_000075.7",
+    "NC_000076.7",
+    "NC_000077.7",
+    "NC_000078.7",
+    "NC_000079.7",
+    "NC_000080.7",
+    "NC_000081.7",
+    "NC_000082.7",
+    "NC_000083.7",
+    "NC_000084.7",
+    "NC_000085.7",
+    "NC_000086.8",
+    "NC_000087.8",
+    "NC_005089.1",
     ]
 
 
