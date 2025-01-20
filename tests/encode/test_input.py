@@ -9,6 +9,8 @@ from vcfpy import InvalidRecordException, Record, BreakEnd, Call
 from decoil.encode.encode import parsevcf
 from decoil.utils import VCF_PROP as vp
 from decoil.encode.operations import pass_filter
+from decoil.encode.encode import transform_record
+from decoil.utils import SEPARATOR
 
 class TestInput(unittest.TestCase):
 
@@ -20,9 +22,9 @@ class TestInput(unittest.TestCase):
             self.fail(f"Unexpected exception raised: {e}")
         # Optionally, check that the result is correct
         # svinfo[chr2_15585355] [('Sniffles2.BND.2S1', 'chr3', '11049996', 'BND', 47, 88, '0/1', '+-'), ('Sniffles2.BND.3S1', 'chr3', '11056099', 'BND', 55, 80, '0/1', '-+')]
-        self.assertEqual(svinfo["chr2_15585355"][1][2], '11049996')
-        self.assertEqual(svinfo["chr2_15585355"][2][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585355"][2][7], '-+')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][2], '11049996')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][2][1], 'chr3')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][2][7], '-+')
         
          # collection_breakpoints: defaultdict(<class 'list'>, {'chr2': [15585355, 15585355, 15633375, 16521051, 15585355], 'chr3': [11049996, 11056099, 10981201], 'chr12': [68807720, 68970909]})
         self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15585355, 15633375, 16521051, 15585355])
@@ -37,9 +39,9 @@ class TestInput(unittest.TestCase):
             self.fail(f"Unexpected exception raised: {e}")
         
         # 'chr2_15585355': [('4', 'chr3', '10981201', 'TRA', 24, 0, '1/1', '--'), ('5', 'chr3', '11060000', 'TRA', 123, 0, '1/1', '-+')]
-        self.assertEqual(svinfo["chr2_15585355"][0][2], '10981201')
-        self.assertEqual(svinfo["chr2_15585355"][1][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585355"][1][7], '-+')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][0][2], '10981201')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][1], 'chr3')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][7], '-+')
         
         #collection_breakpoints["chr2"]: [15633375, 16521051, 15585355, 15585355, 15633377, 16628304]  
         self.assertEqual(collection_breakpoints["chr2"], [15633375, 16521051, 15585355, 15585355, 15633377, 16628304])
@@ -54,9 +56,9 @@ class TestInput(unittest.TestCase):
             self.fail(f"Unexpected exception raised: {e}")
         
         # 'chr2_15585356':[('cuteSV.BND.0', 'chr3', '10981202', 'BND', 24, 0, '1/1', '++')]
-        self.assertEqual(svinfo["chr2_15585356"][0][2], '10981202')
-        self.assertEqual(svinfo["chr2_15585356"][0][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585356"][0][7], '++')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][2], '10981202')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][1], 'chr3')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][7], '++')
         
         #collection_breakpoints["chr2"]: [15585356, 15585357, 15585359, 15633375, 15633376, 16628305]  
         self.assertEqual(collection_breakpoints["chr2"], [15585356, 15585357, 15585359, 15633375, 15633376, 16628305])
@@ -71,9 +73,9 @@ class TestInput(unittest.TestCase):
             self.fail(f"Unexpected exception raised: {e}")
         
         # 'chr2_15585356':[('cuteSV.BND.0', 'chr3', '10981202', 'BND', 24, 0, '1/1', '++')]
-        self.assertEqual(svinfo["chr2_15585356"][0][2], '10981202')
-        self.assertEqual(svinfo["chr2_15585356"][0][1], 'chr3')
-        self.assertEqual(svinfo["chr2_15585356"][0][7], '++')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][2], '10981202')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][1], 'chr3')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585356"][0][7], '++')
         
         #collection_breakpoints["chr2"]: [15585356, 15585357, 15585359, 15633375, 15633376, 16628305]  
         self.assertEqual(collection_breakpoints["chr2"], [15585356, 15585357, 15585359, 15633375, 15633376, 16628305])
@@ -91,18 +93,20 @@ class TestInput(unittest.TestCase):
         """Test wrong assignment of file format"""
         
         # This triggers an error
-        parsevcf("tests/examples/ecdna1/cutesv.vcf","sniffles1")
+        parsevcf("tests/examples/ecdna1/cutesv.vcf","sniffles2")
         mock_exit.assert_called_with(1)
         
     def test_none_DR(self):
         with self.assertRaises(Exception) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': None, 'DV': 14})])
+            record = transform_record(record,svcaller=vp.SNIFFLES2)
             pass_filter(record)
         self.assertEqual(str(context.exception), "DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
     
     def test_none_DV(self):
         with self.assertRaises(Exception) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': 121, 'DV': None})])
+            record = transform_record(record,svcaller=vp.SNIFFLES2)
             pass_filter(record)
         self.assertEqual(str(context.exception), "DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 

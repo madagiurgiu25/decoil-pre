@@ -83,10 +83,10 @@ def convert_bed2links(bedfile, linksfile):
 				n2side = bp.RIGHT
 			
 			elem = {lp.N1: n1 + 1,  # 1-based instead of 0-based
-			        lp.N2: n2 + 1,
-			        lp.N1SIDE: n1side,
-			        lp.N2SIDE: n2side,
-			        lp.CIRC_ID: circ}
+					lp.N2: n2 + 1,
+					lp.N1SIDE: n1side,
+					lp.N2SIDE: n2side,
+					lp.CIRC_ID: circ}
 			dict_links.append(elem)
 	
 	# save
@@ -112,13 +112,13 @@ def convert_cycles2bed(paths, bedfile, graph):
 				strand = "+" if fid > 0 else "-"
 				cov = fragments[absfid].coverage
 				f.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(str(chr),
-				                                              str(start),
-				                                              str(stop),
-				                                              str(circid),
-				                                              str(frag),
-				                                              strand,
-				                                              str(int(cov)),
-				                                              "0"))
+															  str(start),
+															  str(stop),
+															  str(circid),
+															  str(frag),
+															  strand,
+															  str(int(cov)),
+															  "0"))
 
 
 
@@ -132,13 +132,13 @@ def convert_path2bed(paths, bedfile):
 		for path in paths:
 			for (chr, start, stop, strand, frag, circid, cov) in path:
 				f.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(str(chr),
-				                                              str(start),
-				                                              str(stop),
-				                                              str(circid),
-				                                              str(frag),
-				                                              strand,
-				                                              str(int(cov)),
-				                                              "0"))
+															  str(start),
+															  str(stop),
+															  str(circid),
+															  str(frag),
+															  strand,
+															  str(int(cov)),
+															  "0"))
 
 
 def convert_path2bed_v2(path, bedfile, keep=None, score_threshold=0):
@@ -272,13 +272,13 @@ def create_summary(candidates, summaryfile):
 	# 		top_idx = candidates[c]["topology"]
 	# 		top_name = tp.DICT[top_idx]
 	# 		f.write("""{}\t{}\t{}\t{}\t{}\t{}\t{}\n""".format(str(c),
-	# 		                                str(candidates[c]["chrs"]),
-	# 		                                str(candidates[c]["size"]),
-	# 		                                str(candidates[c]["label"]),
-	# 		                                str(top_idx),
-	# 		                                top_name,
+	# 										str(candidates[c]["chrs"]),
+	# 										str(candidates[c]["size"]),
+	# 										str(candidates[c]["label"]),
+	# 										str(top_idx),
+	# 										top_name,
 	# 										str(int(candidates[c]["score"]))
-	# 		                                ))
+	# 										))
 
 
 

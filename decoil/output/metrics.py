@@ -215,13 +215,13 @@ def annotate_topology(cycle):
 
 	Topologies (based on the metainformation):
 
-		Simple excisions:                1     0  0  0   0   0  0
-		Simple events:                 [2-10] 0|1 0  0   0   0  0
+		Simple excisions:				1	 0  0  0   0   0  0
+		Simple events:				 [2-10] 0|1 0  0   0   0  0
 									   [2-10]  0  0  1   0   0  0
-		Mixed simple events:           [2-10]  1  0  1   0   0  0
+		Mixed simple events:		   [2-10]  1  0  1   0   0  0
 		Multi-region intra-chromosomal:[2-10] 0|1 0 0|1  0   1  0
 		Multi-region inter-chromosomal:[2-10] 0|1 0 0|1  1   1  0
-		Simple duplications:           [2-10] 0|1 1 0|1 0|1 0|1 0
+		Simple duplications:		   [2-10] 0|1 1 0|1 0|1 0|1 0
 		Foldbacks:
 
 	Arguments:
@@ -229,14 +229,14 @@ def annotate_topology(cycle):
 	"""
 	topology = None
 	topology_details = {mc.N_FRAG_STR:0,
-	                    # mc.LEN_STR:0,
-	                    mc.SMALL_DEL_STR:0,
-	                    mc.DUP_STR:0,
-	                    mc.INV_STR:0,
-	                    mc.INTERCHR_STR:0,
-	                    mc.MULTI_REGION_STR:0,
-	                    mc.FOLDBACK_STR:0
-	                    }
+						# mc.LEN_STR:0,
+						mc.SMALL_DEL_STR:0,
+						mc.DUP_STR:0,
+						mc.INV_STR:0,
+						mc.INTERCHR_STR:0,
+						mc.MULTI_REGION_STR:0,
+						mc.FOLDBACK_STR:0
+						}
 	previous_fragment = None
 	visited_fragments = []
 	for (chr, start, stop, strand, frag, circid, cov) in cycle:
@@ -263,7 +263,7 @@ def annotate_topology(cycle):
 			# 10% of the previous fragment size
 
 			del_threshold = min(5000, int(0.1 * plen + 0.1 * clen))
-            #        del_threshold = 1000000
+			#		del_threshold = 1000000
 			# print("plen", plen)
 			# print("del tresh", del_threshold)
 			# print("diff",abs(cstart - pstop), abs(pstart - cstop))

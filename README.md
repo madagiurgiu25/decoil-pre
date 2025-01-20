@@ -248,23 +248,25 @@ optional arguments:
   -c, --use-conda
 ```
 
-The pipeline has the following [running modes](docs/decoil_pipeline_modes.md):
+You can run `decoil-pipeline` using following modes:
 
 - `sv-only`
 - `sv-reconstruct`
 - `reconstruct-only`
 
-<a name="decoil-viz"></a><br/>
-
-### 2. Visualization of ecDNA threads using `decoil-viz` (recommended)
-
-To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
+Check the description in [running modes.](docs/decoil_pipeline_modes.md)
 
 <a name="decoil-docs"></a><br/>
 
-### 3. Reconstruct ecDNA using `decoil` (advanced users only)
+### 2. Reconstruct ecDNA using `decoil` (advanced users only)
 
 This configuration is the most flexible and allows users to use their own SV calls. For details go [here](docs/decoil_reconstruct.md).
+
+<a name="decoil-viz"></a><br/>
+
+### 3. Visualization of ecDNA threads using `decoil-viz` (recommended)
+
+To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
 <a name="#decoil-faq"></a><br/>
 
@@ -278,9 +280,12 @@ Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) secti
 
 The relevant output files for the users are:
 
-- `reconstruct.bed` - contains all genomic fragments composing all reconstructions
-- `reconstruct.ecDNA.bed` - contains all genomic fragments composing all the ecDNA labeled reconstructions
+- `reconstruct.bed` - contains all genomic fragments composing for all reconstructions
+- `reconstruct.ecDNA.bed` - contains all genomic fragments composing reconstructions labeled as ecDNA
+- `reconstruct.ecDNA.filtered.bed` - contains all genomic fragments composing the reconstructios labeled as ecDNA and passing the `--filter-score`
 - `summary.txt` - summarize all the circular reconstructions
+
+<br/>Example `reconstruct.bed`:
 
 ```bash
 cat reconstruct.bed
@@ -298,6 +303,8 @@ chr3    10981202        11028470        3       25      -       31      36
 chr12   68807722        68970910        2       53      +       252     252
 
 ```
+
+<br/>Example `summary.txt`:
 
 ```bash
 cat summary.txt

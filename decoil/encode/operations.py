@@ -222,7 +222,7 @@ def filter(vcf, vcfout):
 	Return:
 		(breakpoints, sv info)
 	"""
-        
+		
 	encode.cleanvcf(vcf,vcf + "_clean.vcf")
 	reader = vcfpy.Reader.from_path(vcf + "_clean.vcf")
 	writer = vcfpy.Writer.from_path(vcfout, reader.header)
@@ -394,13 +394,13 @@ def resolve_self_loops(graph):
 				# found self loop
 				if edges[etemp][gep.SVTYPE] == gp.DUP:
 					print("##INFO: Found tandem duplication fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
-					                                                                                   edges[etemp][
-						                                                                                   gep.SVTYPE]))
+																									   edges[etemp][
+																										   gep.SVTYPE]))
 					edges[etemp][gep.REPEAT] = True
 				else:
 					print("##INFO: Found other loop type fragid:(tail, head, edge) {}:({},{},{}) {}".format(fid, u, v, e,
-					                                                                                edges[etemp][
-						                                                                                gep.SVTYPE]))
+																									edges[etemp][
+																										gep.SVTYPE]))
 					edges[etemp][gep.REPEAT] = True
 				pairs_selfloop.append((e, u, v))
 	
@@ -440,7 +440,7 @@ def add_coverage_per_fragment(graph, bigwigfile):
 			if chr not in all_chroms:
 				raise ValueError(
 					"""{} extracted from vcf not present in {}. Please check formatting""".format(str(chr),
-					                                                                              bigwigfile))
+																								  bigwigfile))
 			
 			# for inf values set the length of the chromosome
 			if start == math.inf:
@@ -571,7 +571,7 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 				# avoid duplicated connection between two fragments
 				if left and right and conn1 not in fragments_connected and conn2 not in fragments_connected:
 					print("Spatial ->> Chr breakpoint count node_left node_right", chr1, breakpoint,
-					      count_coverage_through, left, right)
+						  count_coverage_through, left, right)
 					graph.add_edge(MultiGraph.generate_id(), left, right, gp.SPATIAL, settings)
 					fragments_connected[conn1] = None
 					fragments_connected[conn2] = None

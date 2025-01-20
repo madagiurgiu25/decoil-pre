@@ -49,14 +49,33 @@ def cleanvcf(vcfin, vcfout):
 
 
 def transform_record_sniffles1(record):
-    record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
-    return record
+	
+	if vp.STRANDS not in record.INFO:
+		raise Exception("""{} key not found in record. Make sure this is a Sniffles1 format.""".format(vp.STRANDS))
+	
+	record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
+	
+	# SV len
+	record.INFO[vp.SVLEN] = '-1' if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == '-' else record.INFO[vp.SVLEN]
+	record.INFO[vp.SVLEN] = str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN]
+ 
+	return record
 
 
 def transform_record_sniffles2(record):
-    # add CHR2 and POS2
+	
+	for key in [vp.SUPPORT, vp.COVERAGE]:
+		if key not in record.INFO:
+			raise Exception("""{} key not found in record. Make sure this is a Sniffles2 format.""".format(key))
+	
+	# add chr2 and end for SV
 	record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 	record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
+	
+	# SV len
+	record.INFO[vp.SVLEN] = '-1' if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == '-' else record.INFO[vp.SVLEN]
+	record.INFO[vp.SVLEN] = str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN]
+
 
 	if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
 		record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation			
@@ -76,7 +95,7 @@ def transform_record_sniffles2(record):
 
 
 def transform_record_cutesv(record):
-    # add STRANDS instead of STRAND or add an artificial strand encoding for INS
+	# add STRANDS instead of STRAND or add an artificial strand encoding for INS
 	if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
 		record.INFO[vp.STRAND] = record.ALT[0].orientation + record.ALT[0].mate_orientation
 	elif vp.STRAND in record.INFO:
@@ -87,15 +106,26 @@ def transform_record_cutesv(record):
 	# add CHR2 and POS2
 	record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 	record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
+ 
+	# SV len
+	record.INFO[vp.SVLEN] = '-1' if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == '-' else record.INFO[vp.SVLEN]
+	record.INFO[vp.SVLEN] = str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN]
+	
 	return record
 
 def transform_record_nanomonsv(record):
-    # add CHR2 and POS2
+	# add CHR2 and POS2
 	record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 	record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
 
 	# calculate AF
-	record.calls[0].data[vp.AF] = (record.calls[0].data[vp.DV]/(record.calls[0].data[vp.DV]+record.calls[0].data[vp.DR]+1))
+	record.INFO[vp.SVLEN] = '-1' if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == '-' else record.INFO[vp.SVLEN]
+	record.INFO[vp.SVLEN] = str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN]
+
+	# SV len
+	if vp.SVLEN in record.INFO:
+		record.INFO[vp.SVLEN] = str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN]
+
 
 	# add STRANDS information
 	if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
@@ -108,7 +138,7 @@ def transform_record_nanomonsv(record):
 
 
 def transform_record_lumpy(record):
-    # add CHR2 and POS2
+	# add CHR2 and POS2
 	record.INFO[vp.CHR2] = record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom
 	record.INFO[vp.END] = record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos
 
@@ -131,7 +161,7 @@ def transform_record_lumpy(record):
 
 
 def transform_record_delly(record):
-    return record
+	return record
 
 
 DICT_TRANSFORM = {
@@ -156,7 +186,7 @@ def transform_record(record, svcaller):
  
 
 def parsevcf(vcffile_clean, svcaller):
-    
+	
 	reader = vcfpy.Reader.from_path(vcffile_clean)
 	writer = vcfpy.Writer.from_path(vcffile_clean.split(".")[0] + "_filtered.vcf", reader.header)
 	count=0
@@ -222,11 +252,11 @@ def parsevcf(vcffile_clean, svcaller):
 	except InvalidRecordException:
 		log.warning("VCF file was cropped! Most probably because Sniffle VCF is corrupted. This will generate incomplete/incorrect reconstruction.")
 		sys.exit(1)
-	# except Exception:
-	# 	print("""VCF not compatible with the specified --sv-caller {}; check your VCF format using: decoil check -i <your vcf file>""".format(svcaller))
-	# 	sys.exit(1)
-    
-    
+	except Exception:
+		print("""VCF not compatible with the specified --sv-caller {}; check your VCF format using: decoil check -i <your vcf file>""".format(svcaller))
+		sys.exit(1)
+	
+	
 def readvcf(vcffile, outputdir, svcaller=vp.SNIFFLES1):
 	"""
 	Read vcf file and store all breakpoints.
@@ -287,25 +317,25 @@ def insert_fragment(graph, chr, pos, last_pos, fragment_count):
 	
 	frag_len = (int(pos) - int(last_pos))
 	props3 = {gep.CHR: chr,
-	          gep.START: last_pos,
-	          gep.END: pos,
-	          gep.COLOR: "gray",
-	          gep.SVTYPE: gp.FRAGMENT,
-	          gep.FRAGMENT_LEN: frag_len,
-	          gep.FRAGMENT_NAME: fragment_count,
-	          gep.WEIGHT: math.inf}
+			  gep.START: last_pos,
+			  gep.END: pos,
+			  gep.COLOR: "gray",
+			  gep.SVTYPE: gp.FRAGMENT,
+			  gep.FRAGMENT_LEN: frag_len,
+			  gep.FRAGMENT_NAME: fragment_count,
+			  gep.WEIGHT: math.inf}
 	graph.add_edge(id3, id1, id2, gp.FRAGMENT, props3)
 	
 	graph.add_fragment(fragment_count, id1, id2, id3, {fg.CHR: chr,
-	                                                   fg.START: last_pos,
-	                                                   fg.END: pos,
-	                                                   fg.COVERAGE: math.inf
-	                                                   })
+													   fg.START: last_pos,
+													   fg.END: pos,
+													   fg.COVERAGE: math.inf
+													   })
 	graph.get_fragment_intervals().add_fragment(chr, last_pos, pos, {fg.FRAGID: fragment_count,
-	                                                                 fg.EDGEID: id3,
-	                                                                 fg.NODE_TAIL: id1,
-	                                                                 fg.NODE_HEAD: id2
-	                                                                 })
+																	 fg.EDGEID: id3,
+																	 fg.NODE_TAIL: id1,
+																	 fg.NODE_HEAD: id2
+																	 })
 	return graph
 
 
@@ -418,11 +448,11 @@ def addsv(graph, svinfo):
 			chr1, pos1 = key.split(utils.SEPARATOR)
 			
 			data = {"dv": dv,
-			        "dr": dr,
-			        "total_cov": dv + dr,
-			        "len": 10,
-			        "color": vp.SV_COLORS[svtype],
-			        "weight": dv}
+					"dr": dr,
+					"total_cov": dv + dr,
+					"len": 10,
+					"color": vp.SV_COLORS[svtype],
+					"weight": dv}
 			
 			svtype_code = -1
 			if svtype in [vp.BND, vp.TRA]:
