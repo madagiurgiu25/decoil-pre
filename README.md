@@ -7,11 +7,11 @@ Decoil (deconvolve extrachromosomal circular DNA isoforms from long-read data) i
 circular DNA.
 
 - [Getting started using conda and pip](#gettingstartedpip)
-- [Getting started using docker or singularity](#gettingstarted)
-- [Run example using docker or singularity](#testexample)
-- [Run Decoil reconstruction using docker or singularity](#decoil-slim)
-- [Install Decoil from source](#installsource)
-- [Decoil configurations](#decoil-config)
+- [Getting started using docker](#gettingstarteddocker)
+- [Getting started using singularity](#gettingstartedsingularity)
+- [Test example for docker or singularity](#testexample)
+- [Install Decoil from source (latest features, unstable)](#installsource)
+- [Decoil run configuration](#decoil-config)
 - [File formats](#decoil-file)
 - [FAQ](#decoil-faq)
 - [Citation](#citation)
@@ -24,47 +24,35 @@ circular DNA.
 Assumes you have conda installed.
 
 ```bash
+# install conda dependencies
 conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1
 conda activate envdecoil
-python -m pip install decoil==1.1.3
 
+# install decoil via pip
+python -m pip install decoil==1.1.3
 decoil --version
 ```
 
-<a name="gettingstarted"></a>
+<a name="gettingstarteddocker"></a>
 
-## Getting started using docker or singularity
+## Getting started using docker
 
-As a prequisite you need to have install `docker` or `singularity` (you can install this from the official website or using `conda`).
+As a prequisite you need to have installed `docker` (you can install this from the official website or using `conda`).
 
-### 1.1 Download as docker image
+### Download as docker image
 
 Download `decoil` docker image from `docker-hub`. This contains all the dependencies needed to run the software. No additional installation needed. All the environment, packages, dependencies are all specified in the docker/singularity image. 
-
 
 ```bash
 # docker
 docker pull madagiurgiu25/decoil:1.1.2-slim
 ```
 
-### 1.2 Download as singularity image
+###  Run example using docker (optional)
 
-```bash
-# singularity
-singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
-```
+Test docker installation using [example](docs/example.md).
 
-<br/>
-
-<a name="testexample"></a> 
-
-### 2. Run example using docker or singularity 
-
-To test your installation check the [Example](docs/example.md).
-
-<br/>
-
-### 3. Run Decoil reconstruction using docker or singularity <a name="decoil-slim"></a> 
+### Run Decoil reconstruction using docker
 
 To run Decoil on your data you need to cofigure the following parameters:
 
@@ -94,6 +82,37 @@ docker run -it --platform=linux/amd64 \
             -g /annotation/anno.gtf \
             -o /mnt --name ${NAME}
 ```
+To test your installation using [example](docs/example.md).
+
+## Getting started using singularity
+
+As a prequisite you need to have installed `singularity` (you can install this from the official website or using `conda`).
+
+### Download as singularity image
+
+```bash
+# singularity
+singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
+```
+
+### Run example using singularity (optional)
+
+Test singularity installation using [example](docs/example.md).
+
+### Run Decoil reconstruction using singularity
+
+To run Decoil on your data you need to cofigure the following parameters:
+
+```bash
+# run decoil with your input with standard parameters
+BAM_INPUT="<absolute path to your BAM file>"
+OUTPUT_FOLDER="<absolute path to your output folder>"
+NAME="<sample name>"
+GENOME="<absolute path to your reference genome file>"
+ANNO="<absolute path to your gtf annotation file>"
+```
+
+and then run the following command:
 
 ```bash
 # singularity
@@ -118,23 +137,32 @@ singularity run \
 
 <br/>
 
+<a name="testexample"></a> 
+
+## Test example for docker or singularity 
+
+To test docker and singularity installation use the [example](docs/example.md).
+
+
+<br/>
+
 <a name="installsource"></a> 
 
-## Install Decoil from source
+## Install Decoil from source (latest features, unstable)
 
-You can install the latest version of Decoil repository (git and conda/mamba required):
+You can install the latest version of Decoil repository. Note this is an unstable version and contains bugs.
+`git` and `conda/mamba` are prequisites.
+
+### Linux
 
 ```
-git clone https://github.com/madagiurgiu25/decoil-pre.git
-cd  decoil-pre
-
 # create conda environment
-# for linux
-mamba env create -f environment.yml
-# for macos
-mamba env create -f environment.yml --platform osx-64
-
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1
 conda activate envdecoil
+
+# install decoil
+git clone https://github.com/madagiurgiu25/decoil-pre.git
+cd decoil-pre
 python -m pip install -r requirements.txt
 python setup.py install
 ```
@@ -147,10 +175,31 @@ decoil-pipeline --version
 decoil --version
 ```
 
+### MacOS
+
+```
+# create conda environment
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 --platform osx-64
+conda activate envdecoil
+
+# install decoil
+git clone https://github.com/madagiurgiu25/decoil-pre.git
+cd decoil-pre
+python -m pip install -r requirements.txt
+python setup.py install
+```
+
+And check if the installation worked:
+
+```
+# might take a while
+decoil-pipeline --version
+decoil --version
+```
 
 <a name="decoil-config"></a><br/>
 
-## Decoil configurations 
+## Decoil run configurations 
 
 An overview about the available functionalities:
 
