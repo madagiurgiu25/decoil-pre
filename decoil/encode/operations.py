@@ -154,13 +154,13 @@ def pass_filter(record, processed_mates=[]):
 	# DV - coverage spanning the alternative
 	val = record.calls[0].data.get(vp.DV)
 	if val == None:
-		raise Exception("##Exception: DV has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("##Exception: DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	v = int(val)
 	
 	# DR - coverage spanning the reference
 	val = record.calls[0].data.get(vp.DR)
 	if val == None:
-		raise Exception("##Exception: DR has not value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+		raise Exception("##Exception: DR has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	dr = int(val)
  
 	cov = (dr + v)
