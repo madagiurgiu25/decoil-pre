@@ -153,6 +153,12 @@ def pass_filter(record, processed_mates=[]):
 	
 	# DV - coverage spanning the alternative
 	val = record.calls[0].data.get(vp.DV)
+	
+	if svtype not in vp.SV_COLLECTION_STRICT:
+		# log.warning("SV unknown")
+		# log.warning(record)
+		return False, processed_mates
+	
 	if val == None:
 		raise Exception("##Exception: DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 	v = int(val)
@@ -171,7 +177,7 @@ def pass_filter(record, processed_mates=[]):
 	# skip the mate for BND from VCF file
 	if vp.SECONDARY in record.INFO  or mateid and mateid in processed_mates:
 		processed_mates.append(mateid)
-		print("##INFO: Skip mate", record)
+		# print("##INFO: Skip mate", record)
 		return False, processed_mates
 	
 	if svtype not in vp.SV_COLLECTION_STRICT:
@@ -196,11 +202,6 @@ def pass_filter(record, processed_mates=[]):
 	# 	return False
 	# if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
 	# 	return False
-	
-	if svtype not in vp.SV_COLLECTION:
-		log.warning("SV unknown")
-		log.warning(record)
-		return False, processed_mates
 
 	if chr2 not in vp.ALLOWED_CHR or chr1 not in vp.ALLOWED_CHR:
 		return False, processed_mates
@@ -215,7 +216,7 @@ def pass_filter(record, processed_mates=[]):
 	return True, processed_mates
 
 
-def filter(vcf, vcfout):
+def filter(vcf, vcfout, svcaller=vp.SNIFFLES1):
 	"""
 	Read vcf file and store all breakpoints.
 
@@ -223,7 +224,7 @@ def filter(vcf, vcfout):
 		(breakpoints, sv info)
 	"""
 		
-	encode.cleanvcf(vcf,vcf + "_clean.vcf")
+	encode.cleanvcf(vcf,vcf + "_clean.vcf",svcaller=svcaller)
 	reader = vcfpy.Reader.from_path(vcf + "_clean.vcf")
 	writer = vcfpy.Writer.from_path(vcfout, reader.header)
 	process_svs = []
@@ -295,7 +296,6 @@ def remove_highcoverage_fragments(graph, threshold=QUAL.MAX_COVERAGE_DEFAULT):
 			toremove.append(fid)
 	
 	for f in toremove:
-		# graph.rewire_fragment_neighbors(f)
 		graph.remove_fragment(f)
 	return graph
 
@@ -320,7 +320,6 @@ def remove_lowcoverage_fragments(graph, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE
 			toremove.append(fid)
 	
 	for f in toremove:
-		# graph.rewire_fragment_neighbors(f)
 		graph.remove_fragment(f)
 
 	return graph
@@ -369,6 +368,32 @@ def remove_short_fragments(graph, threshold=QUAL.MINIMAL_FRAGMENT_SIZE):
 	for f in toremove:
 		print("##INFO: Remove fragment due to size", f, fragments[f].coords)
 		graph.rewire_fragment_neighbors(f)
+		graph.remove_fragment(f)
+
+	return graph
+
+
+def remove_long_fragments(graph, threshold=QUAL.MAXIMAL_FRAGMENT_SIZE):
+	"""
+	Remove fragments which are larger than 5 MB (QUAL.MAXIMAL_FRAGMENT_COVERAGE)
+
+	Args:
+		graph (decoil.graph.Mutigraph): SV graph
+
+	Returns:
+		filtered graph including only fragments with size <= 5 MB
+	"""
+
+	# remove low coverage fragments
+	fragments = graph.get_fragments()
+	toremove = []
+	for fid in fragments:
+		frag = fragments[fid]
+		if frag.len > threshold:
+			toremove.append(fid)
+
+	for f in toremove:
+		print("##INFO: Remove fragment due to size", f, fragments[f].coords)
 		graph.remove_fragment(f)
 
 	return graph
@@ -461,8 +486,10 @@ def add_coverage_per_fragment(graph, bigwigfile):
 				start = start -1 
 
 			# Compute the median
-			values = bw.values(chr, start, stop)
-			median_value = np.median(values)
+			bin_means = bw.stats(chr, start, stop, type="mean")
+			# Filter out None values (empty bins)
+			bin_means = [x for x in bin_means if x is not None]
+			median_value = np.median(bin_means)
    
 			if median_value > -1:
 				# set fragment coverage

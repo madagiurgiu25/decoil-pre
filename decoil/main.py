@@ -201,6 +201,8 @@ def run_reconstruction(
 	"""
 	Reconstruct circle by finding the longest circular path in the graph
 	"""
+	log.info(f"SV caller: {svcaller}")
+	
 	os.makedirs(outputdir, exist_ok=True)
 	# change to local directory
 	currpath = os.getcwd()
@@ -217,32 +219,38 @@ def run_reconstruction(
 	G = encode.run_encoding(vcffile, bigwigfile, bamfile, outputdir, svcaller=svcaller)
 	run_save_fragments(G, "fragments_initial.bed")
 
-	# 1.3 Add spatial
-	G = operations.add_spatial_edges_new(G, bamfile, fast=fast)
-
-	# 2. Clean
+	# 2. Clean and add spatial edges
 	# 2.1 Remove standalone fragments
 	G = operations.remove_standalone_fragments(G)
 	run_save_fragments(G, "fragments_clean_1.bed")
 	
-	# 2.2.1 Remove high coverage fragments
-	G = operations.remove_highcoverage_fragments(G, threshold=QUAL.MAX_COVERAGE_DEFAULT)
+	# 2.2 Remove long fragments
+	G = operations.remove_long_fragments(G, threshold=QUAL.MAXIMAL_FRAGMENT_SIZE)
 	run_save_fragments(G, "fragments_clean_2.bed")
-
-	# 2.2.2 Remove low coverage fragments
-	# dynamically setup minimal fragment coverage (better not use this)
-	# metrics.set_threshold()
-	G = operations.remove_lowcoverage_fragments(
-		G, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE
-	)
+	
+	# 2.3 Remove high coverage fragments
+	G = operations.remove_highcoverage_fragments(G, threshold=QUAL.MAX_COVERAGE_DEFAULT)
 	run_save_fragments(G, "fragments_clean_3.bed")
 
-	# 2.3 Remove short fragments
-	G = operations.remove_short_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_SIZE)
+	# 2.4 Add spatial
+	G = operations.add_spatial_edges_new(G, bamfile, fast=fast)
+
+	# 2.5 Remove low coverage fragments
+	# dynamically setup minimal fragment coverage (better not use this)
+	# metrics.set_threshold()
+	G = operations.remove_lowcoverage_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_COVERAGE)
 	run_save_fragments(G, "fragments_clean_4.bed")
 
-	# 2.4 Remove duplicated edges
+	# 2.6 Remove short fragments
+	G = operations.remove_short_fragments(G, threshold=QUAL.MINIMAL_FRAGMENT_SIZE)
+	run_save_fragments(G, "fragments_clean_5.bed")
+
+	# 2.7 Remove duplicated edges
 	G = operations.remove_duplicated_edges(G)
+	
+	# 2.8 Remove standalone fragments
+	G = operations.remove_standalone_fragments(G)
+	run_save_fragments(G, "fragments_clean_6.bed")
 
 	# 2.3 Clean low coverage / small size fragments
 	# G = operations.run_cleaning(G, outputdir)
@@ -340,6 +348,13 @@ def process_commandline_decoil_only(subparsers):
 		type=int,
 	)
 	parser_a.add_argument(
+		"--fragment-max-size",
+		help="Maximal fragment size (default: %(default)sbp)",
+		required=False,
+		default=QUAL.MAXIMAL_FRAGMENT_SIZE,
+		type=int,
+	)
+	parser_a.add_argument(
 		"--min-vaf",
 		help="Minimal VAF acceptance SV (default: %(default)s)",
 		required=False,
@@ -419,6 +434,12 @@ def process_commandline_decoil_only(subparsers):
 	parser_c = subparsers.add_parser(PROG.FILTER, help="Filter VCF file")
 	parser_c.add_argument("-i", "--vcf", help="Input vcf", required=True)
 	parser_c.add_argument("-o", "--outputdir", help="Output directory", required=True)
+	parser_c.add_argument(
+		"--sv-caller",
+		help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS),
+		required=False,
+		default=VCF_PROP.SNIFFLES1
+	)
 	parser_c.set_defaults(which=PROG.FILTER)
 
 	parser_d = subparsers.add_parser(PROG.CHECK, help="Check integrity of files")
@@ -627,6 +648,13 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 		type=int,
 	)
 	parser_d.add_argument(
+		"--fragment-max-size",
+		help="Maximal fragment size (default: %(default)sbp)",
+		required=False,
+		default=QUAL.MAXIMAL_FRAGMENT_SIZE,
+		type=int,
+	)
+	parser_d.add_argument(
 		"--min-vaf",
 		help="Minimal VAF acceptance SV (default: %(default)s)",
 		required=False,
@@ -722,6 +750,7 @@ def process_commandline(sysargs, pipeline=False):
 def setup_defaults(args):
 	QUAL.MINIMAL_FRAGMENT_COVERAGE = args.fragment_min_cov
 	QUAL.MINIMAL_FRAGMENT_SIZE = args.fragment_min_size
+	QUAL.MAXIMAL_FRAGMENT_SIZE = args.fragment_max_size
 	QUAL.MAX_COVERAGE_DEFAULT = args.fragment_max_cov
 	QUAL.MINIMAL_SV_LEN = args.min_sv_len
 	QUAL.MIN_VAF = args.min_vaf
@@ -730,7 +759,8 @@ def setup_defaults(args):
 	QUAL.FILTER_SCORE = args.filter_score
 	QUAL.EXPLOG_THRESHOLD = args.max_explog_threshold
 	VCF_PROP.ALLOWED_CHR = VCF_PROP.ALLOWED_CHR + args.extend_allowed_chr.split(",")
-	print("INFO: allowed chromosomes", VCF_PROP.ALLOWED_CHR)
+	log.info("Allowed chromosomes", VCF_PROP.ALLOWED_CHR)
+	
 
 def main(sysargs=sys.argv[1:]):
 
@@ -797,7 +827,7 @@ def main(sysargs=sys.argv[1:]):
 		elif subcommand == PROG.FILTER:
 			# start filtering
 			operations.filter(
-				os.path.abspath(args.vcf), os.path.abspath(args.outputdir)
+				os.path.abspath(args.vcf), os.path.abspath(args.outputdir), svcaller=args.sv_caller
 			)
 
 		print("-------")

@@ -104,7 +104,7 @@ def set_wgs(bigwigfile):
 	Compute WGS mean coverage
 	"""
 	QUAL.MEAN_COVERAGE_WGS = compute_meancov(bigwigfile)
-	print("Set QUAL.MEAN_COVERAGE_WGS to ", QUAL.MEAN_COVERAGE_WGS)
+	print("##INFO: Set QUAL.MEAN_COVERAGE_WGS to ", QUAL.MEAN_COVERAGE_WGS)
 
 
 def set_max_coverage(graph):
@@ -118,14 +118,14 @@ def set_max_coverage(graph):
 			max = fragments[f].coverage
 
 	QUAL.MAX_COVERAGE = max
-	print("Set QUAL.MAX_COVERAGE to ", QUAL.MAX_COVERAGE)
+	print("##INFO: Set QUAL.MAX_COVERAGE to ", QUAL.MAX_COVERAGE)
 
 def set_min_fragment_coverage(wgs, preset_min_coverage):
 	"""
 	Maxim between 2xWGS and the preset minimal fragment coverage (user defined)
 	"""
 	QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MEAN_COVERAGE_WGS,QUAL.MINIMAL_FRAGMENT_COVERAGE)
-	print("Set QUAL.MINIMAL_FRAGMENT_COVERAGE to ", QUAL.MINIMAL_FRAGMENT_COVERAGE)
+	("Set QUAL.MINIMAL_FRAGMENT_COVERAGE to ", QUAL.MINIMAL_FRAGMENT_COVERAGE)
 
 def set_threshold():
 	"""

@@ -106,12 +106,16 @@ class QUAL:
 	ECDNA_MINSIZE = 0.1
 	# Minimal fragment size (bp)
 	MINIMAL_FRAGMENT_SIZE = 500
+	# Maximal fragment size (bp)
+	MAXIMAL_FRAGMENT_SIZE = 5000000
 	# Minimal score (estimated copy-number)
 	FILTER_SCORE = 0
 	# Filter variants based on a explog function
 	EXPLOG_THRESHOLD = 0.1
 	# Far
 	FAR_FRAGMENTS = 16000
+	
+	STEP = 50
 
 
 # MIN_COV = 10
@@ -220,6 +224,13 @@ class VCF_PROP:
 	QR = "QR"
 	SECONDARY = "SECONDARY"
 	
+	# nanonomsv
+	##FORMAT=<ID=TR,Number=1,Type=Integer,Description="The number of reads around the breakpoints">
+	##FORMAT=<ID=VR,Number=1,Type=Integer,Description="The number of variant supporting reads determined in the validation realignment step">
+	#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	TUMOR	CONTROL
+	VR = "VR"
+	TR = "TR"
+	
 	
 	DEL = "DEL"
 	DUP = "DUP"
@@ -245,6 +256,7 @@ class VCF_PROP:
 	SNIFFLES1 = "sniffles1"  # SV caller name
 	CUTESV = "cutesv"
 	NANOMONSV = "nanomonsv"
+	SAVANA = "savana"
 	LUMPY = "lumpy"
 	DELLY = "delly"
 
