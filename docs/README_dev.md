@@ -7,6 +7,11 @@ python -m pip install setuptools wheel twine
 python -m pip install --upgrade pip
 python setup.py sdist bdist_wheel
 python -m twine upload --repository testpypi --verbose dist/*
+```
 
+# Test decoil
 
+```
+python -m pip install -r requirements_dev.txt
+pytest tests 
 ```

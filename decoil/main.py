@@ -527,6 +527,13 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 		default=QUAL.MINIMAL_FRAGMENT_SIZE,
 		type=int
 	)
+	parser_b.add_argument(
+		"--fragment-max-size",
+		help="Maximal fragment size (default: %(default)sbp)",
+		required=False,
+		default=QUAL.MAXIMAL_FRAGMENT_SIZE,
+		type=int,
+	)
 	parser_b.add_argument('--fragment-max-cov',
 						  help='Maximal fragment coverage (default: %(default)sX)',
 						  required=False,
