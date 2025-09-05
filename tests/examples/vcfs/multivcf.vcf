@@ -1,0 +1,61 @@
+##fileformat=VCFv4.1
+##source=SURVIVOR
+##fileDate=20240909
+##contig=<ID=chr1,length=248956422>
+##contig=<ID=chr10,length=133797422>
+##contig=<ID=chr11,length=135086622>
+##contig=<ID=chr12,length=133275309>
+##contig=<ID=chr13,length=114364328>
+##contig=<ID=chr14,length=107043718>
+##contig=<ID=chr15,length=101991189>
+##contig=<ID=chr16,length=90338345>
+##contig=<ID=chr17,length=83257441>
+##contig=<ID=chr18,length=80373285>
+##contig=<ID=chr19,length=58617616>
+##contig=<ID=chr2,length=242193529>
+##contig=<ID=chr20,length=64444167>
+##contig=<ID=chr21,length=46709983>
+##contig=<ID=chr22,length=50818468>
+##contig=<ID=chr3,length=198295559>
+##contig=<ID=chr4,length=190214555>
+##contig=<ID=chr5,length=181538259>
+##contig=<ID=chr6,length=170805979>
+##contig=<ID=chr7,length=159345973>
+##contig=<ID=chr8,length=145138636>
+##contig=<ID=chr9,length=138394717>
+##contig=<ID=chrM,length=16569>
+##contig=<ID=chrX,length=156040895>
+##contig=<ID=chrY,length=57227415>
+##ALT=<ID=DEL,Description="Deletion">
+##ALT=<ID=DUP,Description="Duplication">
+##ALT=<ID=INV,Description="Inversion">
+##ALT=<ID=BND,Description="Translocation">
+##ALT=<ID=INS,Description="Insertion">
+##INFO=<ID=CIEND,Number=2,Type=String,Description="PE confidence interval around END">
+##INFO=<ID=CIPOS,Number=2,Type=String,Description="PE confidence interval around POS">
+##INFO=<ID=CHR2,Number=1,Type=String,Description="Chromosome for END coordinate in case of a translocation">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the structural variant">
+##INFO=<ID=MAPQ,Number=1,Type=Integer,Description="Median mapping quality of paired-ends">
+##INFO=<ID=RE,Number=1,Type=Integer,Description="read support">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">
+##INFO=<ID=PRECISE,Number=0,Type=Flag,Description="Precise structural variation">
+##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="Length of the SV">
+##INFO=<ID=SVMETHOD,Number=1,Type=String,Description="Method for generating this merged VCF file.">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of the SV.">
+##INFO=<ID=SUPP_VEC,Number=1,Type=String,Description="Vector of supporting samples.">
+##INFO=<ID=SUPP,Number=1,Type=String,Description="Number of samples supporting the variant">
+##INFO=<ID=STRANDS,Number=1,Type=String,Description="Indicating the direction of the reads with respect to the type and breakpoint.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=PSV,Number=1,Type=String,Description="Previous support vector">
+##FORMAT=<ID=LN,Number=1,Type=Integer,Description="predicted length">
+##FORMAT=<ID=DR,Number=2,Type=Integer,Description="# supporting reference,variant reads in that order">
+##FORMAT=<ID=ST,Number=1,Type=String,Description="Strand of SVs">
+##FORMAT=<ID=QV,Number=1,Type=String,Description="Quality values: if not defined a . otherwise the reported value.">
+##FORMAT=<ID=TY,Number=1,Type=String,Description="Types">
+##FORMAT=<ID=ID,Number=1,Type=String,Description="Variant ID from input.">
+##FORMAT=<ID=RAL,Number=1,Type=String,Description="Reference allele sequence reported from input.">
+##FORMAT=<ID=AAL,Number=1,Type=String,Description="Alternative allele sequence reported from input.">
+##FORMAT=<ID=CO,Number=1,Type=String,Description="Coordinates">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	file1	file2	file3	file4
+chr5	148175216	2486_2	N	[chr5:148174677[N	.	PASS	SUPP=1;SUPP_VEC=0100;SVLEN=539;SVTYPE=INV;SVMETHOD=SURVIVOR1.0.7;CHR2=chr5;END=148174677;CIPOS=0,0;CIEND=0,0;STRANDS=--	GT:PSV:LN:DR:ST:QV:TY:ID:RAL:AAL:CO	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN	./.:NA:539:0,29:--:.:INV:2486_2:NA:NA:chr5_148175216-chr5_148174677	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN
+chr5	149542617	57_3	ATATATATATATATATATATATGTATATATATATATATATATATATATATATAT	N	.	PASS	SUPP=1;SUPP_VEC=0001;SVLEN=-57;SVTYPE=DEL;SVMETHOD=SURVIVOR1.0.7;CHR2=chr5;END=149542674;CIPOS=0,0;CIEND=0,0;STRANDS=+-	GT:PSV:LN:DR:ST:QV:TY:ID:RAL:AAL:CO	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN	./.:NaN:0:0,0:--:NaN:NaN:NaN:NAN:NAN:NAN	0/1:NA:57:5,4:+-:.:DEL:57_3:ATATATATATATATATATATATGTATATATATATATATATATATATATATATAT:N:chr5_149542617-chr5_149542674
