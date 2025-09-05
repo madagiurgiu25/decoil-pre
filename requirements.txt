@@ -7,6 +7,7 @@ networkx==2.5.1
 numpy==1.26.4
 overrides==7.4.0
 pandas==2.2.3
+# pandas==1.4.2
 # pickle5==0.0.11
 pulp==2.7.0
 pyBigWig==0.3.22

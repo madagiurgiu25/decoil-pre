@@ -8,8 +8,7 @@ from vcfpy import InvalidRecordException, Record, BreakEnd, Call
 
 from decoil.encode.encode import parsevcf
 from decoil.utils import VCF_PROP as vp
-from decoil.encode.operations import pass_filter
-from decoil.encode.encode import transform_record
+from decoil.encode.operations import pass_filter, transform_record
 from decoil.utils import SEPARATOR
 
 class TestInput(unittest.TestCase):
@@ -17,7 +16,7 @@ class TestInput(unittest.TestCase):
     def test_header_sniffles2(self):
         """Test correct format for sniffles2"""
         try:
-            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles2.vcf",vp.SNIFFLES2)
+            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles2.vcf",False,vp.SNIFFLES2)
         except Exception as e:
             self.fail(f"Unexpected exception raised: {e}")
         # Optionally, check that the result is correct
@@ -32,7 +31,7 @@ class TestInput(unittest.TestCase):
     def test_header_sniffles1(self):
         """Test correct format for sniffles1"""
         try:
-            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles1.vcf",vp.SNIFFLES1)
+            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles1.vcf",False,vp.SNIFFLES1)
             print(svinfo)
             print(collection_breakpoints)
         except Exception as e:
@@ -49,7 +48,7 @@ class TestInput(unittest.TestCase):
     def test_header_cutesv(self):
         """Test correct format for cutesv"""
         try:
-            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/cutesv.vcf",vp.CUTESV)
+            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/cutesv.vcf",False,vp.CUTESV)
             print(svinfo)
             print(collection_breakpoints)
         except Exception as e:
@@ -66,7 +65,7 @@ class TestInput(unittest.TestCase):
     def test_header_nanomonsv(self):
         """Test correct format for nanomonsv"""
         try:
-            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/cutesv.vcf",vp.NANOMONSV)
+            svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/cutesv.vcf",False,vp.NANOMONSV)
             print(svinfo)
             print(collection_breakpoints)
         except Exception as e:
@@ -85,7 +84,7 @@ class TestInput(unittest.TestCase):
         """Test wrong assignment of file format"""
         
         # This triggers an error
-        parsevcf("tests/examples/ecdna1/sniffles1.vcf","sniffles2")
+        parsevcf("tests/examples/ecdna1/sniffles1.vcf",False, vp.SNIFFLES2)
         mock_exit.assert_called_with(1)
         
     @patch('sys.exit')  # Mock sys.exit so it doesn't actually exit the interpreter
@@ -93,22 +92,23 @@ class TestInput(unittest.TestCase):
         """Test wrong assignment of file format"""
         
         # This triggers an error
-        parsevcf("tests/examples/ecdna1/cutesv.vcf","sniffles2")
+        parsevcf("tests/examples/ecdna1/cutesv.vcf",False,vp.SNIFFLES2)
         mock_exit.assert_called_with(1)
         
     def test_none_DR(self):
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(SystemExit) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'SVLEN':'-1', 'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': None, 'DV': 14})])
             record = transform_record(record, vp.SNIFFLES2)
             print(record)
             pass_filter(record)
-        self.assertEqual(str(context.exception), "##Exception: DR has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+        self.assertEqual(str(context.exception), "##Exception: DR/DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
     
     def test_none_DV(self):
-        with self.assertRaises(Exception) as context:
+        with self.assertRaises(SystemExit) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'SVLEN':'-1', 'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': 121, 'DV': None})])
+            print(record)
             pass_filter(record)
-        self.assertEqual(str(context.exception), "##Exception: DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
+        self.assertEqual(str(context.exception), "##Exception: DR/DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 
     # def test_vcf(self):
     #     file1 = "tests/examples/vcfs/sim1010_sniffles1.vcf"

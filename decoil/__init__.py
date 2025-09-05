@@ -1,7 +1,7 @@
 """
 Decoil - ecDNA reconstruction from long-read data
 """
-__version__ = "1.2.0"
-__author__ = "Madalina Giurgiu"
+__version__ = "2.0.0a1"
+__author__ = "Madalina Giurgiu-Kraljic"
 __credit__ = "Charite Universitaetsmedizin Berlin and Freie Universitaet Berlin"
 _program = "decoil"

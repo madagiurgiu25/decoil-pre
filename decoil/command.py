@@ -74,6 +74,7 @@ def add_defaults_toconfigs(args, config):
     config["params"] = ""
     config["params"] += " --fragment-min-cov " + str(args.fragment_min_cov)
     config["params"] += " --fragment-min-size " + str(args.fragment_min_size)
+    config["params"] += " --fragment-max-cov " + str(args.fragment_max_cov)
     config["params"] += " --min-sv-len " + str(args.min_sv_len)
     config["params"] += " --min-vaf " + str(args.min_vaf)
     config["params"] += " --min-cov-alt " + str(args.min_cov_alt)
@@ -83,6 +84,12 @@ def add_defaults_toconfigs(args, config):
     config["params"] += " --sv-caller " + str(args.sv_caller)
     if args.extend_allowed_chr != "":
         config["params"] += " --extend-allowed-chr " + args.extend_allowed_chr
+    if args.fast == 1:
+        config["params"] += " --fast "
+    if args.skip == 1:
+        config["params"] += " --skip "
+    if args.multi == 1:
+        config["params"] += " --multi "
 
 def add_configs_sv_workflow(args, config):
     config["bam"] = args.bam

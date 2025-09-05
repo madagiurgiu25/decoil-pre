@@ -12,3 +12,8 @@ dependencies:
   - samtools==1.15.1
   - python-dateutil==2.8.1
   - deeptools==3.5.5
+  # - sniffles>=1.0.7,<=1.0.12
+  # - ncurses==6.1
+  # - samtools==1.9
+  # - nanofilt==2.6.0
+  # - pip==22.2.2
