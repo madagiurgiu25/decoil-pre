@@ -117,8 +117,8 @@ def set_max_coverage(graph):
 		if fragments[f].coverage > max:
 			max = fragments[f].coverage
 
-	QUAL.MAX_COVERAGE = max
-	print("Set QUAL.MAX_COVERAGE to ", QUAL.MAX_COVERAGE)
+	QUAL.MAXIMAL_FRAGMENT_COVERAGE = max
+	print("Set QUAL.MAXIMAL_FRAGMENT_COVERAGE to ", QUAL.MAXIMAL_FRAGMENT_COVERAGE)
 
 def set_min_fragment_coverage(wgs, preset_min_coverage):
 	"""

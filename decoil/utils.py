@@ -93,7 +93,7 @@ class QUAL:
 	# MINIMAL_FRAGMENT_COVERAGE = 10
 	MINIMAL_FRAGMENT_COVERAGE = 5
 	# Set threshold for keeping fragments in the graph
-	MAXIMAL_FRAGMENT_COVERAGE = 100000
+	MAXIMAL_FRAGMENT_COVERAGE = 80000
 	# Set maximal distance for 2 fragments to be considered overlapped
 	OVERLAP = 250
 	# Set WGS mean cov

@@ -88,7 +88,7 @@ def parsevcf(vcffile_clean, multi, svcaller):
 			if state == False:
 				# skip record as this is good
 				continue
-
+	
 			# single sample vcf
 			if multi == False:
 				dv = record.calls[0].data.get(vp.DV)

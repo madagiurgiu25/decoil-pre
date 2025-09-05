@@ -311,7 +311,7 @@ def regress(df_original, y_original, wf, pseudocount=0.001, cutoff=4):
 		# return df.iloc[filtered, :].index.tolist(), np.take(regr.coef_, filtered)
 
 		# fit
-		lasso = Lasso(alpha=0.1, max_iter=1000, fit_intercept=True).fit(M, y)
+		lasso = Lasso(alpha=0.1, max_iter=1000, fit_intercept=True, positive=True).fit(M, y)
 		# remove wgs coverage covariate from lasso coefs
 		lasso_coefs = lasso.coef_[:-1]
 		# print(lasso.coef_)
