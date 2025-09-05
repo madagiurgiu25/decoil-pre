@@ -91,20 +91,37 @@ def test_clean_multi_vcf():
 	encode.cleanvcf(file_input, 
 					file_output,
 					multi=True)
+	
+	# check file size
 	size1 = os.path.getsize(file_input)
 	size2 = os.path.getsize(file_output)
 	assert size1 == size2, f"File sizes differ: {file_input}={size1} bytes, {file_clean}={size2} bytes"
-	
+ 
+
+def test_read_and_clean_multi_vcf():
+	""" Test multi-VCF file
+	"""
+	file_input = "tests/examples/vcfs/multivcf.vcf"
+	outdir = "tests/examples/vcfs/output_multivcf"
+	os.makedirs("tests/examples/vcfs/output_multivcf", exist_ok=True)
+	collection_breakpoints, svinfo = encode.readvcf(file_input, 
+													outdir,
+													multi=True,
+													svcaller=vp.SNIFFLES1)
+	print(collection_breakpoints, svinfo)
+
 
 def test_read_and_clean_vcf(caplog):
 	file_input = "tests/examples/vcfs/sim1010_sniffles1_withartifacts.vcf"
 	outdir = "tests/examples/vcfs/output_sim1010_sniffles1_withartifacts"
 	file_clean = os.path.join(outdir, "clean.vcf")
 	file_clean_filtered = os.path.join(outdir, "clean_filtered.vcf")
+ 
+	_, svinfo = None, None
 
 	with caplog.at_level(logging.DEBUG, logger="decoil.encode"):
 		os.makedirs(outdir, exist_ok=True)
-		encode.readvcf(file_input, 
+		_, svinfo = encode.readvcf(file_input, 
 					   outdir, multi=False, svcaller=vp.SNIFFLES1)
 	
  	# no warnings
@@ -128,6 +145,11 @@ def test_read_and_clean_vcf(caplog):
 		actual_lines = sum(1 for _ in f)
 
 	assert actual_lines == expected_lines, f"Expected {expected_lines} lines, got {actual_lines}"
+ 
+	# test read vcf output
+	expected_dict_svinfo = ['chr2@15100667', 'chr2@15288115', 'chr2@15302904', 'chr2@15398371', 'chr12@104611667', 'chr12@104847913']
+	seen_dict_svinfo = list(svinfo.keys())
+	assert sorted(seen_dict_svinfo) == sorted(expected_dict_svinfo), f"Lists have different elements: {expected_dict_svinfo} != {seen_dict_svinfo}"
  
 
 # pytest injects caplog

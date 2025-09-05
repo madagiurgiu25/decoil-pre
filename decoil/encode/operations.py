@@ -146,14 +146,17 @@ def merge_near_breakpoints(collection_breakpoints, svinfo, distance=QUAL.DISTANC
     return collection_breakpoints, svinfo
 
 
+def transform_record_multi(record):
+    
+    if vp.STRAND not in record.INFO and vp.STRANDS in record.INFO:
+        record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
+    return record
+
+
 def transform_record_sniffles1(record):
 
     if vp.STRANDS not in record.INFO:
-        raise Exception(
-            """{} key not found in record. Make sure this is a Sniffles1 format.""".format(
-                vp.STRANDS
-            )
-        )
+        raise Exception("""{} key not found in record. Make sure this is a Sniffles1 format.""".format(vp.STRANDS))
 
     record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0]
 
@@ -176,51 +179,23 @@ def transform_record_sniffles2(record):
 
     for key in [vp.SUPPORT, vp.COVERAGE]:
         if key not in record.INFO:
-            raise Exception(
-                """{} key not found in record. Make sure this is a Sniffles2 format.""".format(
-                    key
-                )
-            )
+            raise Exception("""{} key not found in record. Make sure this is a Sniffles2 format.""".format(key))
 
     # add chr2 and end for SV
-    record.INFO[vp.CHR2] = (
-        record.CHROM
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_chrom
-    )
-    record.INFO[vp.END] = (
-        record.INFO[vp.END]
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_pos
-    )
+    record.INFO[vp.CHR2] = (record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom)
+    record.INFO[vp.END] = (record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos)
 
     # SV len
-    record.INFO[vp.SVLEN] = (
-        "-1"
-        if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-"
-        else record.INFO[vp.SVLEN]
-    )
-    record.INFO[vp.SVLEN] = (
-        str(record.INFO[vp.SVLEN][0])
-        if isinstance(record.INFO[vp.SVLEN], list)
-        else record.INFO[vp.SVLEN]
-    )
+    record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
+    record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
     if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
-        record.INFO[vp.STRAND] = (
-            record.ALT[0].orientation + record.ALT[0].mate_orientation
-        )
+        record.INFO[vp.STRAND] = (record.ALT[0].orientation + record.ALT[0].mate_orientation)
 
     if record.calls[0].data[vp.GT] == "./.":
         record.calls[0].data[vp.DV] = int(record.INFO[vp.SUPPORT])
-        record.calls[0].data[vp.DR] = (
-            int(record.INFO[vp.COVERAGE][0])
-            if record.INFO[vp.COVERAGE][0] != "None"
-            else 0
-        )
-        record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (
-            record.calls[0].data[vp.DV] + record.calls[0].data[vp.DR] + 1
-        )
+        record.calls[0].data[vp.DR] = (int(record.INFO[vp.COVERAGE][0]) if record.INFO[vp.COVERAGE][0] != "None" else 0)
+        record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (record.calls[0].data[vp.DV] + record.calls[0].data[vp.DR] + 1)
 
         if record.calls[0].data[vp.AF] <= 0.3:
             record.calls[0].data[vp.GT] = "0/0"
@@ -234,79 +209,39 @@ def transform_record_sniffles2(record):
 def transform_record_cutesv(record):
     # add STRANDS instead of STRAND or add an artificial strand encoding for INS
     if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
-        record.INFO[vp.STRAND] = (
-            record.ALT[0].orientation + record.ALT[0].mate_orientation
-        )
+        record.INFO[vp.STRAND] = (record.ALT[0].orientation + record.ALT[0].mate_orientation)
     elif vp.STRAND in record.INFO:
         record.INFO[vp.STRAND] = record.INFO[vp.STRAND][0]
     else:
         raise Exception("""Strand information not found {}""".format(record))
 
     # add CHR2 and POS2
-    record.INFO[vp.CHR2] = (
-        record.CHROM
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_chrom
-    )
-    record.INFO[vp.END] = (
-        record.INFO[vp.END]
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_pos
-    )
+    record.INFO[vp.CHR2] = (record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom)
+    record.INFO[vp.END] = (record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos)
 
     # SV len
-    record.INFO[vp.SVLEN] = (
-        "-1"
-        if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-"
-        else record.INFO[vp.SVLEN]
-    )
-    record.INFO[vp.SVLEN] = (
-        str(record.INFO[vp.SVLEN][0])
-        if isinstance(record.INFO[vp.SVLEN], list)
-        else record.INFO[vp.SVLEN]
-    )
+    record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
+    record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
     return record
 
 
 def transform_record_nanomonsv(record):
     # add CHR2 and POS2
-    record.INFO[vp.CHR2] = (
-        record.CHROM
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_chrom
-    )
-    record.INFO[vp.END] = (
-        record.INFO[vp.END]
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_pos
-    )
+    record.INFO[vp.CHR2] = (record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom)
+    record.INFO[vp.END] = (record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos)
 
     # calculate AF
-    record.INFO[vp.SVLEN] = (
-        "-1"
-        if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-"
-        else record.INFO[vp.SVLEN]
-    )
-    record.INFO[vp.SVLEN] = (
-        str(record.INFO[vp.SVLEN][0])
-        if isinstance(record.INFO[vp.SVLEN], list)
-        else record.INFO[vp.SVLEN]
-    )
+    record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
+    record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
     # SV len
     if vp.SVLEN in record.INFO:
-        record.INFO[vp.SVLEN] = (
-            str(record.INFO[vp.SVLEN][0])
-            if isinstance(record.INFO[vp.SVLEN], list)
-            else record.INFO[vp.SVLEN]
-        )
+        record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
     # add STRANDS information
     if record.INFO[vp.SVTYPE] in [vp.BND, vp.TRA]:
-        record.INFO[vp.STRAND] = (
-            record.ALT[0].orientation + record.ALT[0].mate_orientation
-        )
+        record.INFO[vp.STRAND] = (record.ALT[0].orientation + record.ALT[0].mate_orientation)
     elif vp.STRAND in record.INFO:
         record.INFO[vp.STRAND] = record.INFO[vp.STRAND][0]
     else:
@@ -316,34 +251,16 @@ def transform_record_nanomonsv(record):
 
 def transform_record_lumpy(record):
     # add CHR2 and POS2
-    record.INFO[vp.CHR2] = (
-        record.CHROM
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_chrom
-    )
-    record.INFO[vp.END] = (
-        record.INFO[vp.END]
-        if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA]
-        else record.ALT[0].mate_pos
-    )
+    record.INFO[vp.CHR2] = (record.CHROM if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_chrom)
+    record.INFO[vp.END] = (record.INFO[vp.END] if record.INFO[vp.SVTYPE] not in [vp.BND, vp.TRA] else record.ALT[0].mate_pos)
 
     record.INFO[vp.STRAND] = record.INFO[vp.STRANDS][0].split(":")[0]
-    record.INFO[vp.SVLEN] = (
-        "-1"
-        if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-"
-        else record.INFO[vp.SVLEN]
-    )
-    record.INFO[vp.SVLEN] = (
-        str(record.INFO[vp.SVLEN][0])
-        if isinstance(record.INFO[vp.SVLEN], list)
-        else record.INFO[vp.SVLEN]
-    )
+    record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
+    record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
     record.calls[0].data[vp.DV] = int(record.calls[0].data[vp.QA][0])
     record.calls[0].data[vp.DR] = int(record.calls[0].data[vp.QR])
-    record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (
-        record.calls[0].data[vp.DV] + record.calls[0].data[vp.DR] + 1
-    )
+    record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (record.calls[0].data[vp.DV] + record.calls[0].data[vp.DR] + 1)
 
     if record.calls[0].data[vp.GT] == "./.":
         if record.calls[0].data[vp.AF] <= 0.3:
@@ -360,6 +277,7 @@ def transform_record_delly(record):
 
 
 DICT_TRANSFORM = {
+    vp.MULTI: transform_record_multi,
     vp.SNIFFLES1: transform_record_sniffles1,
     vp.SNIFFLES2: transform_record_sniffles2,
     vp.CUTESV: transform_record_cutesv,
@@ -369,14 +287,15 @@ DICT_TRANSFORM = {
 }
 
 
-def transform_record(record, svcaller):
+def transform_record(record, svcaller, multi):
     """
     Convert required fields from Sniffles2, CuteSV and NANOMONSV
     """
+    if multi  == True:
+        svcaller = vp.MULTI
+    
     if svcaller not in vp.SVCALLERS:
-        raise Exception(
-            """{} vcf format not compatible with Decoil.""".format(svcaller)
-        )
+        raise Exception("""{} vcf format not compatible with Decoil.""".format(svcaller))
 
     record = DICT_TRANSFORM[svcaller](record)
     return record
@@ -395,13 +314,12 @@ def pass_filter(record, processed_mates=[], multi=False):
     mateid = record.INFO[vp.MATEID] if vp.MATEID in record.INFO else None
 
     try:
-
         if multi == False:
             v = int(record.calls[0].data.get(vp.DV))
             dr = int(record.calls[0].data.get(vp.DR))
         else:
-            dv_arr = [record.calls[i].data[vp.DV][1] for i in range(len(record.calls))]
-            dr_arr = [record.calls[i].data[vp.DR][0] for i in range(len(record.calls))]
+            dv_arr = [record.calls[i].data[vp.DR][1] for i in range(len(record.calls))] # DR only
+            dr_arr = [record.calls[i].data[vp.DR][0] for i in range(len(record.calls))] # DR only
             max_index = np.argmax(np.array(dv_arr))
             v = dv_arr[max_index]
             dr = dr_arr[max_index]

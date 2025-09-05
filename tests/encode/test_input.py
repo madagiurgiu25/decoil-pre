@@ -98,16 +98,15 @@ class TestInput(unittest.TestCase):
     def test_none_DR(self):
         with self.assertRaises(SystemExit) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'SVLEN':'-1', 'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': None, 'DV': 14})])
-            record = transform_record(record, vp.SNIFFLES2)
-            print(record)
+            record = transform_record(record, vp.SNIFFLES2, multi=False)
             pass_filter(record)
         self.assertEqual(str(context.exception), "##Exception: DR/DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
     
     def test_none_DV(self):
         with self.assertRaises(SystemExit) as context:
             record  = Record('chr2', 15585355, ['Sniffles2.BND.1S1'], 'N', [BreakEnd('chr3', 10981201, '+', '-', 'N', True)], 55, ['GT'], {'SVLEN':'-1', 'PRECISE': True, 'SVTYPE': 'BND', 'SUPPORT': 14, 'COVERAGE': [0.0, 0.0, 136.0, 134.0, 132.0], 'STRAND': '+-', 'AF': 0.104, 'CHR2': 'chr3', 'STDEV_POS': 0.463}, ['GT', 'GQ', 'DR', 'DV'], [Call('SAMPLE', {'GT': '0/0', 'GQ': 60, 'DR': 121, 'DV': None})])
-            print(record)
-            pass_filter(record)
+            record = transform_record(record, vp.SNIFFLES2, multi=False)
+            pass_filter(record,multi=False)
         self.assertEqual(str(context.exception), "##Exception: DR/DV has no value. Your VCF might not be genotyped. Rerun SV calling using --genotype")
 
     # def test_vcf(self):
