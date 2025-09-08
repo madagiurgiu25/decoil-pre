@@ -258,9 +258,9 @@ def transform_record_lumpy(record):
 	record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
 	record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
-	record.calls[0].data[vp.DV] = int(record.calls[0].data[vp.QA][0])
-	record.calls[0].data[vp.DR] = int(record.calls[0].data[vp.QR])
-	record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (record.calls[0].data[vp.DV] + record.calls[0].data[vp.DR] + 1)
+	# record.calls[0].data[vp.DV] = int(record.calls[0].data[vp.QA][0])
+	# record.calls[0].data[vp.DR] = int(record.calls[0].data[vp.QR])
+	# record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (record.calls[0].data[vp.DP] + 1)
 
 	if record.calls[0].data[vp.GT] == "./.":
 		if record.calls[0].data[vp.AF] <= 0.3:
