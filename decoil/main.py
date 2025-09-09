@@ -301,7 +301,7 @@ def process_commandline_decoil_only(subparsers):
 	parser_a.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
 
 	# optional parameters
-	parser_a.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_a.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE, type=int)
 	parser_a.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_a.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_a.add_argument("--fast", help="Reconstruct fast (not accurate and does not require a bam file)", action="count", default=0)
@@ -370,7 +370,7 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 	parser_b.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
  
 	# optional parameters
-	parser_b.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_b.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE, type=int)
 	parser_b.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_b.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_b.add_argument("--multi", help="Multi-sample VCF file", action="count", default=0)
@@ -401,7 +401,7 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 	parser_d.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
 
 	# optional parameters
-	parser_d.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_d.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE, type=int)
 	parser_d.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_d.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_d.add_argument("--fast", help="Reconstruct fast (not accurate and does not require a bam file)", action="count", default=0)
