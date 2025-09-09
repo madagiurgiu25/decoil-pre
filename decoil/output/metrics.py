@@ -104,7 +104,14 @@ def set_wgs(bigwigfile):
 	Compute WGS mean coverage
 	"""
 	QUAL.MEAN_COVERAGE_WGS = compute_meancov(bigwigfile)
-	print("Set QUAL.MEAN_COVERAGE_WGS to ", QUAL.MEAN_COVERAGE_WGS)
+	print("Real QUAL.MEAN_COVERAGE_WGS is ", QUAL.MEAN_COVERAGE_WGS)
+	if QUAL.DOWNSAMPLING_COVERAGE > 0 and QUAL.MEAN_COVERAGE_WGS > QUAL.DOWNSAMPLING_COVERAGE:
+		QUAL.DOWNSAMPLING_RATIO = QUAL.MEAN_COVERAGE_WGS/QUAL.DOWNSAMPLING_COVERAGE
+		QUAL.MEAN_COVERAGE_WGS = QUAL.MEAN_COVERAGE_WGS/QUAL.DOWNSAMPLING_RATIO
+		print("Downsampled QUAL.MEAN_COVERAGE_WGS is now ", QUAL.MEAN_COVERAGE_WGS)
+		print("Downsampling factor (QUAL.DOWNSAMPLING_RATIO) is ", QUAL.DOWNSAMPLING_RATIO)
+	elif QUAL.DOWNSAMPLING_COVERAGE > 0 and QUAL.MEAN_COVERAGE_WGS <= QUAL.DOWNSAMPLING_COVERAGE:
+		print(f"##INFO: Downsampling will not be activated because mean_wgs <= downsampling_coverage ({QUAL.MEAN_COVERAGE_WGS} <= {QUAL.DOWNSAMPLING_COVERAGE})")
 
 
 def set_max_coverage(graph):
@@ -120,19 +127,28 @@ def set_max_coverage(graph):
 	QUAL.MAXIMAL_FRAGMENT_COVERAGE = max
 	print("Set QUAL.MAXIMAL_FRAGMENT_COVERAGE to ", QUAL.MAXIMAL_FRAGMENT_COVERAGE)
 
-def set_min_fragment_coverage(wgs, preset_min_coverage):
+def set_min_max_fragment_coverage():
 	"""
-	Maxim between 2xWGS and the preset minimal fragment coverage (user defined)
+	Maxim between WGS and the preset minimal fragment coverage (user defined)
+	Adjust maximal fragment coverage if downsampling enabled
 	"""
-	QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MEAN_COVERAGE_WGS,QUAL.MINIMAL_FRAGMENT_COVERAGE)
-	print("Set QUAL.MINIMAL_FRAGMENT_COVERAGE to ", QUAL.MINIMAL_FRAGMENT_COVERAGE)
+	if QUAL.DOWNSAMPLING_RATIO <= 0:
+		QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MEAN_COVERAGE_WGS,QUAL.MINIMAL_FRAGMENT_COVERAGE)
+		print("Set QUAL.MINIMAL_FRAGMENT_COVERAGE to ", QUAL.MINIMAL_FRAGMENT_COVERAGE)
+	else:
+		QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MEAN_COVERAGE_WGS,QUAL.MINIMAL_FRAGMENT_COVERAGE / QUAL.DOWNSAMPLING_RATIO)
+		print("Set QUAL.MINIMAL_FRAGMENT_COVERAGE (downsampling applied --fragment-min-cov) to ", QUAL.MINIMAL_FRAGMENT_COVERAGE)
 
-def set_threshold():
-	"""
-	Set threshold for keeping fragments in the graph
-	"""
-	QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MINIMAL_FRAGMENT_COVERAGE, QUAL.MEAN_COVERAGE_WGS * 4)
-	print("Minimal coverage across fragments", QUAL.MINIMAL_FRAGMENT_COVERAGE)
+		QUAL.MAXIMAL_FRAGMENT_COVERAGE = QUAL.MAXIMAL_FRAGMENT_COVERAGE / QUAL.DOWNSAMPLING_RATIO
+		print("Set QUAL.MAXIMAL_FRAGMENT_COVERAGE (downsampling applied --fragment-max-cov) to ", QUAL.MAXIMAL_FRAGMENT_COVERAGE)
+
+
+# def set_threshold():
+# 	"""
+# 	Set threshold for keeping fragments in the graph
+# 	"""
+# 	QUAL.MINIMAL_FRAGMENT_COVERAGE = max(QUAL.MINIMAL_FRAGMENT_COVERAGE, QUAL.MEAN_COVERAGE_WGS * 4)
+# 	print("Minimal coverage across fragments", QUAL.MINIMAL_FRAGMENT_COVERAGE)
 
 
 def compute_normalized_coverage(graph):
@@ -314,4 +330,5 @@ def annotate(candidates):
 		candidates[cycle]["chrs"] = annotate_chrs(candidates[cycle]["conf"])
 		candidates[cycle]["label"] = annotate_label(candidates[cycle]["size"])
 		candidates[cycle]["topology"], candidates[cycle]["topology_detailed"] = annotate_topology(candidates[cycle]["conf"])
+
 	return candidates

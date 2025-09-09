@@ -112,6 +112,9 @@ class QUAL:
 	EXPLOG_THRESHOLD = 0.1
 	# Far
 	FAR_FRAGMENTS = 16000
+	# Downsampling mean coverage
+	DOWNSAMPLING_COVERAGE = 5
+	DOWNSAMPLING_RATIO = -1
 
 
 # MIN_COV = 10

@@ -10,6 +10,7 @@ import numpy
 import logging
 import math
 import sys
+from copy import deepcopy
 from collections import defaultdict
 
 import vcfpy
@@ -71,8 +72,10 @@ def parsevcf(vcffile_clean, multi, svcaller):
 
 	try:
 		for record in reader:
-		
-			record = operations.transform_record(record, svcaller, multi)
+			
+			# without downsampling
+			record_initial = operations.transform_record(record, svcaller, multi)
+			record = operations.downsample(deepcopy(record_initial))
 
 			id = record.ID[0]  # primary id
 			count += 1
@@ -167,7 +170,7 @@ def readvcf(vcffile, outputdir, multi=False, svcaller=vp.SNIFFLES1):
 
 	# parse vcf
 	svinfo, collection_breakpoints, count = parsevcf(vcffile_clean, multi, svcaller)
-	print(collection_breakpoints)
+	# print(collection_breakpoints)
 	# print(svinfo)
 
 	print("##INFO: Total number of entries in vcf", count)
@@ -182,8 +185,8 @@ def readvcf(vcffile, outputdir, multi=False, svcaller=vp.SNIFFLES1):
 	collection_breakpoints, svinfo = operations.merge_near_breakpoints(
 		collection_breakpoints, svinfo
 	)
-	log.info("1. 2. After cleaning breakpoints")
-	print(collection_breakpoints)
+	# log.info("1. 2. After cleaning breakpoints")
+	# print(collection_breakpoints)
 	# print(svinfo)
 
 	return collection_breakpoints, svinfo
@@ -347,8 +350,6 @@ def addsv(graph, svinfo):
 
 	for key in svinfo:
 		for id, chr2, pos2, svtype, dv, dr, gt, strand in svinfo[key]:
-			print(key)
-			print(svinfo[key])
 			chr1, pos1 = key.split(utils.SEPARATOR)
 
 			data = {

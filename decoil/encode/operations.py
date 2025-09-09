@@ -300,6 +300,16 @@ def transform_record(record, svcaller, multi):
 	record = DICT_TRANSFORM[svcaller](record)
 	return record
 
+def downsample(record):
+	"""
+	In-silico downsampling of the SVs
+	"""
+	# downsampling enabled
+	if QUAL.DOWNSAMPLING_RATIO > 0:
+		record.calls[0].data[vp.DP] = round(record.calls[0].data[vp.DP] / QUAL.DOWNSAMPLING_RATIO)
+		record.calls[0].data[vp.DV] = round(record.calls[0].data[vp.DV] / QUAL.DOWNSAMPLING_RATIO)
+		record.calls[0].data[vp.DR] = round(record.calls[0].data[vp.DR] / QUAL.DOWNSAMPLING_RATIO)
+	return record
 
 def pass_filter(record, processed_mates=[], multi=False):
 	"""
@@ -408,9 +418,7 @@ def filter(vcf, vcfout, svcaller=vp.SNIFFLES1, multi=False):
 			mateid = record.INFO[vp.MATEID] if vp.MATEID in record.INFO else None
 			if mateid:
 				process_svs.append(mateid)
-			state, process_svs = pass_filter(
-				record, processed_mates=process_svs, multi=multi
-			)
+			state, process_svs = pass_filter(record, processed_mates=process_svs, multi=multi)
 			if state == False:
 				continue
 			writer.write_record(record)
@@ -652,6 +660,10 @@ def add_coverage_per_fragment(graph, bigwigfile):
 			# Compute the median
 			values = bw.values(chr, start, stop)
 			median_value = np.median(values)
+   
+			# Downsample fragment median value if this active
+			if QUAL.DOWNSAMPLING_RATIO > 0:
+				median_value = median_value / QUAL.DOWNSAMPLING_RATIO
 
 			if median_value > -1:
 				# set fragment coverage
@@ -755,6 +767,11 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 						breakpoint - padd
 					) and read.reference_end > (breakpoint + padd):
 						count_coverage_through += 1
+
+				# downsample reference spanning reads
+				if QUAL.DOWNSAMPLING_RATIO > 0:
+					count_coverage_through = count_coverage_through / QUAL.DOWNSAMPLING_RATIO
+	
 			else:
 				# set coverage to mean coverage
 				count_coverage_through = 2 * QUAL.MEAN_COVERAGE_WGS
@@ -795,6 +812,14 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 					fragments_connected[conn2] = None
 
 	return graph
+
+
+def upsample_coverage(paths):
+	
+	if QUAL.DOWNSAMPLING_RATIO > 0:
+		for circ in paths:
+			paths[circ]["score"] = paths[circ]["score"] * QUAL.DOWNSAMPLING_RATIO
+	return paths
 
 
 def run_cleaning(G, outputdir):

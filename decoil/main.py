@@ -57,6 +57,11 @@ def run_save_fragments(G, outfile):
 				fdict[fid].end,
 				fdict[fid].coverage,
 			)
+
+			# if downsampling enabled need to upsample
+			if QUAL.DOWNSAMPLING_RATIO > 0:
+				coverage = coverage * QUAL.DOWNSAMPLING_RATIO
+   
 			if end == POS.MAX:
 				if _chr not in ["chrM", "M"]:
 					end = start + 2000
@@ -205,9 +210,9 @@ def run_reconstruction(
 	currpath = os.getcwd()
 	os.chdir(outputdir)
 
-	# 0. Set thesholds
+	# 0. Set thesholds (take into account downsampling)
 	metrics.set_wgs(bigwigfile)
-	metrics.set_min_fragment_coverage(QUAL.MEAN_COVERAGE_WGS, QUAL.MINIMAL_FRAGMENT_COVERAGE)
+	metrics.set_min_max_fragment_coverage()
 
 	# 1 Graph generation
 	# 1.1 Encode
@@ -262,6 +267,7 @@ def run_reconstruction(
 
 	likely_candidates_transformed = cycles.transform_fid2genomicpos(likely_candidates_filtered, G)
 	likely_candidates_simplified = cycles.simplify_likely_candidates(likely_candidates_transformed)
+	likely_candidates_simplified = operations.upsample_coverage(likely_candidates_simplified)
 
 	# 7. Label and annotate
 	candidates_annotated = metrics.annotate(likely_candidates_simplified)
@@ -295,6 +301,8 @@ def process_commandline_decoil_only(subparsers):
 	parser_a.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
 
 	# optional parameters
+	parser_a.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_a.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_a.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_a.add_argument("--fast", help="Reconstruct fast (not accurate and does not require a bam file)", action="count", default=0)
 	parser_a.add_argument("--multi", help="Multi-sample VCF file", action="count", default=0)
@@ -362,6 +370,8 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 	parser_b.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
  
 	# optional parameters
+	parser_b.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_b.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_b.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_b.add_argument("--multi", help="Multi-sample VCF file", action="count", default=0)
 	parser_b.add_argument("--skip", help="Skip creation of fasta files (to save space)", action="count", default=0)
@@ -391,6 +401,8 @@ def process_commandline_decoil_fullpipeline(parser, subparsers):
 	parser_d.add_argument('-d', '--debug', help='Debug mode', action='count', default=0)
 
 	# optional parameters
+	parser_d.add_argument("--downsampling", help='Auto downsampling to %(default)sX', required=False,default=QUAL.DOWNSAMPLING_COVERAGE)
+	parser_d.add_argument("--no-downsampling", help="Switch off downsampling", action="count", default=0)
 	parser_d.add_argument("--extend-allowed-chr", help='Add list custom assemblies/chromosomes (e.g. "chr1,chr2,chr3")', required=False,default="")
 	parser_d.add_argument("--fast", help="Reconstruct fast (not accurate and does not require a bam file)", action="count", default=0)
 	parser_d.add_argument("--multi", help="Multi-sample VCF file", action="count", default=0)
@@ -446,6 +458,7 @@ def process_commandline(sysargs, pipeline=False):
 
 
 def setup_defaults(args):
+	print(args)
 	QUAL.MINIMAL_FRAGMENT_COVERAGE = args.fragment_min_cov
 	QUAL.MINIMAL_FRAGMENT_SIZE = args.fragment_min_size
 	QUAL.MAXIMAL_FRAGMENT_COVERAGE = args.fragment_max_cov
@@ -457,7 +470,11 @@ def setup_defaults(args):
 	QUAL.EXPLOG_THRESHOLD = args.max_explog_threshold
 	VCF_PROP.ALLOWED_CHR = VCF_PROP.ALLOWED_CHR + args.extend_allowed_chr.split(",")
 	print("INFO: allowed chromosomes", VCF_PROP.ALLOWED_CHR)
-
+ 
+	QUAL.DOWNSAMPLING_COVERAGE = args.downsampling
+	# disable downsampling
+	if args.no_downsampling == 1:
+		QUAL.DOWNSAMPLING_COVERAGE = -1
 
 def main(sysargs=sys.argv[1:]):
 
@@ -483,6 +500,7 @@ def main(sysargs=sys.argv[1:]):
 
 		elif subcommand == PROG.RECONSTRUCT:
 			# start reconstruction
+			print(args)
 
 			# start debug mode or not
 			if args.debug == 1:
