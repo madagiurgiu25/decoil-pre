@@ -1,34 +1,50 @@
 import unittest
 from unittest.mock import patch
 
+import os
 import numpy as np
 import bionumpy
 import vcfpy
 from vcfpy import InvalidRecordException, Record, BreakEnd, Call
 
-from decoil.encode.encode import parsevcf
+from decoil.encode.encode import parsevcf, readvcf
 from decoil.utils import VCF_PROP as vp
 from decoil.encode.operations import pass_filter, transform_record
 from decoil.utils import SEPARATOR
 
 class TestInput(unittest.TestCase):
+    
+    def test_merge_sniffles2(self):
+        
+        input = "tests/examples/ecdna1/sniffles2.vcf"
+        outdir = "tests/examples/ecdna1/output_sniffles2/sniffles2"
+        
+        _, collection_breakpoints, _ = parsevcf(input,False,vp.SNIFFLES2)
+        
+        os.makedirs(outdir, exist_ok=True)
+        nonredundant_breakpoints, _ = readvcf(input,
+                                      outputdir=outdir,
+                                      svcaller=vp.SNIFFLES2,
+                                      multi=False)
+        self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15585355, 15633375, 16521051, 15585355])
+        self.assertEqual(nonredundant_breakpoints["chr2"], [15585355, 15633375, 16521051])
+        
 
     def test_header_sniffles2(self):
         """Test correct format for sniffles2"""
         try:
             svinfo, collection_breakpoints, _ = parsevcf("tests/examples/ecdna1/sniffles2.vcf",False,vp.SNIFFLES2)
-            print(svinfo)
-            print(collection_breakpoints)
         except Exception as e:
             self.fail(f"Unexpected exception raised: {e}")
+        print(collection_breakpoints)
         # Optionally, check that the result is correct
-        # svinfo[chr2_15585355] chr2@15585355': [('Sniffles2.BND.2S1', 'chr3', '11049996', 'BND', 47, 88, '0/1', '++'), ('Sniffles2.BND.3S1', 'chr3', '11056099', 'BND', 55, 80, '0/1', '-+')]
-        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][0][2], '11049996')
+        # svinfo[chr2_15585355] chr2@15585355': [('Sniffles2.BND.1S1', 'chr3', '10981201', 'BND', 14, 121, '0/0', '+-'), ('Sniffles2.BND.2S1', 'chr3', '11049996', 'BND', 47, 88, '0/1', '++'), ('Sniffles2.BND.3S1', 'chr3', '11056099', 'BND', 55, 80, '0/1', '-+')]
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][0][2], '10981201')
         self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][1], 'chr3')
-        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][7], '-+')
+        self.assertEqual(svinfo["chr2"+SEPARATOR+"15585355"][1][7], '++')
         
-         # collection_breakpoints: defaultdict(<class 'list'>, {'chr2': [15585355, 15585355, 15633375, 16521051, 15585355], 'chr3': [11049996, 11056099, 10981201], 'chr12': [68807720, 68970909]})
-        self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15633375, 16521051, 15585355])
+         # collection_breakpoints: defaultdict(<class 'list'>, {'chr2': [15585355, 15585355, 15585355, 15633375, 16521051, 15585355], 'chr3': [10981201, 11049996, 11056099, 10981201], 'chr12': [68807720, 68970909]})
+        self.assertEqual(collection_breakpoints["chr2"], [15585355, 15585355, 15585355, 15633375, 16521051, 15585355])
         
     def test_header_sniffles1(self):
         """Test correct format for sniffles1"""

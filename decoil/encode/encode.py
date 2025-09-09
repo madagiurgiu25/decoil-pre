@@ -71,7 +71,7 @@ def parsevcf(vcffile_clean, multi, svcaller):
 
 	try:
 		for record in reader:
-			
+		
 			record = operations.transform_record(record, svcaller, multi)
 
 			id = record.ID[0]  # primary id
@@ -88,7 +88,7 @@ def parsevcf(vcffile_clean, multi, svcaller):
 			if state == False:
 				# skip record as this is good
 				continue
-	
+
 			# single sample vcf
 			if multi == False:
 				dv = record.calls[0].data.get(vp.DV)

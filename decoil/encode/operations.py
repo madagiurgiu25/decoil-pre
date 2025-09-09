@@ -258,9 +258,9 @@ def transform_record_lumpy(record):
 	record.INFO[vp.SVLEN] = ("-1" if vp.SVLEN not in record.INFO or record.INFO[vp.SVLEN] == "-" else record.INFO[vp.SVLEN])
 	record.INFO[vp.SVLEN] = (str(record.INFO[vp.SVLEN][0]) if isinstance(record.INFO[vp.SVLEN], list) else record.INFO[vp.SVLEN])
 
-	# record.calls[0].data[vp.DV] = int(record.calls[0].data[vp.QA][0])
-	# record.calls[0].data[vp.DR] = int(record.calls[0].data[vp.QR])
-	# record.calls[0].data[vp.AF] = record.calls[0].data[vp.DV] / (record.calls[0].data[vp.DP] + 1)
+	record.calls[0].data[vp.DV] = int(record.calls[0].data[vp.QA][0])
+	record.calls[0].data[vp.DR] = int(record.calls[0].data[vp.QR])
+	record.calls[0].data[vp.AF] = int(record.calls[0].data[vp.DV]) / (record.calls[0].data[vp.DP] + 1)
 
 	if record.calls[0].data[vp.GT] == "./.":
 		if record.calls[0].data[vp.AF] <= 0.3:
@@ -336,7 +336,7 @@ def pass_filter(record, processed_mates=[], multi=False):
 	# skip the mate for BND from VCF file
 	if vp.SECONDARY in record.INFO or mateid and mateid in processed_mates:
 		processed_mates.append(mateid)
-		print("##INFO: Skip mate", record)
+		# print("##INFO: Skip mate", record)
 		return False, processed_mates
 
 	if svtype not in vp.SV_COLLECTION_STRICT:
@@ -344,6 +344,7 @@ def pass_filter(record, processed_mates=[], multi=False):
 
 	# filter low cov (< 10X)
 	if cov < QUAL.MIN_COV:
+		# print("Not meeting qual")
 		return False, processed_mates
 
 	# filter low VAF
@@ -362,30 +363,24 @@ def pass_filter(record, processed_mates=[], multi=False):
 	# if vp.PRECISE not in record.INFO and 'PASS' not in record.FILTER:
 	# 	return False
 	
-	if 'PASS' not in record.FILTER and 'STRANDBIAS' not in record.FILTER:
-		return False, processed_mates
+	# if record.FILTER not in ['PASS','STRANDBIAS','.']:
+	# 	return False, processed_mates
 	
-	if record.INFO[vp.SVTYPE] not in vp.SV_COLLECTION:
+	if svtype not in vp.SV_COLLECTION:
 		log.warning("SV unknown")
 		log.warning(record)
 		return False, processed_mates
 
-	if str(record.INFO[vp.CHR2]) not in vp.ALLOWED_CHR or str(record.CHROM) not in vp.ALLOWED_CHR:
+	if str(chr2) not in vp.ALLOWED_CHR or str(chr1) not in vp.ALLOWED_CHR:
+		# log.warning(f"chr not allowed {str(record.INFO[vp.CHR2])}")
 		return False, processed_mates
 
-	if record.INFO[vp.SVTYPE] != vp.BND and abs(int(record.INFO[vp.SVLEN])) < QUAL.MINIMAL_SV_LEN:
+	if record.INFO[vp.SVTYPE] not in [vp.BND,vp.TRA] and abs(int(svlen)) < QUAL.MINIMAL_SV_LEN:
+		# print(svlen)
+		# print(svtype)
+		# print(QUAL.MINIMAL_SV_LEN)
+		# log.warning(f"not passed min len {int(svlen)}")
 		return False, processed_mates
-
-	# if svtype not in vp.SV_COLLECTION:
-	#	 log.warning("SV unknown")
-	#	 log.warning(record)
-	#	 return False, processed_mates
-
-	# if chr2 not in vp.ALLOWED_CHR or chr1 not in vp.ALLOWED_CHR:
-	#	 return False, processed_mates
-
-	# if svtype != vp.BND and svlen < QUAL.MINIMAL_SV_LEN:
-	#	 return False, processed_mates
 
 	# filter based on a negative exponential curve
 	if np.power(3, -cov * vaf / np.log(cov + 0.001)) >= QUAL.EXPLOG_THRESHOLD:
