@@ -442,12 +442,15 @@ class MultiGraph(object):
 		self.graph[v][u].remove(edgeid)
 
 		# remove fragment if edge was connecting fragment;s head to tail
-		if self.edges.get(edgeid).svtype == gp.FRAGMENT:
-			fid = self.nodes.get(u).parent_fragment
-			self.remove_fragment(fid)
+		if edgeid in self.edges:
+			if self.edges.get(edgeid).svtype == gp.FRAGMENT:
+				fid = self.nodes.get(u).parent_fragment
+				self.remove_fragment(fid)
 
-		# remove edge from edges dict
-		self.edges.pop(edgeid)
+			# remove edge from edges dict
+			self.edges.pop(edgeid)
+		else:
+			print("###Warning - try to remove an edge that does not exist anymore edgeid=",edgeid, "(u,v)", u,v)
 
 	def remove_fragment(self, fid):
 		"""
