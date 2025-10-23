@@ -33,7 +33,7 @@ conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.
 conda activate envdecoil
 
 # install decoil via pip
-python -m pip install decoil==1.1.3
+python -m pip install decoil==2.0.0b2
 decoil --version
 ```
 
