@@ -161,7 +161,7 @@ You can install the latest version of Decoil repository. Note this is an unstabl
 
 ```
 # create conda environment
-conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1 deeptools==3.5.5
 conda activate envdecoil
 
 # install decoil
@@ -183,7 +183,7 @@ decoil --version
 
 ```
 # create conda environment
-conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 --platform osx-64
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 deeptools==3.5.5 --platform osx-64
 conda activate envdecoil
 
 # install decoil
