@@ -34,7 +34,7 @@ conda create -n $CONDAENV -c bioconda -c conda-forge python==3.10 survivor==1.0.
 conda activate $CONDAENV
 
 # install decoil via pip
-python -m pip install decoil==2.0.0b3
+python -m pip install decoil==2.0.0b4
 
 # optional
 export PATH=~/miniconda3/envs/$CONDAENV/bin:$PATH
