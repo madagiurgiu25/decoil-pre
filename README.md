@@ -25,15 +25,19 @@ Assumes you have conda installed.
 
 ```bash
 # install conda dependencies
+CONDAENV="envdecoil"
 # linux
-conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1 deeptools==3.5.5
+conda create -n $CONDAENV -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1
 # macos
-conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 deeptools==3.5.5 --platform osx-64
+conda create -n $CONDAENV -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 --platform osx-64
 
-conda activate envdecoil
+conda activate $CONDAENV
 
 # install decoil via pip
-python -m pip install decoil==2.0.0b2
+python -m pip install decoil==2.0.0b3
+
+# optional
+export PATH=~/miniconda3/envs/$CONDAENV/bin:$PATH
 decoil --version
 ```
 
@@ -183,7 +187,7 @@ decoil --version
 
 ```
 # create conda environment
-conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 deeptools==3.5.5 --platform osx-64
+conda create -n envdecoil -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 --platform osx-64
 conda activate envdecoil
 
 # install decoil
