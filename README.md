@@ -288,9 +288,9 @@ Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) secti
 
 The relevant output files for the users are:
 
-- `reconstruct.bed` - contains all genomic fragments composing for all reconstructions
-- `reconstruct.ecDNA.bed` - contains all genomic fragments composing reconstructions labeled as ecDNA
-- `reconstruct.ecDNA.filtered.bed` - contains all genomic fragments composing the reconstructios labeled as ecDNA and passing the `--filter-score`
+- `reconstruct.bed` - contains all genomic fragments **in order** composing for all reconstructions
+- `reconstruct.ecDNA.bed` - contains all genomic fragments  **in order** composing reconstructions labeled as ecDNA
+- `reconstruct.ecDNA.filtered.bed` - contains all genomic fragments **in order** composing the reconstructios labeled as ecDNA and passing the `--filter-score`
 - `summary.txt` - summarize all the circular reconstructions
 
 <br/>Example `reconstruct.bed`:
@@ -309,8 +309,18 @@ chr2    15585356        15633376        3       5       +       149     36
 chr2    16521052        16628305        3       13      +       37      36
 chr3    10981202        11028470        3       25      -       31      36
 chr12   68807722        68970910        2       53      +       252     252
-
 ```
+
+| Column | Description |
+|--------|-------------|
+| `chr` | Chromosome containing the genomic fragment. |
+| `start` | Start coordinate of the fragment. |
+| `end` | End coordinate of the fragment. |
+| `circ_id` | Identifier of the reconstructed circular DNA molecule. Fragments with the same `circ_id` belong to the same reconstruction. |
+| `fragment_id` | Unique identifier of the genomic fragment used in the reconstruction. |
+| `strand` | Orientation (`+` or `-`) of the fragment within the reconstructed cycle. |
+| `coverage` | Sequencing coverage (read depth) supporting this genomic fragment. |
+| `estimated_proportions` | Estimated abundance of the reconstructed cycle. This value is identical for all fragments belonging to the same `circ_id`. |
 
 <br/>Example `summary.txt`:
 
@@ -323,7 +333,15 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 2       chr12           0.163188        ecDNA   0       simple_circle           252
 ```
 
-<br/>
+| Column | Description |
+|--------|-------------|
+| `circ_id` | Identifier of predicted cycle. |
+| `chr_origin` | Chromosome(s) contributing fragments to the reconstructed cycle. Multiple chromosomes are comma-separated. |
+| `size(MB)` | Total size of the reconstructed cycle in megabases (Mb). |
+| `label` | Classification assigned to the reconstruction (e.g. `ecDNA`). May be empty if no label is assigned. |
+| `topology_idx` | Numeric identifier of the inferred structural topology. |
+| `topology_name` | Human-readable name of the inferred topology (e.g. `simple_circle`, `multi_region_inter_chr`, `simple_duplications`). |
+| `estimated_proportions` | Estimated abundance of the reconstructed structure. |
 
 <a name="citation"></a>
 
