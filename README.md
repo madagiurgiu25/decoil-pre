@@ -27,9 +27,9 @@ Assumes you have conda installed.
 # install conda dependencies
 CONDAENV="envdecoil"
 # linux
-conda create -n $CONDAENV -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools==1.15.1
+conda create -n $CONDAENV -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools datrie
 # macos
-conda create -n $CONDAENV -c bioconda -c conda-forge python==3.10 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools==1.15.1 --platform osx-64
+conda create -n $CONDAENV -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools datrie --platform osx-64
 
 conda activate $CONDAENV
 
@@ -38,6 +38,10 @@ python -m pip install decoil==2.0.0b4
 
 # optional
 export PATH=~/miniconda3/envs/$CONDAENV/bin:$PATH
+
+# check if decoil in path
+which decoil
+# check version
 decoil --version
 ```
 

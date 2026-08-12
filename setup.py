@@ -43,7 +43,7 @@ setuptools.setup(
     		'samtools':'1.15.1',
     		'python-dateutil':'2.8.0',
        },
-    python_requires=">=3.10.0",
+    python_requires=">=3.9",
     packages=setuptools.find_packages(),
     include_package_data=True,
     keywords=[],
