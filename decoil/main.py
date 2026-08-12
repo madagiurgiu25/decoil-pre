@@ -13,6 +13,7 @@ import time
 from pprint import pprint
 
 import decoil.output.metrics
+import decoil.check
 import json
 
 # import pickle5 as pickle
@@ -44,6 +45,28 @@ handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 log.addHandler(handler)
+
+
+def get_conda_requirements_file():
+    project_root = Path(__file__).resolve().parent.parent
+
+    system = platform.system()
+
+    if system == "Darwin":
+        return project_root / "conda-requirements-osx.txt"
+
+    elif system == "Linux":
+        return project_root / "conda-requirements-linux.txt"
+
+    elif system == "Windows":
+        print()
+        print("WARNING: Windows support has not been tested.")
+        return None
+
+    else:
+        print()
+        print(f"WARNING: Unsupported platform: {system}")
+        return None
 
 
 def run_save_fragments(G, outfile):
@@ -336,6 +359,10 @@ def process_commandline_decoil_only(subparsers):
 	parser_c.add_argument('--sv-caller', help="""SV caller name matching the VCF input {}""".format(VCF_PROP.SVCALLERS),
 						 required=False, default=VCF_PROP.SNIFFLES1)
 	parser_c.set_defaults(which=PROG.FILTER)
+
+	#### CHECK DEPENDENCIES
+	parser_d = subparsers.add_parser(PROG.CHECK, help='Check if all dependencies installed')
+	parser_c.set_defaults(which=PROG.CHECK)
 
 	return subparsers
 

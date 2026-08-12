@@ -1,0 +1,6 @@
+# conda-requirements-osx.txt
+survivor==1.0.7
+sniffles==1.0.7
+ngmlr==0.2.7
+samtools
+datrie

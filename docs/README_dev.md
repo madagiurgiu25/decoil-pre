@@ -3,14 +3,26 @@
 ```
 cd decoil-pre
 
+# install dependencies
 python -m pip install setuptools wheel twine 
 python -m pip install --upgrade pip
 
+# build
 rm -rf decoil.egg-info/ build/ dist/ sdist/
 python -m pip install -r requirements.txt
 python setup.py sdist bdist_wheel
+
+# test installation locally from wheel
+python -m pip install dist/decoil-*-py3-none-any.whl
+
+# upload to testpypi
 python -m twine upload --repository testpypi --verbose dist/*
 
+# download from testpypi
+python -m pip install \
+  --index-url https://test.pypi.org/simple/ \
+  --extra-index-url https://pypi.org/simple/ \
+  decoil==<version>
 
 ```
 

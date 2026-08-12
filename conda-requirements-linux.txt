@@ -1,0 +1,5 @@
+# conda-requirements-linux.txt
+
+bedtools=2.31.1
+sniffles=1.0.7
+samtools>=1.20

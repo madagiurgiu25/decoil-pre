@@ -60,6 +60,8 @@ Decoil supports a fast-mode that enables reconstructions from short-reads. For t
 decoil reconstruct <other params> --fast --sv-caller lumpy
 ```
 
+You need yourself to get lumpy calls. 
+
 ### Can I use Decoil with a 
 
 ### Can I use Decoil with a custom genome?
