@@ -280,7 +280,7 @@ This configuration is the most flexible and allows users to use their own SV cal
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
-<a name="#decoil-faq"></a><br/>
+<a name="decoil-faq"></a><br/>
 
 ## FAQ
 
