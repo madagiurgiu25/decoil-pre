@@ -236,7 +236,7 @@ class TestMultiGraph(unittest.TestCase):
 	# 	samfile = pysam.AlignmentFile("tests/data/ngmlr.bam", "rb")
 	# 	breakpoint = 15102001
 	# 	window = 500
-	# 	padd = 100
+	# 	pad = 100
 	# 	span = 500000
 	# 	count_coverage_through = 0
 		
@@ -259,7 +259,7 @@ class TestMultiGraph(unittest.TestCase):
 	# 			continue
 			
 	# 		# keep only reads which go through the breakpoint
-	# 		if read.reference_start < (breakpoint - padd) and read.reference_end > (breakpoint + padd):
+	# 		if read.reference_start < (breakpoint - pad) and read.reference_end > (breakpoint + pad):
 	# 			# print("through read",read.query_name,read.query_alignment_start, read.reference_start)
 	# 			if read.query_name in read_aligned:
 	# 				found += 1

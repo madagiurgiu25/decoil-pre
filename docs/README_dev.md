@@ -39,6 +39,7 @@ python3.10 -m pip install parasails
 2. Run individual test:
 
 ```
+python -m pip install pytest
 # -s will capture the print() and goes to console
 pytest -s -k test_none_DR tests/encode/test_input.py 
 ```

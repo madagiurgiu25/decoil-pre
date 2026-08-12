@@ -347,7 +347,7 @@ def insert_edges_sorted(list_edges, e, data):
 		list_edges[j][1]["rank2"] > data["rank2"]:
 		j += 1
 
-	# equal rank1, differnt rank2 but reaching last element
+	# equal rank1, different rank2 but reaching last element
 	if j == len(list_edges):
 		list_edges.append((e, data))
 		return list_edges

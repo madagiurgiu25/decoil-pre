@@ -49,7 +49,7 @@ decoil --version
 
 ## Getting started using docker
 
-As a prequisite you need to have installed `docker` (you can install this from the official website or using `conda`).
+As a prerequisite you need to have installed `docker` (you can install this from the official website or using `conda`).
 
 ### Download as docker image
 
@@ -66,7 +66,7 @@ Test docker installation using [example](docs/example.md).
 
 ### Run Decoil reconstruction using docker
 
-To run Decoil on your data you need to cofigure the following parameters:
+To run Decoil on your data you need to configure the following parameters:
 
 ```bash
 # run decoil with your input with standard parameters
@@ -98,7 +98,7 @@ To test your installation using [example](docs/example.md).
 
 ## Getting started using singularity
 
-As a prequisite you need to have installed `singularity` (you can install this from the official website or using `conda`).
+As a prerequisite you need to have installed `singularity` (you can install this from the official website or using `conda`).
 
 ### Download as singularity image
 
@@ -113,7 +113,7 @@ Test singularity installation using [example](docs/example.md).
 
 ### Run Decoil reconstruction using singularity
 
-To run Decoil on your data you need to cofigure the following parameters:
+To run Decoil on your data you need to configure the following parameters:
 
 ```bash
 # run decoil with your input with standard parameters
@@ -163,7 +163,7 @@ To test docker and singularity installation use the [example](docs/example.md).
 ## Install Decoil from source (latest features, unstable)
 
 You can install the latest version of Decoil repository. Note this is an unstable version and contains bugs.
-`git` and `conda/mamba` are prequisites.
+`git` and `conda/mamba` are prerequisites.
 
 ### Linux
 

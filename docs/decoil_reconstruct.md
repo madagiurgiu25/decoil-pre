@@ -1,7 +1,7 @@
 # Decoil
 
 For advanced users only: you can run `decoil reconstruct` to reconstruct ecDNA.<br/>
-This requires as input the SV calls (.vcf), the aligment file (.bam) and the coverage track (.bw), which needs to be computed upfront by the user.
+This requires as input the SV calls (.vcf), the alignment file (.bam) and the coverage track (.bw), which needs to be computed upfront by the user.
 
 
 Usage:

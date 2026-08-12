@@ -269,7 +269,7 @@ class Node(object):
 	@end_time.setter
 	def end_time(self, t):
 		"""
-		Set iteration timne
+		Set iteration time
 		"""
 		self._end_time = t
 
@@ -419,7 +419,7 @@ class MultiGraph(object):
 					self.edges.pop(e)
 			toremove.append(v)
 
-		# remove u entries from the adjancency matrix
+		# remove u entries from the adjacency matrix
 		for key in toremove:
 			self.graph[key].pop(u)
 		self.graph.pop(u)
@@ -474,7 +474,7 @@ class MultiGraph(object):
 
 	def change_fragment_boundry(self, fid, part, offset):
 		"""
-		Change fragment boundries, i.e. elongate
+		Change fragment boundaries, i.e. elongate
 		"""
 		if part == gp.TAIL:
 			# elongate to left
@@ -617,7 +617,7 @@ class MultiGraph(object):
 		By convention negative fid means inverted fragment fid.
 
 		Arguments:
-			path (list): List of nodes [(v1, e1), (v2, e2)] where e2 represents trasition v1 -> v2
+			path (list): List of nodes [(v1, e1), (v2, e2)] where e2 represents transition v1 -> v2
 
 		Returns:
 			List of paths
@@ -652,7 +652,7 @@ class MultiGraph(object):
 
 	def adjacent_edges_sorted(self, u):
 		"""
-		Get all adjancent edges to a node u.
+		Get all adjacent edges to a node u.
 		Sort the output:
 			- edges weight (descendent)
 			- for same weight consider sorting:
@@ -716,10 +716,12 @@ class MultiGraph(object):
 		"""
 		Reset time for DFS tree search
 		"""
-		self.start_time = self.end_time = 0
+		self.start_time = 0
+		self.end_time = 0
 
 		for n in self.nodes:
-			self.nodes[n].start_time = self.fnodes[n].end_time = 0
+			self.nodes[n].start_time = 0
+			self.nodes[n].end_time = 0
 
 	def __find_cycle__(self, node, stack):
 		"""

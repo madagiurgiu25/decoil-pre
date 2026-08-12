@@ -102,7 +102,7 @@ class QUAL:
 	MAX_COVERAGE = 500
 	# Set max coverage default
 	MAX_COVERAGE_DEFAULT = 80000
-	# Treshold ecDNA size (MB) Deshpande et al 2019. Nat.Comm.
+	# Threshold ecDNA size (MB) Deshpande et al 2019. Nat.Comm.
 	ECDNA_MINSIZE = 0.1
 	# Minimal fragment size (bp)
 	MINIMAL_FRAGMENT_SIZE = 500
