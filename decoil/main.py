@@ -362,7 +362,7 @@ def process_commandline_decoil_only(subparsers):
 
 	#### CHECK DEPENDENCIES
 	parser_d = subparsers.add_parser(PROG.CHECK, help='Check if all dependencies installed')
-	parser_c.set_defaults(which=PROG.CHECK)
+	parser_d.set_defaults(which=PROG.CHECK)
 
 	return subparsers
 
@@ -515,78 +515,81 @@ def main(sysargs=sys.argv[1:]):
 		# parse arguments
 		subcommand, args, parser = process_commandline(sysargs)
 
-		if subcommand == PROG.VALIDATE:
-			# start validation
-			validate.compare_true_reconstruct(
-				os.path.abspath(args.a),
-				os.path.abspath(args.b),
-				os.path.abspath(args.reference_genome),
-				os.path.abspath(args.outputfile),
-				temp=os.path.abspath(args.temp),
-			)
+		if subcommand == PROG.CHECK:
+			decoil.check.run_dependency_check()
+		else:
+			if subcommand == PROG.VALIDATE:
+				# start validation
+				validate.compare_true_reconstruct(
+					os.path.abspath(args.a),
+					os.path.abspath(args.b),
+					os.path.abspath(args.reference_genome),
+					os.path.abspath(args.outputfile),
+					temp=os.path.abspath(args.temp),
+				)
 
-		elif subcommand == PROG.RECONSTRUCT:
-			# start reconstruction
-			print(args)
+			elif subcommand == PROG.RECONSTRUCT:
+				# start reconstruction
+				print(args)
 
-			# start debug mode or not
-			if args.debug == 1:
-				log.setLevel(logging.DEBUG)
-			else:
-				log.setLevel(logging.INFO)
+				# start debug mode or not
+				if args.debug == 1:
+					log.setLevel(logging.DEBUG)
+				else:
+					log.setLevel(logging.INFO)
 
-			# setup configuration parameters
-			setup_defaults(args)
+				# setup configuration parameters
+				setup_defaults(args)
 
-			# not use bam file
-			fast = None
-			bam = None
-			if args.fast == 1:
+				# not use bam file
+				fast = None
 				bam = None
-				fast = True
-			else:
-				bam = os.path.abspath(args.bam)
-				fast = False
+				if args.fast == 1:
+					bam = None
+					fast = True
+				else:
+					bam = os.path.abspath(args.bam)
+					fast = False
 
-			# skip fasta file creation
-			skip = None
-			if args.skip == 1:
-				skip = True
-			else:
-				skip = False
+				# skip fasta file creation
+				skip = None
+				if args.skip == 1:
+					skip = True
+				else:
+					skip = False
 
-			if args.multi == 1:
-				multi = True
-			else:
-				multi = False
+				if args.multi == 1:
+					multi = True
+				else:
+					multi = False
 
-			run_reconstruction(
-				os.path.abspath(args.vcf),
-				os.path.abspath(args.coverage),
-				bam,
-				os.path.abspath(args.outputdir),
-				os.path.abspath(args.reference_genome),
-				name=args.name,
-				svcaller=args.sv_caller,
-				multi=multi,
-				fast=fast,
-				skip=skip,
-			)
+				run_reconstruction(
+					os.path.abspath(args.vcf),
+					os.path.abspath(args.coverage),
+					bam,
+					os.path.abspath(args.outputdir),
+					os.path.abspath(args.reference_genome),
+					name=args.name,
+					svcaller=args.sv_caller,
+					multi=multi,
+					fast=fast,
+					skip=skip,
+				)
 
-		elif subcommand == PROG.FILTER:
-			# start filtering
-			operations.filter(
-				os.path.abspath(args.vcf), os.path.abspath(args.outputdir)
-			)
+			elif subcommand == PROG.FILTER:
+				# start filtering
+				operations.filter(
+					os.path.abspath(args.vcf), os.path.abspath(args.outputdir)
+				)
 
-		print("-------")
-		print("Status: Successfully finished")
-		print("User time (seconds): decoil", round(time.time() - start_time, 2))
-		print("Subprogram: decoil", subcommand)
-		print("Params:", args)
-		print("Allowed chromosomes:", VCF_PROP.ALLOWED_CHR)
-		print("#######")
-		print()
+			print("-------")
+			print("Status: Successfully finished")
+			print("User time (seconds): decoil", round(time.time() - start_time, 2))
+			print("Subprogram: decoil", subcommand)
+			print("Params:", args)
+			print("Allowed chromosomes:", VCF_PROP.ALLOWED_CHR)
+			print("#######")
+			print()
 
 	except AttributeError:
 		parser.print_help()
