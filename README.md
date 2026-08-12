@@ -27,14 +27,14 @@ Assumes you have conda installed.
 # install conda dependencies
 CONDAENV="envdecoil"
 # linux
-conda create -n $CONDAENV -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools datrie
+conda create -n $CONDAENV --override-channels -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.12 ngmlr==0.2.7 samtools datrie
 # macos
-conda create -n $CONDAENV -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools datrie --platform osx-64
+conda create -n $CONDAENV --override-channels -c bioconda -c conda-forge python==3.9 survivor==1.0.7 sniffles==1.0.7 ngmlr==0.2.7 samtools datrie --platform osx-64
 
 conda activate $CONDAENV
 
 # install decoil via pip
-python -m pip install decoil==2.0.0
+python -m pip install decoil==2.0.2
 
 # optional
 export PATH=~/miniconda3/envs/$CONDAENV/bin:$PATH
@@ -57,7 +57,7 @@ Download `decoil` docker image from `docker-hub`. This contains all the dependen
 
 ```bash
 # docker
-docker pull madagiurgiu25/decoil:1.1.2-slim
+docker pull madagiurgiu25/decoil:2.0.2
 ```
 
 ###  Run example using docker (optional)
@@ -87,7 +87,7 @@ docker run -it --platform=linux/amd64 \
     -v ${GENOME}:/annotation/reference.fa \
     -v ${ANNO}:/annotation/anno.gtf \
     -v ${OUTPUT_FOLDER}:/mnt \
-    -t madagiurgiu25/decoil:1.1.2-slim \
+    -t madagiurgiu25/decoil:2.0.2 \
     decoil-pipeline sv-reconstruct \
             -b /data/input.bam \
             -r /annotation/reference.fa \
@@ -104,7 +104,7 @@ As a prerequisite you need to have installed `singularity` (you can install this
 
 ```bash
 # singularity
-singularity pull decoil.sif  docker://madagiurgiu25/decoil:1.1.2-slim
+singularity pull decoil.sif  docker://madagiurgiu25/decoil:2.0.2
 ```
 
 ### Run example using singularity (optional)
@@ -236,7 +236,7 @@ This requires only a `.bam` file as input and generates internally all the files
 
 ```bash
 # call help
-docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:1.1.2-slim decoil-pipeline --help
+docker run -it --platform=linux/amd64 -t madagiurgiu25/decoil:2.0.2 decoil-pipeline --help
 
 usage: decoil-pipeline <workflow> <parameters> [<target>]
 Example: 

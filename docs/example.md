@@ -5,18 +5,18 @@ You can test if Decoil is correctly installed by running the following example.
 
 ## Download docker image and convert to singularity
 
-If you want to run the example using `docker`, download the `decoil:1.1.2-slim` docker image from `docker hub`.
+If you want to run the example using `docker`, download the `decoil:2.0.1` docker image from `docker hub`.
 
 ```bash
 # docker
-docker pull madagiurgiu25/decoil:1.1.2-slim
+docker pull madagiurgiu25/decoil:2.0.1
 ```
 
 If you want to run the example using `singularity`, run the command below to convert the docker image into a singularity image file (SIF):
 
 ```bash
 # singularity
-singularity pull decoil.sif madagiurgiu25/decoil:1.1.2-slim
+singularity pull decoil.sif madagiurgiu25/decoil:2.0.1
 ```
 
 ## Download annotation data
@@ -47,7 +47,7 @@ docker run -it --platform=linux/amd64 \
     -v $PWD/test3:/mnt \
     -v $PWD/$GTFANNO:/annotation/anno.gtf \
     -v $PWD/$REFGENOME:/annotation/reference.fa \
-    -t madagiurgiu25/decoil:1.1.2-slim \
+    -t madagiurgiu25/decoil:2.0.1 \
 decoil-pipeline -f sv-reconstruct \
     --bam /examples/ecdna1/map.bam \
     --reference-genome /annotation/reference.fa \
