@@ -280,9 +280,9 @@ This configuration is the most flexible and allows users to use their own SV cal
 
 To interpret and visualize the results of the ecDNA reconstruction threads, use [decoil-viz](https://github.com/madagiurgiu25/decoil-viz).
 
-<a name="#decoil-faq"></a><br/>
+<br/>
 
-## FAQ
+## FAQ <a name="#decoil-faq"></a>
 
 Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
 
@@ -346,6 +346,7 @@ circ_id chr_origin      size(MB)        label   topology_idx    topology_name   
 | `topology_idx` | Numeric identifier of the inferred structural topology. |
 | `topology_name` | Human-readable name of the inferred topology (e.g. `simple_circle`, `multi_region_inter_chr`, `simple_duplications`). |
 | `estimated_proportions` | Estimated abundance of the reconstructed structure. |
+
 
 <a name="citation"></a>
 
