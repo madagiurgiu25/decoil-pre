@@ -284,7 +284,7 @@ To interpret and visualize the results of the ecDNA reconstruction threads, use 
 
 ## FAQ
 
-Check recommendations for filtering or debugging in the [FAQ](docs/faq.md) section.
+Check recommendations for filtering or debugging in the [FAQ](docs/FAQ.md) section.
 
 <a name="decoil-file"></a><br/>
 
