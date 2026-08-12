@@ -169,7 +169,7 @@ def get_longest_path(found_paths, gcomp):
 
 def deduplicate(parent_list, new_entries):
 	"""
-	Attach to parent_list only circular paths not existant in new_entries
+	Attach to parent_list only circular paths not existent in new_entries
 	Consider equal paths only if lists are identical (DO NOT take into account circularity
 	"""
 	tokeep = []

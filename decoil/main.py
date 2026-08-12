@@ -210,7 +210,7 @@ def run_reconstruction(
 	currpath = os.getcwd()
 	os.chdir(outputdir)
 
-	# 0. Set thesholds (take into account downsampling)
+	# 0. Set thresholds (take into account downsampling)
 	metrics.set_wgs(bigwigfile)
 	metrics.set_min_max_fragment_coverage()
 
@@ -434,7 +434,7 @@ def process_commandline(sysargs, pipeline=False):
 		usage="""
 		  decoil-pipeline [options] <run-mode> <parameters> [<target>]
 		  or
-		  decoil <run-mode> <paramters>""",
+		  decoil <run-mode> <parameters>""",
 	)
 	parser.add_argument(
 		"--version", action="version", version="%(prog)s {}".format(decoil.__version__)

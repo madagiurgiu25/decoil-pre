@@ -57,7 +57,7 @@ def in_window(array, pos1, pos2, distance):
 
 def merge_near_breakpoints(collection_breakpoints, svinfo, distance=QUAL.DISTANCE):
 	"""
-	Merge brekpoints in the close proximity
+	Merge breakpoints in close proximity
 	"""
 
 	# for each chromosome
@@ -95,7 +95,7 @@ def merge_near_breakpoints(collection_breakpoints, svinfo, distance=QUAL.DISTANC
 						# breakpoints are not in close proximity
 						break
 
-				# jump over all brekpoints in close proximity
+				# jump over all breakpoints in close proximity
 				i = j
 
 		for refbr in breakpoints_todelete:
@@ -687,7 +687,7 @@ def passqc(count_spanning_reads, mean_wgs):
 	return False
 
 
-def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
+def add_spatial_edges_new(graph, bamfile, window=500, pad=100, fast=False):
 	"""
 	Add edges which connects 2 neighboring fragments in space if supporting reads >= WGS / 2
 
@@ -695,7 +695,7 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 			graph (decoil.encode.Multigraph):
 			bamfile (str): Path to bam file
 			window (int): Left and right window spanning region around breakpoint
-			padd (int):
+			pad (int):
 	"""
 
 	log.info("5. Add edges connecting neighboring fragments")
@@ -759,8 +759,8 @@ def add_spatial_edges_new(graph, bamfile, window=500, padd=100, fast=False):
 
 					# keep only reads which go through the breakpoint
 					if read.reference_start < (
-						breakpoint - padd
-					) and read.reference_end > (breakpoint + padd):
+						breakpoint - pad
+					) and read.reference_end > (breakpoint + pad):
 						count_coverage_through += 1
 
 				# downsample reference spanning reads

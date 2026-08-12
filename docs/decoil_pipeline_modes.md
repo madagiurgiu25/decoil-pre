@@ -16,7 +16,7 @@ The pipeline has the following running modes:
 usage:
                   decoil-pipeline [options] <run-mode> <parameters> [<target>]
                   or
-                  decoil <run-mode> <paramters>
+                  decoil <run-mode> <parameters>
 
 Decoil 2.0.0a1: reconstruct ecDNA from long-read data
 
